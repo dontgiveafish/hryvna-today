@@ -43,3 +43,4 @@ nb-configuration.xml
 engine/assets/*
 engine/runtime/*
 public/api.hryvna.today/assets/*
+nbproject
