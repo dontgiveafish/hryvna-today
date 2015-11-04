@@ -14,7 +14,6 @@ use Yii;
  * @property string $euro_buy
  * @property string $euro_sale
  * @property string $grab_date
- * @property string $bank_time
  *
  * @property Banks $bank
  */
@@ -34,10 +33,10 @@ abstract class Exchange extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['bank_id', 'dollar_buy', 'dollar_sale', 'euro_buy', 'euro_sale', 'grab_date', 'bank_time'], 'required'],
+            [['bank_id', 'dollar_buy', 'dollar_sale', 'euro_buy', 'euro_sale', 'grab_date'], 'required'],
             [['bank_id'], 'integer'],
             [['dollar_buy', 'dollar_sale', 'euro_buy', 'euro_sale'], 'number'],
-            [['grab_date', 'bank_time'], 'safe']
+            [['grab_date'], 'safe']
         ];
     }
 
@@ -54,7 +53,6 @@ abstract class Exchange extends \yii\db\ActiveRecord
             'euro_buy' => 'Euro Buy',
             'euro_sale' => 'Euro Sale',
             'grab_date' => 'Grab Date',
-            'bank_time' => 'Bank Time',
         ];
     }
 

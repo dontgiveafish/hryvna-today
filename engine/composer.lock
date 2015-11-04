@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6eadab628e5c917849d0756cb58bf38c",
-    "content-hash": "609a88866963b9fe50cf9c9acb10d666",
+    "hash": "99694ca46e393ad0a5fbf6f9d5898b74",
+    "content-hash": "047c7618c0d9a17872897b7171e66c75",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -316,6 +316,47 @@
                 "html"
             ],
             "time": "2013-11-30 08:25:19"
+        },
+        {
+            "name": "serhatozles/yii2-simplehtmldom",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/serhatozles/yii2-simplehtmldom.git",
+                "reference": "64f36d1ff3ec9bff04b06f98c1648b5fea326554"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/serhatozles/yii2-simplehtmldom/zipball/64f36d1ff3ec9bff04b06f98c1648b5fea326554",
+                "reference": "64f36d1ff3ec9bff04b06f98c1648b5fea326554",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "serhatozles\\simplehtmldom\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "serhatozles",
+                    "email": "serhatozles@gmail.com"
+                }
+            ],
+            "description": "Simple HTML Dom",
+            "keywords": [
+                "extension",
+                "simplehtmldom",
+                "yii2"
+            ],
+            "time": "2014-12-01 19:14:07"
         },
         {
             "name": "smarty/smarty",
@@ -1021,7 +1062,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "serhatozles/yii2-simplehtmldom": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
