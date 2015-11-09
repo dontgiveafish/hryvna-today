@@ -2,19 +2,24 @@
 
 namespace app\grabbers\banks;
 
-use app\grabbers\ExchangeGrabber;
-use app\interfaces\ExchangeGrabbingStrategy;
+use app\models\Currency;
+
+use app\grabbers\ExchangeRateGrabberStrategy;
+use app\grabbers\ExchangeRateGrabbingStrategyInterface;
 
 /**
  * This is class for grabbing not typical bank API
  */
-class Privat extends ExchangeGrabber implements ExchangeGrabbingStrategy {
+class Privat extends ExchangeRateGrabberStrategy implements ExchangeRateGrabbingStrategyInterface {
 
-    const bank_id = 3;
-
+    /**
+     * This is how Privatbank API works
+     * 
+     * @throws \Exception
+     */
     protected function getValues() {
 
-        $html = file_get_contents('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5');
+        $html = file_get_contents($this->getUrl());
 
         if (empty($html)) {
             throw new \Exception('broken markup:no data');
@@ -30,7 +35,7 @@ class Privat extends ExchangeGrabber implements ExchangeGrabbingStrategy {
         $sale = $this->grabJson($json, 2, 'sale');
         $check = $this->grabJson($json, 2, 'ccy');
 
-        $this->saveDollarValues($buy, $sale, $check);
+        $this->saveCurrencyValues(Currency::DOLLAR_ID, $buy, $sale, $check);
 
         // EUR
 
@@ -38,10 +43,19 @@ class Privat extends ExchangeGrabber implements ExchangeGrabbingStrategy {
         $sale = $this->grabJson($json, 1, 'sale');
         $check = $this->grabJson($json, 1, 'ccy');
 
-        $this->saveEuroValues($buy, $sale, $check);
+        $this->saveCurrencyValues(Currency::EURO_ID, $buy, $sale, $check);
 
     }
 
+    /**
+     * Get and filter JSON value
+     * 
+     * @param array $json_array
+     * @param type $currency_id
+     * @param type $key
+     * @return type
+     * @throws \Exception
+     */
     private function grabJson(array $json_array, $currency_id, $key) {
 
         if (empty($json_array[$currency_id]->$key)) {
@@ -49,7 +63,7 @@ class Privat extends ExchangeGrabber implements ExchangeGrabbingStrategy {
         }
 
         return $json_array[$currency_id]->$key;
-        
+
     }
-   
+
 }

@@ -46,7 +46,7 @@ class Hryvna extends Component
         
         $banks_count = models\Bank::find()->count();
 
-        $table_exchanges = models\Exchange::tableName();
+        $table_exchanges = models\ExchangeRate::tableName();
         
         $query = "
             SELECT grab_date as actual_date, count(*) as exchanges_count
@@ -80,7 +80,7 @@ class Hryvna extends Component
             $today = $this->assignActualDate();
         }
 
-        $table_exchanges = models\Exchange::tableName();
+        $table_exchanges = models\ExchangeRate::tableName();
         $table_banks = models\Bank::tableName();
 
         $result = array();
@@ -173,7 +173,7 @@ class Hryvna extends Component
             $today = $this->assignActualDate();
         }
 
-        $exchanges_table = models\Exchange::tableName();
+        $exchanges_table = models\ExchangeRate::tableName();
         $table_banks = models\Bank::tableName();
                 
         $today->modify(($delta * $period) .' day');
@@ -230,7 +230,7 @@ class Hryvna extends Component
             $today = $this->assignActualDate();
         }
 
-        $table_exchanges = models\Exchange::tableName();
+        $table_exchanges = models\ExchangeRate::tableName();
         $banks_table = models\Bank::tableName();
         
         $today->modify($period .' day');

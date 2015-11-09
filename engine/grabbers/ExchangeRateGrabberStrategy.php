@@ -2,44 +2,88 @@
 
 namespace app\grabbers;
 
-use app\models\Exchange;
+use app\models\ExchangeRateGrabberInfo;
 use app\models\Currency;
 
-use app\interfaces\ExchangeGrabbingStrategy;
+use app\grabbers\CommonBankGrabStrategy;
 
 /**
  * This is abstract class for grabbing banks exchanges
  */
-abstract class ExchangeGrabber {
+abstract class ExchangeRateGrabberStrategy {
 
     /** @var array Array to store grabbed exchange values */
-    private $exchanges = [];
+    protected $exchanges = [];
+
+    /** @var ExchangeRateGrabberInfo Metadata of grabber */
+    protected $info;
+
+    public static function create($bankname) {
+
+        $classname = __NAMESPACE__ . '\\banks\\' . $bankname;
+
+        if (class_exists($classname)) {
+            return new $classname;
+        }
+
+        return new CommonBankGrabStrategy($bankname);
+        
+    }
 
     /**
-     * This is factory to create exchange rates model using grabbing strategy
+     * Constructor is getting database grabber info from class name
      * 
-     * @param ExchangeGrabbingStrategy $strategy
-     * @return Exchange
+     * @throws \Exception Throws \Exception if echange rate grabber info not found
      */
-    public static function buildExchange(ExchangeGrabbingStrategy $strategy) {
+    public function __construct() {
+
+        $classname = $this->getBankName();
+
+        $info = ExchangeRateGrabberInfo::find()->where(['name' => $classname])->one();
+
+        if (empty($info)) {
+            throw new \Exception("broken class: metadata for $classname not found");
+        }
+
+        $this->info = $info->attributes;
+
+    }
+
+    /**
+     * Site URL generation
+     * Method(not variable or constant) is used because some sites are require extra data like dates
+     * 
+     * @return string URL of site to grab
+     */
+    protected function getUrl() {
+
+        if (!empty($this->info['url'])) {
+            return $this->info['url'];
+        }
+    }
+
+    /**
+     * Get Bank ID from strategy metadata
+     * 
+     * @return int
+     */
+    public function getBankId() {
+        if (!empty($this->info['bank_id'])) {
+            return $this->info['bank_id'];
+        }
+    }
+    
+    /**
+     * Getting bank grabbing strategy name from classname
+     * 
+     * @return string
+     */
+    public function getBankName() {
+
+        $classname = get_class($this);
+        $classname = substr($classname, strrpos($classname, '\\') + 1);
         
-        // call stragery and get values
-
-        $values = $strategy->grab();
-
-        // create and return model
-
-        $exchange = new Exchange();
-
-        $exchange->bank_id = $strategy::bank_id;
-        $exchange->dollar_buy = $values[Currency::DOLLAR_ID]['buy'];
-        $exchange->dollar_sale = $values[Currency::DOLLAR_ID]['sale'];
-        $exchange->euro_buy = $values[Currency::EURO_ID]['buy'];
-        $exchange->euro_sale = $values[Currency::EURO_ID]['sale'];
-        $exchange->grab_date = (new \DateTime)->format('Y-m-d');
-
-        return $exchange;
-
+        return $classname;
     }
 
     /**
@@ -102,29 +146,7 @@ abstract class ExchangeGrabber {
         return true;
 
     }
-    
-    /**
-     * Method to save dollar values to exchange array
-     * 
-     * @param float $buy
-     * @param float $sale
-     * @param string $check
-     */
-    protected function saveDollarValues($buy, $sale, $check) {
-        $this->saveCurrencyValues(Currency::DOLLAR_ID, $buy, $sale, $check);
-    }
-
-    /**
-     * Method to save euro values to exchange array
-     * 
-     * @param float $buy
-     * @param float $sale
-     * @param string $check
-     */
-    protected function saveEuroValues($buy, $sale, $check) {
-        $this->saveCurrencyValues(Currency::EURO_ID, $buy, $sale, $check);
-    }
-    
+   
     /**
      * Method to save any currency values to exchange array
      * 
@@ -133,7 +155,7 @@ abstract class ExchangeGrabber {
      * @param float $sale
      * @param string $check
      */
-    private function saveCurrencyValues($currency_id, $buy, $sale, $check) {
+    protected function saveCurrencyValues($currency_id, $buy, $sale, $check) {
         $this->exchanges[$currency_id] = [
             'buy' => $buy,
             'sale' => $sale,

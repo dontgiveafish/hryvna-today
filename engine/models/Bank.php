@@ -55,6 +55,6 @@ class Bank extends \yii\db\ActiveRecord
      */
     public function getExchanges()
     {
-        return $this->hasMany(Exchanges::className(), ['bank_id' => 'id']);
+        return $this->hasMany(ExchangeRate::className(), ['bank_id' => 'id']);
     }
 }

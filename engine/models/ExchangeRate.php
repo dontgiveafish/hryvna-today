@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use Yii;
+
 /**
  * This is the model class for table "exchanges".
  *
@@ -15,7 +17,7 @@ namespace app\models;
  *
  * @property Banks $bank
  */
-class Exchange extends \yii\db\ActiveRecord
+class ExchangeRate extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc

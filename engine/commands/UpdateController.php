@@ -2,7 +2,11 @@
 
 namespace app\commands;
 
-use app\grabbers\ExchangeGrabber;
+use app\models\ExchangeRate;
+use app\models\Currency;
+
+use app\grabbers\ExchangeRateGrabber;
+use app\grabbers\ExchangeRateGrabberStrategy;
 
 use yii\console\Controller;
 
@@ -20,17 +24,7 @@ class UpdateController extends Controller
      */
     public function actionBank($strategy_classname, $tries_count = 5, $seconds_to_sleep = 10)
     {
-
-        // look for exchange grabbing strategy class
-        
-        $strategy_classname_full = "app\grabbers\banks\\$strategy_classname";
-
-        if (!class_exists($strategy_classname_full)) {
-            throw new \Exception("Strategy for $strategy_classname not found");
-        }
-
-        $strategy = new $strategy_classname_full();
-
+       
         // start tries
         
         $try_number = 0;
@@ -38,7 +32,20 @@ class UpdateController extends Controller
         while (empty($exchange) && $try_number++ <= $tries_count) {
 
             try {
-                $exchange = ExchangeGrabber::buildExchange($strategy);
+
+                $grabber = new ExchangeRateGrabber(ExchangeRateGrabberStrategy::create($strategy_classname));
+                $data = $grabber->execute();
+
+                $exchange = new ExchangeRate();
+
+                $exchange->bank_id = $grabber->getBankId();
+                $exchange->dollar_buy = $data[Currency::DOLLAR_ID]['buy'];
+                $exchange->dollar_sale = $data[Currency::DOLLAR_ID]['sale'];
+                $exchange->euro_buy = $data[Currency::EURO_ID]['buy'];
+                $exchange->euro_sale = $data[Currency::EURO_ID]['sale'];
+                $exchange->grab_date = (new \DateTime)->format('Y-m-d');
+
+                
             }
             catch (\Exception $ex) {
 
