@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Жов 20 2015 р., 20:00
--- Версія сервера: 5.5.44-0ubuntu0.14.04.1
--- Версія PHP: 5.5.9-1ubuntu4.13
+-- Час створення: Лис 09 2015 р., 22:02
+-- Версія сервера: 5.5.46-0ubuntu0.14.04.2
+-- Версія PHP: 5.5.9-1ubuntu4.14
 
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -77,10 +77,11 @@ CREATE TABLE IF NOT EXISTS `banks` (
 
 DROP TABLE IF EXISTS `currency`;
 CREATE TABLE IF NOT EXISTS `currency` (
-  `id` int(11) NOT NULL,
+  `id` int(10) unsigned NOT NULL,
   `code` varchar(5) NOT NULL,
   `title` varchar(128) NOT NULL,
-  `symbol` varchar(128) NOT NULL
+  `symbol` varchar(128) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -103,6 +104,54 @@ CREATE TABLE IF NOT EXISTS `exchanges_new` (
   UNIQUE KEY `bank_id and date` (`bank_id`,`grab_date`),
   KEY `id` (`id`),
   KEY `bank_id` (`bank_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблиці `grab_banks`
+--
+
+DROP TABLE IF EXISTS `grab_banks`;
+CREATE TABLE IF NOT EXISTS `grab_banks` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `bank_id` int(10) unsigned NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `url` varchar(256) DEFAULT NULL,
+  `cells_selector` varchar(256) DEFAULT NULL,
+  `cells_idx` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `bank_id` (`bank_id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблиці `grab_banks_currency`
+--
+
+DROP TABLE IF EXISTS `grab_banks_currency`;
+CREATE TABLE IF NOT EXISTS `grab_banks_currency` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `bank_id` int(10) unsigned NOT NULL,
+  `currency_id` int(10) unsigned NOT NULL,
+  `currency_multiplier` decimal(10,5) DEFAULT NULL,
+  `buy_tr_selector` varchar(256) DEFAULT NULL,
+  `buy_tr_idx` int(10) DEFAULT NULL,
+  `buy_td_selector` varchar(256) DEFAULT NULL,
+  `buy_td_idx` int(10) DEFAULT NULL,
+  `sale_tr_selector` varchar(256) DEFAULT NULL,
+  `sale_tr_idx` int(10) DEFAULT NULL,
+  `sale_td_selector` varchar(256) DEFAULT NULL,
+  `sale_td_idx` int(10) DEFAULT NULL,
+  `check_tr_selector` varchar(256) DEFAULT NULL,
+  `check_tr_idx` int(10) DEFAULT NULL,
+  `check_td_selector` varchar(256) DEFAULT NULL,
+  `check_td_idx` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `bank_id` (`bank_id`,`currency_id`),
+  KEY `currency_id` (`currency_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 --
@@ -120,6 +169,19 @@ ALTER TABLE `api_log`
 --
 ALTER TABLE `exchanges_new`
   ADD CONSTRAINT `exchanges_new_ibfk_1` FOREIGN KEY (`bank_id`) REFERENCES `banks` (`id`);
+
+--
+-- Обмеження зовнішнього ключа таблиці `grab_banks`
+--
+ALTER TABLE `grab_banks`
+  ADD CONSTRAINT `grab_banks_ibfk_1` FOREIGN KEY (`bank_id`) REFERENCES `banks` (`id`);
+
+--
+-- Обмеження зовнішнього ключа таблиці `grab_banks_currency`
+--
+ALTER TABLE `grab_banks_currency`
+  ADD CONSTRAINT `grab_banks_currency_ibfk_1` FOREIGN KEY (`bank_id`) REFERENCES `banks` (`id`),
+  ADD CONSTRAINT `grab_banks_currency_ibfk_2` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`);
 SET FOREIGN_KEY_CHECKS=1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
