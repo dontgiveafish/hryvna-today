@@ -8,18 +8,24 @@ use app\grabbers\ExchangeRateGrabberStrategy;
 use app\grabbers\ExchangeRateGrabbingStrategyInterface;
 
 /**
- * This is class for grabbing not typical bank API
+ * This is class for grabbing non-common Privatbank API
  */
-class Privat extends ExchangeRateGrabberStrategy implements ExchangeRateGrabbingStrategyInterface {
-
+class Privat extends ExchangeRateGrabberStrategy implements ExchangeRateGrabbingStrategyInterface
+{
     /**
-     * This is how Privatbank API works
+     * This method is adapted for Privatbank API
      * 
-     * @throws \Exception
+     * {@inheritdoc}
      */
-    protected function getValues() {
+    public function execute()
+    {
+        $url = $this->getURL();
 
-        $html = file_get_contents($this->getUrl());
+        if (empty($url)) {
+            throw new \Exception('broken class:no url');
+        }
+        
+        $html = file_get_contents($url);
 
         if (empty($html)) {
             throw new \Exception('broken markup:no data');
@@ -27,7 +33,9 @@ class Privat extends ExchangeRateGrabberStrategy implements ExchangeRateGrabbing
 
         $json = json_decode($html);
 
-        if (empty($json)) throw new \Exception('broken json: no data');
+        if (empty($json)) {
+            throw new \Exception('broken json: no data');
+        }
 
         // USD
 
@@ -44,7 +52,8 @@ class Privat extends ExchangeRateGrabberStrategy implements ExchangeRateGrabbing
         $check = $this->grabJson($json, 1, 'ccy');
 
         $this->saveCurrencyValues(Currency::EURO_ID, $buy, $sale, $check);
-
+        
+        return $this->exchanges;
     }
 
     /**
@@ -56,14 +65,12 @@ class Privat extends ExchangeRateGrabberStrategy implements ExchangeRateGrabbing
      * @return type
      * @throws \Exception
      */
-    private function grabJson(array $json_array, $currency_id, $key) {
-
+    private function grabJson(array $json_array, $currency_id, $key)
+    {
         if (empty($json_array[$currency_id]->$key)) {
             throw new \Exception('broken json: missing value');
         }
 
         return $json_array[$currency_id]->$key;
-
     }
-
 }

@@ -8,10 +8,15 @@ use app\grabbers\ExchangeRateGrabbingStrategyInterface;
 /**
  * This is class for grabbing bank
  */
-class Nbu extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrategyInterface {
-
-    protected function getURL() {
-
+class Nbu extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrategyInterface
+{
+    /**
+     * This method is adding query with current date to metadata URL
+     * 
+     * {@inheritdoc}
+     */
+    protected function getURL()
+    {
         if (empty($this->info['url'])) {
             return;
         }

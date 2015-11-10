@@ -14,7 +14,8 @@ use serhatozles\simplehtmldom\simple_html_dom_node;
 /**
  * This is class for common grabbing banks exchange rates
  */
-class CommonBankGrabStrategy extends ExchangeRateGrabberStrategy implements ExchangeRateGrabbingStrategyInterface {
+class CommonBankGrabStrategy extends ExchangeRateGrabberStrategy implements ExchangeRateGrabbingStrategyInterface
+{
 
     /** @var string String to store bank strategy name */
     protected $bankname;
@@ -24,28 +25,29 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategy implements Exch
      * 
      * {@inheritdoc}
      */
-    public function __construct($bankname = null) {
-
+    public function __construct($bankname = null)
+    {
         $this->bankname = empty($bankname) ? parent::getBankName() : $bankname;
 
         parent::__construct();
-
     }
     
     /**
      * {@inheritdoc}
      */
-    public function getBankName() {
+    public function getBankName()
+    {
             return $this->bankname;
     }
 
     /**
      * This is how typical bank grabbing works
      * Get URL, scrub document, cells, exchanges, throw exception if something is empty or wrong
-     * @throws \Exception
+     * 
+     * {@inheritdoc}
      */
-    protected function getValues() {
-
+    public function execute()
+    {
         // grab bank exchange page, check
 
         $url = $this->getURL();
@@ -57,13 +59,15 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategy implements Exch
         // grab bank exchange page, check
 
         $html = SimpleHTMLDom::file_get_html($url);
+
         if (empty($html)) {
             throw new \Exception('broken markup:no html');
         }
 
-        // check exchange table
+        // grab exchange table, check
         
         $cells = $this->grabCells($html);
+
         if (empty($cells)) {
             throw new \Exception('broken markup:no cells');
         }
@@ -71,6 +75,10 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategy implements Exch
         // grab exchange values
 
         $this->grabValues($cells);
+        
+        // return
+        
+        return $this->exchanges;
     }
 
     /**
@@ -79,14 +87,13 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategy implements Exch
      * @param simple_html_dom $html
      * @return simple_html_dom_node
      */
-    protected function grabCells(simple_html_dom $html) {
-
+    protected function grabCells(simple_html_dom $html)
+    {
         if (!empty($this->info['cells_selector']) && isset($this->info['cells_idx'])) {
 
             return $html->find($this->info['cells_selector'], $this->info['cells_idx']);
 
         }
-
     }
 
     /**
@@ -95,8 +102,8 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategy implements Exch
      * @param simple_html_dom_node $cells DOM node
      * @return void
      */
-    protected function grabValues(simple_html_dom_node $cells) {
-
+    protected function grabValues(simple_html_dom_node $cells)
+    {
         $currencies = ExchangeRateCurrencyGrabberInfo::find()->where(['bank_id' => $this->getBankId()])->all();
 
         if (empty($currencies)) {
@@ -118,8 +125,8 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategy implements Exch
             $multiplier = empty($currency_info->currency_multiplier) ? 1 : $currency_info->currency_multiplier;
 
             $this->saveCurrencyValues($currency_info->currency_id, $buy * $multiplier, $sale * $multiplier, $check);
-        }
 
+        }
     }
 
     /**
@@ -135,8 +142,8 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategy implements Exch
      * @return string
      * @throws \Exception
      */
-    protected function grabTableCell(simple_html_dom_node $cells, $tr_idx, $td_idx, $tr_selector = null, $td_selector = null) {
-
+    protected function grabTableCell(simple_html_dom_node $cells, $tr_idx, $td_idx, $tr_selector = null, $td_selector = null)
+    {
         // reassign empty selectors if any
         
         $tr_selector = $tr_selector ?: 'tr';
@@ -170,9 +177,7 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategy implements Exch
         }
         
         // return filtered result
-
         return $data;
-
     }
 
 }

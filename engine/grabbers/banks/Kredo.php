@@ -12,9 +12,13 @@ use serhatozles\simplehtmldom\simple_html_dom_node;
 /**
  * This is class for grabbing bank
  */
-class Kredo extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrategyInterface {
-
-    protected function grabValues(simple_html_dom_node $cells) {
+class Kredo extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrategyInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    protected function grabValues(simple_html_dom_node $cells)
+    {
 
         // USD
 
@@ -37,5 +41,4 @@ class Kredo extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrate
         $this->saveCurrencyValues(Currency::EURO_ID, $buy, $sale, $check);
 
     }
-
 }

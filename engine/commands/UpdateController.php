@@ -34,7 +34,7 @@ class UpdateController extends Controller
             try {
 
                 $grabber = new ExchangeRateGrabber(ExchangeRateGrabberStrategy::create($strategy_classname));
-                $data = $grabber->execute();
+                $data = $grabber->grab();
 
                 $exchange = new ExchangeRate();
 
