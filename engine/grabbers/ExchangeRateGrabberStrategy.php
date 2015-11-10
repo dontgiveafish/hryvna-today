@@ -17,6 +17,13 @@ abstract class ExchangeRateGrabberStrategy
     /** @var ExchangeRateGrabberInfo Metadata of grabber */
     protected $info;
 
+    /**
+     * Create strategry from strategy name
+     * It can return existing class object or construct CommonBankGrabStrategy with bankname
+     * 
+     * @param string $bankname
+     * @return ExchangeRateGrabbingStrategyInterface
+     */
     public static function create($bankname)
     {
         $classname = __NAMESPACE__ . '\\banks\\' . $bankname;
