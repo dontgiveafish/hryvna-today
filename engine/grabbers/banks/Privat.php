@@ -4,13 +4,13 @@ namespace app\grabbers\banks;
 
 use app\models\Currency;
 
-use app\grabbers\ExchangeRateGrabberStrategy;
+use app\grabbers\ExchangeRateGrabberStrategyAbstract;
 use app\grabbers\ExchangeRateGrabbingStrategyInterface;
 
 /**
  * This is class for grabbing non-common Privatbank API
  */
-class Privat extends ExchangeRateGrabberStrategy implements ExchangeRateGrabbingStrategyInterface
+class Privat extends ExchangeRateGrabberStrategyAbstract implements ExchangeRateGrabbingStrategyInterface
 {
     /**
      * This method is adapted for Privatbank API

@@ -4,7 +4,7 @@ namespace app\grabbers;
 
 use app\models\ExchangeRateCurrencyGrabberInfo;
 
-use app\grabbers\ExchangeRateGrabberStrategy;
+use app\grabbers\ExchangeRateGrabberStrategyAbstract;
 use app\grabbers\ExchangeRateGrabbingStrategyInterface;
 
 use serhatozles\simplehtmldom\SimpleHTMLDom;
@@ -14,7 +14,7 @@ use serhatozles\simplehtmldom\simple_html_dom_node;
 /**
  * This is class for common grabbing banks exchange rates
  */
-class CommonBankGrabStrategy extends ExchangeRateGrabberStrategy implements ExchangeRateGrabbingStrategyInterface
+class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract implements ExchangeRateGrabbingStrategyInterface
 {
 
     /** @var string String to store bank strategy name */

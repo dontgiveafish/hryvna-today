@@ -8,7 +8,7 @@ use app\grabbers\CommonBankGrabStrategy;
 /**
  * This is abstract class for grabbing banks exchanges
  */
-abstract class ExchangeRateGrabberStrategy
+abstract class ExchangeRateGrabberStrategyAbstract
 {
 
     /** @var array Array to store grabbed exchange values */
