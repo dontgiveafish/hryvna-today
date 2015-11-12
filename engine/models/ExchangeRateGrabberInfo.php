@@ -23,7 +23,7 @@ class ExchangeRateGrabberInfo extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'grab_banks';
+        return 'grabber_strategy_info';
     }
 
     /**

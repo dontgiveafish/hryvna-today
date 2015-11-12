@@ -117,7 +117,7 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
     {
         
         // do this with model many to many
-        $currencies = ExchangeRateCurrencyGrabberInfo::find()->where(['bank_id' => $this->info['id']])->all();
+        $currencies = ExchangeRateCurrencyGrabberInfo::find()->where(['strategy_id' => $this->info['id']])->all();
 
         if (empty($currencies)) {
             throw new \Exception('broken metadata: no rows for currencies');

@@ -3,19 +3,13 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Лис 09 2015 р., 22:02
+-- Час створення: Лис 12 2015 р., 23:49
 -- Версія сервера: 5.5.46-0ubuntu0.14.04.2
 -- Версія PHP: 5.5.9-1ubuntu4.14
 
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- База даних: `hryvna`
@@ -99,42 +93,23 @@ CREATE TABLE IF NOT EXISTS `exchanges_new` (
   `euro_buy` decimal(10,5) NOT NULL,
   `euro_sale` decimal(10,5) NOT NULL,
   `grab_date` date NOT NULL,
-  `bank_time` datetime NOT NULL,
+  `bank_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `bank_id and date` (`bank_id`,`grab_date`),
   KEY `id` (`id`),
   KEY `bank_id` (`bank_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Структура таблиці `grab_banks`
---
-
-DROP TABLE IF EXISTS `grab_banks`;
-CREATE TABLE IF NOT EXISTS `grab_banks` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `bank_id` int(10) unsigned NOT NULL,
-  `name` varchar(64) NOT NULL,
-  `url` varchar(256) DEFAULT NULL,
-  `cells_selector` varchar(256) DEFAULT NULL,
-  `cells_idx` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `bank_id` (`bank_id`),
-  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблиці `grab_banks_currency`
+-- Структура таблиці `grabber_strategy_currency`
 --
 
-DROP TABLE IF EXISTS `grab_banks_currency`;
-CREATE TABLE IF NOT EXISTS `grab_banks_currency` (
+DROP TABLE IF EXISTS `grabber_strategy_currency`;
+CREATE TABLE IF NOT EXISTS `grabber_strategy_currency` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `bank_id` int(10) unsigned NOT NULL,
+  `strategy_id` int(10) unsigned NOT NULL,
   `currency_id` int(10) unsigned NOT NULL,
   `currency_multiplier` decimal(10,5) DEFAULT NULL,
   `buy_tr_selector` varchar(256) DEFAULT NULL,
@@ -150,8 +125,27 @@ CREATE TABLE IF NOT EXISTS `grab_banks_currency` (
   `check_td_selector` varchar(256) DEFAULT NULL,
   `check_td_idx` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `bank_id` (`bank_id`,`currency_id`),
+  KEY `bank_id` (`strategy_id`,`currency_id`),
   KEY `currency_id` (`currency_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблиці `grabber_strategy_info`
+--
+
+DROP TABLE IF EXISTS `grabber_strategy_info`;
+CREATE TABLE IF NOT EXISTS `grabber_strategy_info` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `bank_id` int(10) unsigned DEFAULT NULL,
+  `name` varchar(64) NOT NULL,
+  `url` varchar(256) DEFAULT NULL,
+  `cells_selector` varchar(256) DEFAULT NULL,
+  `cells_idx` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `bank_id` (`bank_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 --
@@ -171,19 +165,15 @@ ALTER TABLE `exchanges_new`
   ADD CONSTRAINT `exchanges_new_ibfk_1` FOREIGN KEY (`bank_id`) REFERENCES `banks` (`id`);
 
 --
--- Обмеження зовнішнього ключа таблиці `grab_banks`
+-- Обмеження зовнішнього ключа таблиці `grabber_strategy_currency`
 --
-ALTER TABLE `grab_banks`
-  ADD CONSTRAINT `grab_banks_ibfk_1` FOREIGN KEY (`bank_id`) REFERENCES `banks` (`id`);
+ALTER TABLE `grabber_strategy_currency`
+  ADD CONSTRAINT `grabber_strategy_currency_ibfk_3` FOREIGN KEY (`strategy_id`) REFERENCES `grabber_strategy_info` (`id`),
+  ADD CONSTRAINT `grabber_strategy_currency_ibfk_2` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`);
 
 --
--- Обмеження зовнішнього ключа таблиці `grab_banks_currency`
+-- Обмеження зовнішнього ключа таблиці `grabber_strategy_info`
 --
-ALTER TABLE `grab_banks_currency`
-  ADD CONSTRAINT `grab_banks_currency_ibfk_1` FOREIGN KEY (`bank_id`) REFERENCES `banks` (`id`),
-  ADD CONSTRAINT `grab_banks_currency_ibfk_2` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`);
+ALTER TABLE `grabber_strategy_info`
+  ADD CONSTRAINT `grabber_strategy_info_ibfk_1` FOREIGN KEY (`bank_id`) REFERENCES `banks` (`id`);
 SET FOREIGN_KEY_CHECKS=1;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

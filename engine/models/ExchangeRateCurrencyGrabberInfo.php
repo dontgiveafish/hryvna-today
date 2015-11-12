@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "grab_banks_currency".
  *
  * @property integer $id
- * @property integer $bank_id
+ * @property integer $strategy_id
  * @property integer $currency_id
  * @property string $currency_multiplier
  * @property string $sale_tr_selector
@@ -34,7 +34,7 @@ class ExchangeRateCurrencyGrabberInfo extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'grab_banks_currency';
+        return 'grabber_strategy_currency';
     }
 
     /**
@@ -43,8 +43,8 @@ class ExchangeRateCurrencyGrabberInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['bank_id', 'currency_id'], 'required'],
-            [['bank_id', 'currency_id', 'sale_tr_idx', 'sale_td_idx', 'buy_tr_idx', 'buy_td_idx', 'check_tr_idx', 'check_td_idx'], 'integer'],
+            [['strategy_id', 'currency_id'], 'required'],
+            [['strategy_id', 'currency_id', 'sale_tr_idx', 'sale_td_idx', 'buy_tr_idx', 'buy_td_idx', 'check_tr_idx', 'check_td_idx'], 'integer'],
             [['currency_multiplier'], 'number'],
             [['sale_tr_selector', 'sale_td_selector', 'buy_tr_selector', 'buy_td_selector', 'check_tr_selector', 'check_td_selector'], 'string', 'max' => 256]
         ];
@@ -57,7 +57,7 @@ class ExchangeRateCurrencyGrabberInfo extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'bank_id' => 'Bank ID',
+            'strategy_id' => 'Strategy ID',
             'currency_id' => 'Currency ID',
             'currency_multiplier' => 'Currency Multiplier',
             'sale_tr_selector' => 'Sale Tr Selector',
@@ -86,8 +86,8 @@ class ExchangeRateCurrencyGrabberInfo extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getBank()
+    public function getInfo()
     {
-        return $this->hasOne(Banks::className(), ['id' => 'bank_id']);
+        return $this->hasOne(ExchangeRateCurrencyGrabberInfo::className(), ['id' => 'strategy_id']);
     }
 }
