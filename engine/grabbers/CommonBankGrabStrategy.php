@@ -58,7 +58,18 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
 
         // grab bank exchange page, check
 
-        $html = SimpleHTMLDom::file_get_html($url);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION , 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36');
+        $str = curl_exec($curl);
+
+        if (empty($str)) {
+            throw new \Exception('broken remote:no document on link');
+        }
+        
+        $html = SimpleHTMLDom::str_get_html($str);
 
         if (empty($html)) {
             throw new \Exception('broken markup:no html');
@@ -78,7 +89,7 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
         
         // return
         
-        return $this->exchanges;
+        return $this->returnValues();
     }
 
     /**
@@ -104,10 +115,12 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
      */
     protected function grabValues(simple_html_dom_node $cells)
     {
-        $currencies = ExchangeRateCurrencyGrabberInfo::find()->where(['bank_id' => $this->getBankId()])->all();
+        
+        // do this with model many to many
+        $currencies = ExchangeRateCurrencyGrabberInfo::find()->where(['bank_id' => $this->info['id']])->all();
 
         if (empty($currencies)) {
-            throw new Exception('broken metadata: no rows for currencies');
+            throw new \Exception('broken metadata: no rows for currencies');
         }
 
         foreach ($currencies as $currency_info) {
@@ -164,18 +177,18 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
         if (empty($cell)) {
             throw new \Exception('broken markup: no cells cell');
         }
-        
+
         // get data
 
         $data = $cell->plaintext;
 
         // filter data
-        
+
         if (!empty($data)) {
             $data = str_replace(',', '.', $data);
             $data = str_replace(['&nbsp;', ' '], '', $data);
         }
-        
+
         // return filtered result
         return $data;
     }

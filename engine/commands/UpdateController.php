@@ -103,7 +103,7 @@ class UpdateController extends Controller
      */
     public function actionAll($tries_count = 5, $seconds_to_sleep = 10)
     {
-        $banks_to_grab = ExchangeRateGrabberInfo::find()->orderBy('bank_id')->all();
+        $banks_to_grab = ExchangeRateGrabberInfo::find()->where(['not', ['bank_id' => null]])->orderBy('bank_id')->all();
         
         foreach ($banks_to_grab as $bank) {
             $this->actionBank($bank->name, $tries_count, $seconds_to_sleep);

@@ -53,7 +53,7 @@ class Privat extends ExchangeRateGrabberStrategyAbstract implements ExchangeRate
 
         $this->saveCurrencyValues(Currency::EURO_ID, $buy, $sale, $check);
         
-        return $this->exchanges;
+        return $this->returnValues();
     }
 
     /**

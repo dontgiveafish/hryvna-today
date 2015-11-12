@@ -2,7 +2,9 @@
 
 namespace app\grabbers;
 
+use app\models\Currency;
 use app\models\ExchangeRateGrabberInfo;
+
 use app\grabbers\CommonBankGrabStrategy;
 
 /**
@@ -99,13 +101,48 @@ abstract class ExchangeRateGrabberStrategyAbstract
      * @param float $sale
      * @param string $check
      */
-    protected function saveCurrencyValues($currency_id, $buy, $sale, $check)
+    final protected function saveCurrencyValues($currency_id, $buy, $sale, $check)
     {
         $this->exchanges[$currency_id] = [
             'buy' => $buy,
             'sale' => $sale,
             'check' => $check
         ];        
+    }
+    
+    /**
+     * This method is to validate and return exchange rates
+     * 
+     * @return Exchange
+     * @throws \Exception
+     */
+    final protected function returnValues()
+    {
+        // check if values exists
+
+        if (empty($this->exchanges)) {
+            throw new \Exception('broken markup:no exchange');
+        }
+
+        // check for values of exchanges and currency checker
+
+        $currency_checker = [
+            Currency::DOLLAR_ID => ['USD', '$'],
+            Currency::EURO_ID => ['EUR', '€', '&euro;']
+        ];
+
+        foreach ($this->exchanges as $currency => $exchange) {
+
+            if ($currency * $exchange['buy'] * $exchange['sale'] == 0) {
+                throw new \Exception('broken markup:no exchange');
+            }
+
+            if (!in_array($exchange['check'], $currency_checker[$currency])) {
+                throw new \Exception('broken markup:check fail');
+            }
+        }
+
+        return $this->exchanges;
     }
 
 }

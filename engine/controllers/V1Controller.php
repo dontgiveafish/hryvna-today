@@ -84,7 +84,7 @@ class V1Controller extends Controller
      * @throws \Exception
      */
     private function preparePeriod($param = 'period') {
-        
+
         $string_period = $this->prepareParam($param);
         
         if (empty($string_period)) {

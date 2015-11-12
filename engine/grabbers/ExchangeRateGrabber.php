@@ -3,7 +3,6 @@
 namespace app\grabbers;
 
 use app\grabbers\ExchangeRateGrabbingStrategyInterface;
-use app\models\Currency;
 
 class ExchangeRateGrabber
 {
@@ -29,13 +28,7 @@ class ExchangeRateGrabber
      */
     public function grab()
     {    
-        $data = $this->strategy->execute();
-        
-        if (!$this->validateValues($data)) {
-            throw new \Exception('strategy data validation failed');
-        }
-        
-        return $data;
+        return $this->strategy->execute();
     }
     
     /**
@@ -48,38 +41,4 @@ class ExchangeRateGrabber
         return $this->strategy->getBankId();
     }
 
-    /**
-     * This method is checking exchange rates array from strategy
-     * 
-     * @return Exchange
-     * @throws \Exception
-     */
-    private function validateValues($values)
-    {
-        // check if values exists
-
-        if (empty($values)) {
-            throw new \Exception('broken markup:no exchange');
-        }
-
-        // check for values of exchanges and currency checker
-
-        $currency_checker = [
-            Currency::DOLLAR_ID => ['USD', '$'],
-            Currency::EURO_ID => ['EUR', '€', '&euro;']
-        ];
-
-        foreach ($values as $currency => $exchange) {
-
-            if ($currency * $exchange['buy'] * $exchange['sale'] == 0) {
-                throw new \Exception('broken markup:no exchange');
-            }
-
-            if (!in_array($exchange['check'], $currency_checker[$currency])) {
-                throw new \Exception('broken markup:check fail');
-            }
-        }
-
-        return true;
-    }
 }
