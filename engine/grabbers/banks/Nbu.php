@@ -17,7 +17,9 @@ class Nbu extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrategy
      */
     protected function getURL()
     {
-        if (empty($this->info['url'])) {
+        $url = parent::getUrl();
+
+        if (empty($url)) {
             return;
         }
 
@@ -27,7 +29,7 @@ class Nbu extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrategy
             'date' => (new \DateTime())->format('d.m.Y')
         ]);
 
-        return $this->info['url'] . '?' . $query;
+        return $url . '?' . $query;
     }
 
 }

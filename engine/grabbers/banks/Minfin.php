@@ -24,11 +24,14 @@ class Minfin extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrat
      */
     protected function getURL()
     {
-        if (empty($this->current_curency_alias) || empty($this->info['url'])) {
+        
+        $url = parent::getUrl();
+        
+        if (empty($this->current_curency_alias) || empty($url)) {
             return;
         }
 
-        return str_replace('%CURRENCY%', $this->current_curency_alias, $this->info['url']);
+        return str_replace('%CURRENCY%', $this->current_curency_alias, $url);
     }
     
     public function execute()

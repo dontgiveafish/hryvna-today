@@ -52,7 +52,7 @@ abstract class ExchangeRateGrabberStrategyAbstract
             throw new \Exception("broken class: metadata for $classname not found");
         }
 
-        $this->info = $info->attributes;
+        $this->info = $info;
     }
 
     /**
@@ -63,8 +63,8 @@ abstract class ExchangeRateGrabberStrategyAbstract
      */
     protected function getUrl()
     {
-        if (!empty($this->info['url'])) {
-            return $this->info['url'];
+        if (!empty($this->info->url)) {
+            return $this->info->url;
         }
     }
 
@@ -75,8 +75,8 @@ abstract class ExchangeRateGrabberStrategyAbstract
      */
     public function getBankId()
     {
-        if (!empty($this->info['bank_id'])) {
-            return $this->info['bank_id'];
+        if (!empty($this->info->bank_id)) {
+            return $this->info->bank_id;
         }
     }
     

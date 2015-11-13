@@ -100,9 +100,9 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
      */
     protected function grabCells(simple_html_dom $html)
     {
-        if (!empty($this->info['cells_selector']) && isset($this->info['cells_idx'])) {
+        if (!empty($this->info->cells_selector) && isset($this->info->cells_idx)) {
 
-            return $html->find($this->info['cells_selector'], $this->info['cells_idx']);
+            return $html->find($this->info->cells_selector, $this->info->cells_idx);
 
         }
     }
@@ -116,8 +116,7 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
     protected function grabValues(simple_html_dom_node $cells)
     {
         
-        // do this with model many to many
-        $currencies = ExchangeRateCurrencyGrabberInfo::find()->where(['strategy_id' => $this->info['id']])->all();
+        $currencies = $this->info->grabberStrategyCurrencies;
 
         if (empty($currencies)) {
             throw new \Exception('broken metadata: no rows for currencies');

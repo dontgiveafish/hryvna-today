@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "grab_strategies".
+ * This is the model class for table "grabber_strategy_info".
  *
  * @property integer $id
  * @property integer $bank_id
@@ -14,6 +14,7 @@ use Yii;
  * @property string $cells_selector
  * @property integer $cells_idx
  *
+ * @property ExchangeRateCurrencyGrabberInfo[] $grabberStrategyCurrencies
  * @property Banks $bank
  */
 class ExchangeRateGrabberInfo extends \yii\db\ActiveRecord
@@ -32,12 +33,12 @@ class ExchangeRateGrabberInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['bank_id', 'name'], 'required'],
             [['bank_id', 'cells_idx'], 'integer'],
+            [['name'], 'required'],
             [['name'], 'string', 'max' => 64],
             [['url', 'cells_selector'], 'string', 'max' => 256],
-            [['bank_id'], 'unique'],
-            [['name'], 'unique']
+            [['name'], 'unique'],
+            [['bank_id'], 'unique']
         ];
     }
 
@@ -54,6 +55,14 @@ class ExchangeRateGrabberInfo extends \yii\db\ActiveRecord
             'cells_selector' => 'Cells Selector',
             'cells_idx' => 'Cells Idx',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGrabberStrategyCurrencies()
+    {
+        return $this->hasMany(ExchangeRateCurrencyGrabberInfo::className(), ['strategy_id' => 'id']);
     }
 
     /**
