@@ -27,7 +27,7 @@ class Finance extends CommonBankGrabStrategy implements ExchangeRateGrabbingStra
         $row = $cells->find('tr', $tr_idx);
 
         if (empty($row)) {
-            throw new \Exception('broken markup: no cells row');
+            throw new \LogicException('broken markup: no cells row');
         }
 
         $cell = $row->find('td', $td_idx);
@@ -36,7 +36,7 @@ class Finance extends CommonBankGrabStrategy implements ExchangeRateGrabbingStra
         }
 
         if (empty($cell)) {
-            throw new \Exception('broken markup: no cells cell');
+            throw new \LogicException('broken markup: no cells cell');
         }
 
         return trim($cell->plaintext);

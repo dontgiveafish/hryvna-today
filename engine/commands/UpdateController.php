@@ -21,7 +21,6 @@ class UpdateController extends Controller
      * @param string $strategy_classname Classname of strategy
      * @param int $tries_count Count of tries if caught exception
      * @param int $seconds_to_sleep Seconds to sleep befor new try
-     * @throws \Exception
      */
     public function actionBank($strategy_classname, $tries_count = 5, $seconds_to_sleep = 10)
     {

@@ -53,7 +53,7 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
         $url = $this->getURL();
 
         if (empty($url)) {
-            throw new \Exception('broken class:no url');
+            throw new \LogicException('broken class:no url');
         }
 
         // grab bank exchange page, check
@@ -66,13 +66,13 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
         $str = curl_exec($curl);
 
         if (empty($str)) {
-            throw new \Exception('broken remote:no document on link');
+            throw new \LogicException('broken remote:no document on link');
         }
         
         $html = SimpleHTMLDom::str_get_html($str);
 
         if (empty($html)) {
-            throw new \Exception('broken markup:no html');
+            throw new \LogicException('broken markup:no html');
         }
 
         // grab exchange table, check
@@ -80,7 +80,7 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
         $cells = $this->grabCells($html);
 
         if (empty($cells)) {
-            throw new \Exception('broken markup:no cells');
+            throw new \LogicException('broken markup:no cells');
         }
 
         // grab exchange values
@@ -119,7 +119,7 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
         $currencies = $this->info->grabberStrategyCurrencies;
 
         if (empty($currencies)) {
-            throw new \Exception('broken metadata: no rows for currencies');
+            throw new \LogicException('broken metadata: no rows for currencies');
         }
 
         foreach ($currencies as $currency_info) {
@@ -166,7 +166,7 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
         $row = $cells->find($tr_selector, $tr_idx);
 
         if (empty($row)) {
-            throw new \Exception('broken markup: no cells row');
+            throw new \LogicException('broken markup: no cells row');
         }
 
         // get cell
@@ -174,7 +174,7 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
         $cell = $row->find($td_selector, $td_idx);
 
         if (empty($cell)) {
-            throw new \Exception('broken markup: no cells cell');
+            throw new \LogicException('broken markup: no cells cell');
         }
 
         // get data

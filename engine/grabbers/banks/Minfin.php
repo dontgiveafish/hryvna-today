@@ -64,7 +64,7 @@ class Minfin extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrat
         $cell = $cells->find($cell_selector, $cell_idx);
 
         if (empty($cell)) {
-            throw new \Exception('broken markup: no cells cell');
+            throw new \LogicException('broken markup: no cells cell');
         }
 
         $cell_text = $cell->innertext;

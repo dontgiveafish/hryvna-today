@@ -49,7 +49,7 @@ abstract class ExchangeRateGrabberStrategyAbstract
         $info = ExchangeRateGrabberInfo::find()->where(['name' => $classname])->one();
 
         if (empty($info)) {
-            throw new \Exception("broken class: metadata for $classname not found");
+            throw new \UnexpectedValueException("broken class: metadata for $classname not found");
         }
 
         $this->info = $info;
@@ -113,7 +113,7 @@ abstract class ExchangeRateGrabberStrategyAbstract
     /**
      * This method is to validate and return exchange rates
      * 
-     * @return Exchange
+     * @return array Exchange array
      * @throws \Exception
      */
     final protected function returnValues()
@@ -121,7 +121,7 @@ abstract class ExchangeRateGrabberStrategyAbstract
         // check if values exists
 
         if (empty($this->exchanges)) {
-            throw new \Exception('broken markup:no exchange');
+            throw new \RuntimeException('broken markup:no exchange');
         }
 
         // check for values of exchanges and currency checker
@@ -134,11 +134,11 @@ abstract class ExchangeRateGrabberStrategyAbstract
         foreach ($this->exchanges as $currency => $exchange) {
 
             if ($currency * $exchange['buy'] * $exchange['sale'] == 0) {
-                throw new \Exception('broken markup:no exchange');
+                throw new \RuntimeException('broken markup:no exchange');
             }
 
             if (!in_array($exchange['check'], $currency_checker[$currency])) {
-                throw new \Exception('broken markup:check fail');
+                throw new \RuntimeException('broken markup:check fail');
             }
         }
 

@@ -22,19 +22,19 @@ class Privat extends ExchangeRateGrabberStrategyAbstract implements ExchangeRate
         $url = $this->getURL();
 
         if (empty($url)) {
-            throw new \Exception('broken class:no url');
+            throw new \LogicException('broken class:no url');
         }
         
         $html = file_get_contents($url);
 
         if (empty($html)) {
-            throw new \Exception('broken markup:no data');
+            throw new \LogicException('broken markup:no data');
         }
 
         $json = json_decode($html);
 
         if (empty($json)) {
-            throw new \Exception('broken json: no data');
+            throw new \LogicException('broken json: no data');
         }
 
         // USD
@@ -68,7 +68,7 @@ class Privat extends ExchangeRateGrabberStrategyAbstract implements ExchangeRate
     private function grabJson(array $json_array, $currency_id, $key)
     {
         if (empty($json_array[$currency_id]->$key)) {
-            throw new \Exception('broken json: missing value');
+            throw new \LogicException('broken json: missing value');
         }
 
         return $json_array[$currency_id]->$key;
