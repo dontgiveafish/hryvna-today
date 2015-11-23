@@ -10,8 +10,8 @@
 # Project settings for customize
 
 custom_project_name  = false # default from project name folder
-custom_project_host  = false # default `project_name.local`
-custom_project_alias = false # default `www.project_name.local`
+custom_project_host  = false # default `project_name.dev`
+custom_project_alias = false # default `www.project_name.dev`
 
 custom_ip_address    = false # default "10.0.0.10" IP Address IPv4 private network range
 custom_default_host  = false # default "localserver"
@@ -40,8 +40,8 @@ SCRIPT
 # General project settings for customize
 
 project_name = $custom_project_name || File.basename(File.dirname(__FILE__))
-project_host = $custom_project_host || "#{project_name}.local"
-project_host_alias = $custom_project_host_alias || "www.#{project_name}.local"
+project_host = $custom_project_host || "#{project_name}.dev"
+project_host_alias = $custom_project_host_alias || "api.#{project_name}.dev"
 ip_address = $custom_ip_address || "10.0.0.10"
 default_host = $custom_default_host || "localserver"
 hostmanager_aliases = ["#{project_host}", "#{project_host_alias}"]
@@ -61,9 +61,9 @@ $virtual_host = <<SCRIPT
       ServerName #{project_host}
       ServerAlias #{$project_host_alias}
 
-      DocumentRoot /var/www/#{project_name}
+      DocumentRoot /var/www/#{project_name}/public/hryvna.today
 
-      <Directory /var/www/#{project_name}>
+      <Directory /var/www/#{project_name}/public/hryvna.today>
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
         Order allow,deny
@@ -77,6 +77,26 @@ $virtual_host = <<SCRIPT
     </VirtualHost>" > /etc/apache2/sites-available/#{project_name}.conf
 
     a2ensite #{project_name}
+
+    echo "<VirtualHost *:80>
+      ServerName api.#{project_host}
+
+      DocumentRoot /var/www/#{project_name}/public/api.hryvna.today
+
+      <Directory /var/www/#{project_name}/public/api.hryvna.today>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+      </Directory>
+
+      # Available loglevels: trace8, ..., trace1, debug, info, notice, warn, error, crit, alert, emerg.
+      LogLevel info
+      ErrorLog /var/www/#{project_name}/log/apache-error.log
+      CustomLog /var/www/#{project_name}/log/apache-access.log combined
+    </VirtualHost>" > /etc/apache2/sites-available/api.#{project_name}.conf
+
+    a2ensite api.#{project_name}
 
     # Restart Services
     service apache2 restart
@@ -150,6 +170,11 @@ $script = <<SCRIPT
 
     # Restart Services
     service mysql restart
+
+    # Add database
+    mysql -u root -plocal -e "CREATE DATABASE hryvna CHARACTER SET utf8 COLLATE utf8_general_ci;"
+    mysql -u root -plocal hryvna < /var/www/#{project_name}/migration/database_structure.sql
+    mysql -u root -plocal hryvna < /var/www/#{project_name}/migration/database_data.sql
 
     # Install NodeJs anb tools
     echo "Install NodeJs anb tools..."
