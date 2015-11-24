@@ -3,13 +3,19 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Лис 12 2015 р., 23:50
+-- Час створення: Лис 24 2015 р., 13:13
 -- Версія сервера: 5.5.46-0ubuntu0.14.04.2
 -- Версія PHP: 5.5.9-1ubuntu4.14
 
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- База даних: `hryvna`
@@ -24,7 +30,7 @@ INSERT INTO `banks` (`id`, `type`, `title`, `rate`) VALUES
 (2, 'bank', 'Райффайзен Банк Аваль', 3),
 (3, 'bank', 'ПриватБанк', 2),
 (4, 'bank', 'Кредит Дніпро', 0),
-(5, 'bank', 'Ощадбанк', 4),
+(5, 'bank', 'Ощадбанк', 0),
 (6, 'bank', 'Креді Агріколь Банк', 0),
 (7, 'bank', 'УкрСиббанк', 0),
 (8, 'bank', 'Кредобанк', 0),
@@ -34,7 +40,8 @@ INSERT INTO `banks` (`id`, `type`, `title`, `rate`) VALUES
 (12, 'bank', 'ПроКредит Банк', 0),
 (13, 'bank', 'ПУМБ', 0),
 (14, 'bank', 'Банк Південний', 0),
-(16, 'market', 'Чорний ринок', 5);
+(16, 'market', 'Чорний ринок', 5),
+(17, 'market', 'Міжбанк', 4);
 
 --
 -- Дамп даних таблиці `currency`
@@ -79,7 +86,9 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
 (29, 18, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
 (30, 18, 978, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
 (31, 10, 840, 0.01000, NULL, 5, NULL, 2, NULL, 5, NULL, 3, NULL, 5, NULL, 1),
-(32, 10, 978, 0.01000, NULL, 2, NULL, 2, NULL, 2, NULL, 3, NULL, 2, NULL, 1);
+(32, 10, 978, 0.01000, NULL, 2, NULL, 2, NULL, 2, NULL, 3, NULL, 2, NULL, 1),
+(33, 19, 840, NULL, NULL, 1, NULL, 0, NULL, 1, NULL, 1, NULL, 1, 'th', 0),
+(34, 19, 978, NULL, NULL, 2, NULL, 0, NULL, 2, NULL, 1, NULL, 2, 'th', 0);
 
 --
 -- Дамп даних таблиці `grabber_strategy_info`
@@ -103,5 +112,10 @@ INSERT INTO `grabber_strategy_info` (`id`, `bank_id`, `name`, `url`, `cells_sele
 (15, 16, 'Black', NULL, NULL, NULL),
 (16, NULL, 'Finance', 'http://finance.i.ua/', '.Right .local_table', 0),
 (17, NULL, 'Minfin', 'http://minfin.com.ua/currency/auction/%CURRENCY%/buy/all/', '.au-status .au-status--group', 0),
-(18, NULL, 'Telegraf', 'http://telegraf.com.ua/kurs-valute/', '.kurs-block .right table.kurs-table', 0);
+(18, NULL, 'Telegraf', 'http://telegraf.com.ua/kurs-valute/', '.kurs-block .right table.kurs-table', 0),
+(19, 17, 'Mizhbank', 'http://finance.liga.net/rates/mb/', 'table#link_mb', 0);
 SET FOREIGN_KEY_CHECKS=1;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
