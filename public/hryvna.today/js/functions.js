@@ -1044,10 +1044,10 @@ function chooseBanks() {
 							datasBuy.unshift(parseFloat(arrayBanks[i].date[k].currencyBuy[current_currency]));
 							datasSale.unshift(parseFloat(arrayBanks[i].date[k].currencySale[current_currency]));
 							var cur_date = arrayBanks[i].date[k].dateCurrent;
-							var cur_day = cur_date.substring(0, 2);
-							var cur_month = cur_date.substring(2, 4)-1;
-							var cur_year = cur_date.substring(4, 8)-1;
-							var dateObj = new Date(cur_year, cur_month, cur_day )
+							var cur_day = cur_date.substring(8, 10)-0;
+							var cur_month = cur_date.substring(5, 7)-1;
+							var cur_year = cur_date.substring(0, 4)-1;
+							var dateObj = new Date(cur_year, cur_month, cur_day);
 							var cur_day_number = dateObj.getDay();
 							var cur_day_text;
 							

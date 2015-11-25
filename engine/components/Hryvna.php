@@ -29,11 +29,11 @@ class Hryvna extends Component
         if (empty($this->actual_date)) {
 
             $date_string = $this->getActualDate();
-            $this->actual_date = \DateTime::createFromFormat(self::DATE_FORMAT, $date_string);
+            $this->actual_date = new \DateTime();
 
         }
 
-        return $this->actual_date;
+        return clone $this->actual_date;
         
     }
 
@@ -134,9 +134,17 @@ class Hryvna extends Component
                             AVG(dollar_buy) as dollar_buy_black, AVG(dollar_sale) as dollar_sale_black,
                             AVG(euro_buy) as euro_buy_black, AVG(euro_sale) as euro_sale_black
                         $part_of_query
-                        AND banks.type = 'market'
+                        AND bank_id = 16
 
-                    ) as markets
+                    ) as markets,
+                    (
+                        SELECT
+                            AVG(dollar_buy) as dollar_buy_mizhbank, AVG(dollar_sale) as dollar_sale_mizhbank,
+                            AVG(euro_buy) as euro_buy_mizhbank, AVG(euro_sale) as euro_sale_mizhbank
+                        $part_of_query
+                        AND bank_id = 17
+
+                    ) as mizhbank
             ";
 
             // call this query

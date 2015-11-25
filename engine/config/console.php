@@ -25,6 +25,22 @@ return [
                 ],
             ],
         ],
+        'hryvna' => [
+            'class' => 'app\components\Hryvna',
+        ],
+        'view' => [
+            'renderers' => [
+                'tpl' => [
+                    'class' => 'yii\smarty\ViewRenderer',
+                    'options' => [
+                        'left_delimiter'  => "{{",
+                        'right_delimiter' => "}}",
+                        'caching' => false,
+                        'force_compile' => true,
+                    ]
+                ],
+            ],
+        ],
         'db' => $db,
     ],
     'params' => $params,
