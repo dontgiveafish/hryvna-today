@@ -47,9 +47,9 @@ class Privat extends ExchangeRateGrabberStrategyAbstract implements ExchangeRate
 
         // EUR
 
-        $buy = $this->grabJson($json, 1, 'buy');
-        $sale = $this->grabJson($json, 1, 'sale');
-        $check = $this->grabJson($json, 1, 'ccy');
+        $buy = $this->grabJson($json, 0, 'buy');
+        $sale = $this->grabJson($json, 0, 'sale');
+        $check = $this->grabJson($json, 0, 'ccy');
 
         $this->saveCurrencyValues(Currency::EURO_ID, $buy, $sale, $check);
         
