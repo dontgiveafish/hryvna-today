@@ -10,6 +10,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'gii'],
     'controllerNamespace' => 'app\commands',
+    'language' => 'uk-UA',
     'modules' => [
         'gii' => 'yii\gii\Module',
     ],
@@ -27,6 +28,12 @@ return [
         ],
         'hryvna' => [
             'class' => 'app\components\Hryvna',
+        ],
+        'formatter' => [
+            'dateFormat' => 'yyyy.MM.dd',
+            'decimalSeparator' => ',',
+            'thousandSeparator' => ' ',
+            'currencyCode' => 'UAH',
         ],
         'view' => [
             'renderers' => [
