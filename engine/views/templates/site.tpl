@@ -27,41 +27,40 @@
 	<!--[if lte IE 7]><link rel="stylesheet" href="css/ie7.css" media="screen, projection"><![endif]-->
 	<!-- Media queries style -->
 	<link href="css/mq-all.css" rel="stylesheet" media="screen">
-        <!-- Extra links -->
-        <link rel="alternate" type="application/rss+xml" title="RSS" href="http://hryvna.today/rss.xml" />
 
-        <meta property="og:title" content="Гривня Тудей" />
-        <meta property="og:site_name" content="Гривня Тудей" />
-        <meta property="og:image" content="http://hryvna.today/img/preview.png" />
-        <meta property="og:url" content="http://hryvna.today" />
-        <meta property="og:see_also" content="http://dontgiveafish.com" />
+	<!-- Social -->
+	<meta property="og:title" content="Гривня Тудей" />
+	<meta property="og:site_name" content="Гривня Тудей" />
+	<meta property="og:image" content="http://hryvna.today/img/preview.png" />
+	<meta property="og:url" content="http://hryvna.today" />
+	<meta property="og:see_also" content="http://dontgiveafish.com" />
 
-        {{function name=today}}
-            <td>
-                <div
-                    {{assign var=currency value="dollar_$value"}}
-                    {{assign var=currency value=$review.$currency}}
-                    {{assign var=dollar_value value=$currency.value|string_format:"%.2f"}}
-                    {{assign var=dollar_diff value=$currency.diff|string_format:"%.2f"}}
-                    data-dollar="{{$currency.value|string_format:"%.2f"}}"
-                    data-dollar-diff="{{$currency.diff}}"                   
+	{{function name=today}}
+		<td>
+			<div
+				{{assign var=currency value="dollar_$value"}}
+				{{assign var=currency value=$review.$currency}}
+				{{assign var=dollar_value value=$currency.value|string_format:"%.2f"}}
+				{{assign var=dollar_diff value=$currency.diff|string_format:"%.2f"}}
+				data-dollar="{{$currency.value|string_format:"%.2f"}}"
+				data-dollar-diff="{{$currency.diff}}"
 
-                    {{assign var=currency value="euro_$value"}}
-                    {{assign var=currency value=$review.$currency}}
-                    data-euro="{{$currency.value|string_format:"%.2f"}}"
-                    data-euro-diff="{{$currency.diff}}">
-                    
-                    <span>{{$dollar_value}}
-                    {{if $dollar_diff > 0}}
-                        <i class="icon-arrow-yellow-top"></i>
-                    {{elseif $dollar_diff < 0}}
-                        <i class="icon-arrow-yellow-down"></i>
-                    {{else}}
-                        <i class="icon-arrow-medium"></i>
-                    {{/if}}</span>
-                </div>
-            </td>
-        {{/function}}
+				{{assign var=currency value="euro_$value"}}
+				{{assign var=currency value=$review.$currency}}
+				data-euro="{{$currency.value|string_format:"%.2f"}}"
+				data-euro-diff="{{$currency.diff}}">
+
+				<span>{{$dollar_value}}
+				{{if $dollar_diff > 0}}
+					<i class="icon-arrow-yellow-top"></i>
+				{{elseif $dollar_diff < 0}}
+					<i class="icon-arrow-yellow-down"></i>
+				{{else}}
+					<i class="icon-arrow-medium"></i>
+				{{/if}}</span>
+			</div>
+		</td>
+	{{/function}}
 
 
 </head>
@@ -131,7 +130,7 @@
 							<th colspan="2"><div><span>НБУ</span></div></th>
 							<th><div><span>Банки</span></div></th>
 							<th><div><span>Міжбанк</span></div></th>
-							<th><div><span>Міняли</span></div></th>
+							<th><div><span>Міняйли</span></div></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -219,7 +218,7 @@
 					<tbody></tbody>
 				</table>
 				<!-- bay-sale end -->
-                                <a href="" class="btn-light show-more-banks">Показати більше банків</a>
+				<a href="" class="btn-light show-more-banks">Показати більше банків</a>
 				<div class="scroll-link scroll-link-banks"><a href="#banks">sdf</a></div>
 			</div>
 		</section>
@@ -240,7 +239,7 @@
 					<div class="column">
 						<div class="column-inner">
 							<div class="about-text">
-                                                            <p>Гривня Тудей – невеликий волонтерський проект, що має за мету детально розповісти про актуальний <strong>курс гривні</strong>, використовуючи <strong>просту і зрозумілу</strong> інфографіку.</p>
+								<p>Гривня Тудей – невеликий волонтерський проект, що має за мету детально розповісти про актуальний <strong>курс гривні</strong>, використовуючи <strong>просту і зрозумілу</strong> інфографіку.</p>
 							</div>
 						</div>
 					</div>
