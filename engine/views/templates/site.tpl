@@ -395,7 +395,7 @@
 <!-- Widgets -->
 <script src="js/widgets.js"></script>
 <!-- Main functions -->
-<script src="js/functions.js?v2"></script>
+<script src="js/functions.js?v3"></script>
 <!-- Data -->
 <script src="js/data.js?{{$today->getTimestamp()}}"></script>
 

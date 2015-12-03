@@ -796,13 +796,12 @@ function graficCurrency(start_date) {
 		var bank_date = bank.date;
 		$.each(bank_date,function(j,date){
 			if ( date.dateCurrent == start_date ) {
-				var dateCurrencyBuy = date.currencyBuy[current_currency];
-				var dateCurrencySale = date.currencySale[current_currency];
-				var dateCurrencyBuyIncrement = date.currencyBuyIncrement[current_currency];
-				var dateCurrencySaleIncrement = date.currencySaleIncrement[current_currency];
+				var dateCurrencyBuy = date.currencyBuy[current_currency].toFixed(2);
+				var dateCurrencySale = date.currencySale[current_currency].toFixed(2);
+				var dateCurrencyBuyIncrement = date.currencyBuyIncrement[current_currency].toFixed(2);
+				var dateCurrencySaleIncrement = date.currencySaleIncrement[current_currency].toFixed(2);
 				var dateBarLeft = date.barLeft[current_currency];
 				var datebarRight = date.barRight[current_currency];
-				var bank_
 				
 				// buy_icon
 				if ( parseFloat(dateCurrencyBuyIncrement) > 0 )
@@ -823,8 +822,14 @@ function graficCurrency(start_date) {
 				// adding plus
 				if ( parseFloat(dateCurrencyBuyIncrement) > 0 )
 					dateCurrencyBuyIncrement = '+'+dateCurrencyBuyIncrement;
+				else if (parseFloat(dateCurrencyBuyIncrement) == 0) {
+					dateCurrencyBuyIncrement = '';
+				}
 				if ( parseFloat(dateCurrencySaleIncrement) > 0 )
 					dateCurrencySaleIncrement = '+'+dateCurrencySaleIncrement;
+				else if (parseFloat(dateCurrencySaleIncrement) == 0) {
+					dateCurrencySaleIncrement = '';
+				}
 				if ( bank_index < max_visible_banks )
 					bank_status = '';
 				else
@@ -843,7 +848,7 @@ function graficCurrency(start_date) {
 								<div class="inner">\
 									<div class="inner-text">\
 										<div class="number-c">\
-											<strong>'+dateCurrencyBuy.toFixed(2)+'</strong> <i class="'+buy_icon+'"></i> <span class="increment-currensy">'+dateCurrencyBuyIncrement+'</span>\
+											<strong>'+dateCurrencyBuy+'</strong> <i class="'+buy_icon+'"></i> <span class="increment-currensy">'+dateCurrencyBuyIncrement+'</span>\
 										</div>\
 									</div>\
 								</div>\
@@ -852,7 +857,7 @@ function graficCurrency(start_date) {
 								<div class="inner">\
 									<div class="inner-text">\
 										<div class="number-c">\
-											<strong>'+dateCurrencySale.toFixed(2)+'</strong> <i class="'+sale_icon+'"></i> <span class="increment-currensy">'+dateCurrencySaleIncrement+'</span>\
+											<strong>'+dateCurrencySale+'</strong> <i class="'+sale_icon+'"></i> <span class="increment-currensy">'+dateCurrencySaleIncrement+'</span>\
 										</div>\
 									</div>\
 								</div>	\
