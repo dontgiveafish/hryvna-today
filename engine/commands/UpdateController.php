@@ -80,8 +80,9 @@ class UpdateController extends Controller
 
             $last_exchanges = ExchangeRate::find()->where(['bank_id' => $grabber->getBankId()])->orderBy('grab_date DESC')->one();
 
-            $exchange = clone $last_exchanges;
-            unset($exchange->id);
+            $exchange = new ExchangeRate();
+            $exchange->attributes = $last_exchanges->attributes;
+            $exchange->id = null;
             $exchange->grab_date = (new \DateTime)->format('Y-m-d');
 
             echo ("Last exchange rates will be inserted for $strategy_classname" . PHP_EOL);
