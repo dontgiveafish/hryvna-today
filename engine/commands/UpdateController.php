@@ -36,6 +36,7 @@ class UpdateController extends Controller
 
         // start tries        
         $try_number = 0;
+        $today = (new \DateTime)->format('Y-m-d');
 
         do {
             try {
@@ -43,7 +44,6 @@ class UpdateController extends Controller
 
                 // @todo: hide in factory
 
-                $today = (new \DateTime)->format('Y-m-d');
                 $exchange = ExchangeRate::find()->where(['bank_id' => $grabber->getBankId(), 'grab_date' => $today])->one();
 
                 if (empty($exchange)) {
@@ -83,7 +83,7 @@ class UpdateController extends Controller
             $exchange = new ExchangeRate();
             $exchange->attributes = $last_exchanges->attributes;
             $exchange->id = null;
-            $exchange->grab_date = (new \DateTime)->format('Y-m-d');
+            $exchange->grab_date = $today;
 
             echo ("Last exchange rates will be inserted for $strategy_classname" . PHP_EOL);
 
