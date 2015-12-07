@@ -11,6 +11,7 @@ return [
     'bootstrap' => ['log', 'gii'],
     'controllerNamespace' => 'app\commands',
     'language' => 'uk-UA',
+    'timeZone' => 'Europe/Kiev',
     'modules' => [
         'gii' => 'yii\gii\Module',
     ],
