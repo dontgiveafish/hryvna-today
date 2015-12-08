@@ -239,7 +239,7 @@
 					<div class="column">
 						<div class="column-inner">
 							<div class="about-text">
-								<p>Гривня Тудей – невеликий волонтерський проект, що має за мету детально розповісти про актуальний <strong>курс гривні</strong>, використовуючи <strong>просту і зрозумілу</strong> інфографіку.</p>
+								<p>Гривня Тудей – невеликий волонтерський проект, що має за мету детально розповісти про актуальний <strong>курс гривні</strong>, використовуючи <strong>просту і зрозумілу</strong> інфографіку. Доречі, ми є на <a href="https://github.com/dontgiveafish/hryvna-today">гітхабі</a>!</p>
 							</div>
 						</div>
 					</div>
@@ -314,7 +314,7 @@
 			<div class="sum-currency">
 				<div class="sum-currency-title">Суму</div>
 				<div class="wrap-input">
-					<input type="text" id="converter-sum" value="100" />
+					<input type="number" id="converter-sum" value="100" />
 				</div>
 			</div>
 			<ul class="checkbox-currency-list">

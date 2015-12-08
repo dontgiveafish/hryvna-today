@@ -1,21 +1,5 @@
 var addthis_config = {ui_click: true}
-// start date
-var url = window.location.href;
-var url_hash = window.location.hash;
-var url_hash_replaced = url_hash.replace('#','');
-if ( url_hash.length && url_hash_replaced.match(/\d\d\d\d\d\d\d\d/) ) {
-	var start_date = url_hash.replace('#','');
-	dateCreater(start_date);
-} else {
-	var cur_date = new Date();
-//	var day = cur_date.getDate().toString();
-//	var month = (cur_date.getMonth() + 1);
-//	if ( month < 10 )
-//		month = '0'+month;
-//	var year = cur_date.getFullYear().toString();
-//	var start_date = day + month + year;
-//        var start_date = $.datepicker.formatDate('ddmmyy', new Date());
-}
+
 function dateCreater(date) {
 	day = start_date.substring(0, 2);
 	month = start_date.substring(2, 4);
@@ -474,44 +458,6 @@ function showDrop() {
                         $('.choose-currency-text-inner p').html(datas_tank[currency_delta][current_currency]['story']);
                         firstGraphic();
 		});
-
-		//hash tags
-		var drop_url = window.location.href; 
-		var drop_url_hash = window.location.hash; 
-		if ( drop_url_hash.length ) {
-			currency_delta = drop_url_hash.replace('#',''); 
-			
-			if ( currency_delta == 'month' ) {
-				$('.drop-content-list a').removeClass('current');
-				$('.drop-content-list li:eq(0) a').addClass('current');
-				dropTitle.text('Місяць');
-			}
-			
-			if ( currency_delta == 'kvartal' ) {
-				$('.drop-content-list a').removeClass('current');
-				$('.drop-content-list li:eq(1) a').addClass('current');
-				dropTitle.text('Квартал');
-			}
-			
-			if ( currency_delta == 'halfyear' ) {
-				$('.drop-content-list a').removeClass('current');
-				$('.drop-content-list li:eq(2) a').addClass('current');
-				dropTitle.text('Місяць');
-			}
-			
-			if ( currency_delta == 'year' ) {
-				$('.drop-content-list a').removeClass('current');
-				$('.drop-content-list li:eq(3) a').addClass('current');
-				dropTitle.text('Рік');
-			}
-
-			if ( currency_delta == 'week' ) {
-				$('.drop-content-list a').removeClass('current');
-				$('.drop-content-list li:eq(4) a').addClass('current');
-				dropTitle.text('Тиждень');
-			}
-
-		}
 	}
 }
 /* showDrop end */
