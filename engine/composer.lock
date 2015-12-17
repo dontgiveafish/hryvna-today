@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "99694ca46e393ad0a5fbf6f9d5898b74",
-    "content-hash": "047c7618c0d9a17872897b7171e66c75",
+    "hash": "16ab46a26632924fdcaaaa7e18c167be",
+    "content-hash": "82e898a80fd5f62f0a50c7f7e9ccc743",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -182,16 +182,16 @@
         },
         {
             "name": "bower-asset/yii2-pjax",
-            "version": "v2.0.4",
+            "version": "v2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/jquery-pjax.git",
-                "reference": "3f20897307cca046fca5323b318475ae9dac0ca0"
+                "reference": "6818718408086db6bdcf33649cecb86b6b4f9b67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/jquery-pjax/zipball/3f20897307cca046fca5323b318475ae9dac0ca0",
-                "reference": "3f20897307cca046fca5323b318475ae9dac0ca0",
+                "url": "https://api.github.com/repos/yiisoft/jquery-pjax/zipball/6818718408086db6bdcf33649cecb86b6b4f9b67",
+                "reference": "6818718408086db6bdcf33649cecb86b6b4f9b67",
                 "shasum": ""
             },
             "require": {
@@ -318,6 +318,96 @@
             "time": "2013-11-30 08:25:19"
         },
         {
+            "name": "mailchimp/mailchimp",
+            "version": "2.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://bitbucket.org/mailchimp/mailchimp-api-php.git",
+                "reference": "7ac99b5ac746d5875c5c350ad7e3b83674c83ec1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/mailchimp/mailchimp-api-php/get/7ac99b5ac746d5875c5c350ad7e3b83674c83ec1.zip",
+                "reference": "7ac99b5ac746d5875c5c350ad7e3b83674c83ec1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "require-dev": {
+                "apigen/apigen": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Mailchimp": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "MailChimp Devs",
+                    "email": "api@mailchimp.com",
+                    "homepage": "http://mailchimp.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "API client library for the MailChimp bulk email as a service platform",
+            "homepage": "https://bitbucket.org/mailchimp/mailchimp-api-php",
+            "keywords": [
+                "api",
+                "email"
+            ],
+            "time": "2014-10-30 20:38:12"
+        },
+        {
+            "name": "sammaye/yii2-mailchimp",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sammaye/yii2-mailchimp.git",
+                "reference": "eddfa33ce53edf86ee3324a641462c1d4d01adb5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Sammaye/yii2-mailchimp/zipball/eddfa33ce53edf86ee3324a641462c1d4d01adb5",
+                "reference": "eddfa33ce53edf86ee3324a641462c1d4d01adb5",
+                "shasum": ""
+            },
+            "require": {
+                "mailchimp/mailchimp": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "sammaye\\mailchimp\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sammaye",
+                    "homepage": "http://sammaye.wordpress.com"
+                }
+            ],
+            "description": "MailChimp plugin for the Yii2 framework",
+            "keywords": [
+                "Yii2 Extension",
+                "extension",
+                "mailchimp",
+                "sammaye",
+                "yii2",
+                "yii2-extension"
+            ],
+            "time": "2014-05-28 11:37:42"
+        },
+        {
             "name": "serhatozles/yii2-simplehtmldom",
             "version": "dev-master",
             "source": {
@@ -360,16 +450,16 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v3.1.27",
+            "version": "v3.1.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "4537d8aae6c4a26f5439bc3a05d3437d25c2c4d2"
+                "reference": "d234f79203ca236093989c579c824a1a882d1153"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/4537d8aae6c4a26f5439bc3a05d3437d25c2c4d2",
-                "reference": "4537d8aae6c4a26f5439bc3a05d3437d25c2c4d2",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/d234f79203ca236093989c579c824a1a882d1153",
+                "reference": "d234f79203ca236093989c579c824a1a882d1153",
                 "shasum": ""
             },
             "require": {
@@ -411,7 +501,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-06-18 00:55:59"
+            "time": "2015-12-13 14:19:58"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -772,9 +862,9 @@
                 "bower-asset/jquery": ">=1.7"
             },
             "require-dev": {
-                "bower-asset/jasmine-ajax": "~1.3.1",
-                "bower-asset/jasmine-jquery": "~1.5.2",
-                "bower-asset/jquery": "~1.7"
+                "bower-asset/jasmine-ajax": ">=1.3.1,<1.4",
+                "bower-asset/jasmine-jquery": ">=1.5.2,<1.6",
+                "bower-asset/jquery": ">=1.7,<1.8"
             },
             "type": "bower-asset-library",
             "extra": {

@@ -5,6 +5,7 @@ namespace app\commands;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
+use sammaye\mailchimp\Mailchimp;
 
 use app\models;
 
@@ -13,6 +14,9 @@ use app\hryvna\Storyteller;
 class PublishController extends Controller
 {
 
+    /**
+     * This action is to generate and replace HTML page and JS data
+     */
     public function actionSite()
     {
 
@@ -76,5 +80,63 @@ class PublishController extends Controller
         echo (file_put_contents(Yii::$app->params['site']['index'], $site) . PHP_EOL);
         echo (file_put_contents(Yii::$app->params['site']['js'], $js) . PHP_EOL);
 
+    }
+
+    /**
+     * This action is to generate and send email campaign
+     */
+    public function actionEmail()
+    {
+
+        $params = [
+            'today'     => new \DateTime(),
+            'review'    => $day_review = Yii::$app->hryvna->getAvg(),
+            'story'     => Storyteller::describePeriod(1, 'останній тиждень', 'десять днів')['dollar']['story']
+        ];
+
+        $probability = rand(0, 100);
+
+        if ($probability > 95) {
+            $subject = 'І знову про курс гривні!';
+        }
+        elseif ($probability > 90) {
+            $subject = 'Який курс сьогодні?';
+        }
+        else {
+            $subject = Storyteller::describeDayChanges();
+        }
+
+        $letter = $this->view->render('@app/views/mail/campaign.tpl', $params);
+
+        $chimp = new Mailchimp(['apikey' => Yii::$app->params['mailchimp']['apikey']]);
+
+        $campaign = $chimp->campaigns->create(
+            'regular',
+            array(
+                'list_id'       => Yii::$app->params['mailchimp']['list_id'],
+                'subject'       => $subject,
+                'from_email'    => Yii::$app->params['mailchimp']['from_email'],
+                'from_name'     => Yii::$app->params['mailchimp']['from_name']
+            ),
+            array(
+                'html' => $letter
+            )
+        );
+
+        echo ("Campaign created" . PHP_EOL);
+
+        if (empty(YII_DEBUG)) {
+
+            $result = $chimp->campaigns->send($campaign['id']);
+
+            if (!empty($result['complete'])) {
+                echo ("Campaign $subject was successfully sent" . PHP_EOL);
+            }
+            else {
+                throw new \Exception('There was a problem with sending email campaign');
+
+            }
+
+        }
     }
 }

@@ -19,7 +19,8 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "yiisoft/yii2-smarty": "^2.0",
-        "serhatozles/yii2-simplehtmldom": "dev-master"
+        "serhatozles/yii2-simplehtmldom": "dev-master",
+        "sammaye/yii2-mailchimp": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

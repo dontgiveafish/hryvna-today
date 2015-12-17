@@ -72,6 +72,51 @@ class Storyteller
 
     }
 
+    public static function describeDayChanges()
+    {
+        $today = new \DateTime();
+        $yesterday = (new \DateTime())->modify('-1 day');
+
+        $avg = Yii::$app->hryvna->getAvg($today);
+        $avg_y = Yii::$app->hryvna->getAvg($yesterday);
+
+        if (empty($avg['dollar_avg']) || empty($avg_y['dollar_avg'])) {
+            throw new \Exception('no avg');
+        }
+
+        $day_diff = round($avg['dollar_avg']['value'] - $avg_y['dollar_avg']['value'], 2) * 100;
+
+        $say = self::formatDate(new \DateTime(), true) . ' гривня ';
+
+        if ($day_diff == 0) {
+            $frases = array('залишається стабільною', 'не змінилась у ціні');
+        }
+        elseif (abs($day_diff) < 15) {
+            $frases = array('незначно', 'трохи', 'дещо');
+        }
+        elseif (abs($day_diff) < 50) {
+            $frases = array('помітно', 'досить відчутно');
+        }
+        else {
+            $frases = array('сильно', 'різко', 'стрімко');
+        }
+
+        $say .= $frases[array_rand($frases)];
+
+        if ($day_diff > 0) {
+            $frases = array('впала', 'втратила вартість', 'здешевшала');
+        }
+        elseif ($day_diff < 0) {
+            $frases = array('зміцнилась', 'зросла', 'подорожчала');
+        }
+
+        if ($day_diff != 0) {
+            $say .= ' ' . $frases[array_rand($frases)];
+        }
+
+        return $say;
+    }
+
 
     /**
      * Format date
@@ -126,7 +171,7 @@ class Storyteller
         $interval = $now->diff($date);
         if ($interval->days == 0) {
             $ways_to_say[] = function() {
-                $variants  = ['Сьогодні', 'Зараз'];
+                $variants  = ['Сьогодні', 'Цього дня'];
                 return $variants[array_rand($variants)];
             };
         }
