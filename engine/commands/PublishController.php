@@ -6,10 +6,12 @@ use Yii;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
 use sammaye\mailchimp\Mailchimp;
+use TwitterAPIExchange;
 
 use app\models;
 
 use app\hryvna\Storyteller;
+use app\hryvna\Painter;
 
 class PublishController extends Controller
 {
@@ -139,4 +141,40 @@ class PublishController extends Controller
 
         }
     }
+
+    /**
+     * This action is to generate and publish social campaigns
+     */
+    public function actionSocial()
+    {
+
+        $day_review = Yii::$app->hryvna->getAvg();
+        $avg = $day_review['dollar_avg']['value'];
+
+        $cash_destination = Yii::getAlias('@runtime') . '/cash.jpg';
+        $cash = Painter::drawCash($avg);
+        imagejpeg($cash, $cash_destination);
+
+        $tweet = Storyteller::tweet();
+
+        $twitter = new TwitterAPIExchange([
+            'oauth_access_token'        => Yii::$app->params['twitter']['oauth_access_token'],
+            'oauth_access_token_secret' => Yii::$app->params['twitter']['oauth_access_token_secret'],
+            'consumer_key'              => Yii::$app->params['twitter']['consumer_key'],
+            'consumer_secret'           => Yii::$app->params['twitter']['consumer_secret']
+        ]);
+
+        $json = $twitter->buildOauth('https://api.twitter.com/1.1/statuses/update_with_media.json', 'POST')
+        ->setPostfields([
+            'status'    => $tweet,
+            'media[]'   => '@' . $cash_destination,
+        ])
+        ->performRequest();
+
+        $json = json_decode($json);
+
+        print_r($json);
+
+    }
+
 }

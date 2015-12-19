@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "16ab46a26632924fdcaaaa7e18c167be",
-    "content-hash": "82e898a80fd5f62f0a50c7f7e9ccc743",
+    "hash": "3c919541bd92f0f72db7c9d1575f9fdd",
+    "content-hash": "3b42d573299b2cde37d60cd841a7dcb4",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -316,6 +316,51 @@
                 "html"
             ],
             "time": "2013-11-30 08:25:19"
+        },
+        {
+            "name": "j7mbo/twitter-api-php",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/J7mbo/twitter-api-php.git",
+                "reference": "e576556d8b548327d4aefeff0a9d40fa9a9d552e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/J7mbo/twitter-api-php/zipball/e576556d8b548327d4aefeff0a9d40fa9a9d552e",
+                "reference": "e576556d8b548327d4aefeff0a9d40fa9a9d552e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.5.1"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "TwitterAPIExchange.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GNU Public License"
+            ],
+            "authors": [
+                {
+                    "name": "James Mallison",
+                    "homepage": "https://github.com/j7mbo/twitter-api-php"
+                }
+            ],
+            "description": "Simple PHP Wrapper for Twitter API v1.1 calls",
+            "homepage": "https://github.com/j7mbo/twitter-api-php",
+            "keywords": [
+                "api",
+                "php",
+                "twitter"
+            ],
+            "time": "2015-05-04 14:30:06"
         },
         {
             "name": "mailchimp/mailchimp",

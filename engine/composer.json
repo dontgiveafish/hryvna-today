@@ -20,7 +20,8 @@
         "yiisoft/yii2-swiftmailer": "*",
         "yiisoft/yii2-smarty": "^2.0",
         "serhatozles/yii2-simplehtmldom": "dev-master",
-        "sammaye/yii2-mailchimp": "*"
+        "sammaye/yii2-mailchimp": "*",
+        "J7mbo/twitter-api-php": "1.0.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

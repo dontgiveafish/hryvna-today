@@ -117,6 +117,52 @@ class Storyteller
         return $say;
     }
 
+    public static function tweet() {
+        $today = new \DateTime();
+        $yesterday = (new \DateTime())->modify('-1 day');
+
+        $avg = Yii::$app->hryvna->getAvg($today);
+        $avg_y = Yii::$app->hryvna->getAvg($yesterday);
+
+        if (empty($avg['dollar_avg']) || empty($avg_y['dollar_avg'])) {
+            throw new \Exception('no avg');
+        }
+
+        $avg_rounded = round($avg['dollar_avg']['value'], 2);
+        $day_diff = round($avg['dollar_avg']['value'] - $avg_y['dollar_avg']['value'], 2);
+
+        if ($day_diff == 0) $say_day_diff = '(без змін)';
+        else if ($day_diff < 0) $say_day_diff = '('.sprintf('%0.2f', $day_diff).')';
+        else if ($day_diff > 0) $say_day_diff = '(+'.sprintf('%0.2f', $day_diff).')';
+
+        $hashtags = ['долар', 'гривня', 'курс', 'курсгривні', 'курсвалют', 'валюта'];
+
+        $say_story = [
+            function ($K) { return 'середня ціна '. self::sklonen($K, 'долару', 'доларів', 'доларів'); },
+            function ($K) { return self::sklonen($K, 'долар коштує', 'долари коштують', 'доларів коштують'); },
+            function ($K) { return 'за ' . self::sklonen($K, 'долар', 'долари', 'доларів') . ' дають'; },
+            function ($K) { return self::sklonen($K, 'долар', 'долари', 'доларів').' це'; },
+        ];
+
+        $K = rand(0, 100) < 80 ? 1 : 100;
+
+        $tweet = implode(' ', [
+            self::formatDate(new \DateTime(), true),
+            $say_story[array_rand($say_story)]($K),
+            ($K == 1 ? sprintf('%0.2f', $K * $avg_rounded) : $K * $avg_rounded) . ' гривень',
+            $say_day_diff,
+            '#' . $hashtags[array_rand($hashtags)],
+            'g.ua/kK6C'
+        ]);
+
+        return $tweet;
+
+    }
+
+    public static function tellLongStory() {
+
+    }
+
 
     /**
      * Format date
@@ -195,10 +241,15 @@ class Storyteller
         $m = $n % 10;
         $j = $n % 100;
 
-        if ($n == 1) $n = '';
+        if ($n == 1) {
+            $n = '';
+        }
+        else {
+            $n .= ' ';
+        }
 
-        if($m==0 || $m>=5 || ($j>=10 && $j<=20)) return $n.' '.$s3;
-        if($m>=2 && $m<=4) return $n.' '.$s2;
-        return $n.' '.$s1;
+        if($m==0 || $m>=5 || ($j>=10 && $j<=20)) return $n . $s3;
+        if($m>=2 && $m<=4) return $n . $s2;
+        return $n . $s1;
     }
 }
