@@ -7,6 +7,9 @@ use yii\console\Controller;
 use yii\helpers\ArrayHelper;
 use sammaye\mailchimp\Mailchimp;
 use TwitterAPIExchange;
+use Facebook\FacebookSession,
+    Facebook\FacebookRequest,
+    CURLFile;
 
 use app\models;
 
@@ -148,12 +151,22 @@ class PublishController extends Controller
     public function actionSocial()
     {
 
+        // prepare data
+
         $day_review = Yii::$app->hryvna->getAvg();
         $avg = $day_review['dollar_avg']['value'];
+        $diff = round($day_review['dollar_avg']['diff'], 2);
+        if ($diff > 0) {
+            $diff = '+' . $diff;
+        }
+
+        // draw cash and save to file
 
         $cash_destination = Yii::getAlias('@runtime') . '/cash.jpg';
         $cash = Painter::drawCash($avg);
         imagejpeg($cash, $cash_destination);
+
+        // twitter
 
         $tweet = Storyteller::tweet();
 
@@ -174,6 +187,36 @@ class PublishController extends Controller
         $json = json_decode($json);
 
         print_r($json);
+
+        // facebook
+
+        $facebook_post = implode(PHP_EOL . PHP_EOL, [
+            Storyteller::describeDayChanges() . ($diff == 0 ? '' : " ($diff)") .  '.',
+            Storyteller::tellLongStory(),
+            'Детальніше про курс валют, як завжди – на Гривні Тудей: http://hryvna.today'
+        ]);
+
+        FacebookSession::setDefaultApplication(
+            Yii::$app->params['facebook']['application_id'],
+            Yii::$app->params['facebook']['application_secret']
+        );
+
+        $session = new FacebookSession(Yii::$app->params['facebook']['access_token']);
+
+        $request = new FacebookRequest(
+            $session,
+            'POST',
+            '/' . Yii::$app->params['facebook']['page_id'] . '/photos',
+            array (
+                'caption' => $facebook_post,
+                'source' => new CURLFile($cash_destination)
+            )
+        );
+
+        $response = $request->execute();
+        $graphObject = $response->getGraphObject();
+
+        print_r($graphObject);
 
     }
 

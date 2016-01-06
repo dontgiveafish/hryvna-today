@@ -21,7 +21,8 @@
         "yiisoft/yii2-smarty": "^2.0",
         "serhatozles/yii2-simplehtmldom": "dev-master",
         "sammaye/yii2-mailchimp": "*",
-        "J7mbo/twitter-api-php": "1.0.0"
+        "J7mbo/twitter-api-php": "1.0.0",
+        "facebook/php-sdk-v4": "4.0.*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

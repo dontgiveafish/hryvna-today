@@ -89,39 +89,40 @@ class Storyteller
         $say = self::formatDate(new \DateTime(), true) . ' гривня ';
 
         if ($day_diff == 0) {
-            $frases = array('залишається стабільною', 'не змінилась у ціні');
+            $phrases = ['залишається стабільною', 'не змінилась у ціні'];
         }
         elseif (abs($day_diff) < 15) {
-            $frases = array('незначно', 'трохи', 'дещо');
+            $phrases = ['незначно', 'трохи', 'дещо'];
         }
         elseif (abs($day_diff) < 50) {
-            $frases = array('помітно', 'досить відчутно');
+            $phrases = ['помітно', 'досить відчутно'];
         }
         else {
-            $frases = array('сильно', 'різко', 'стрімко');
+            $phrases = ['сильно', 'різко', 'стрімко'];
         }
 
-        $say .= $frases[array_rand($frases)];
+        $say .= $phrases[array_rand($phrases)];
 
         if ($day_diff > 0) {
-            $frases = array('впала', 'втратила вартість', 'здешевшала');
+            $phrases = ['впала', 'втратила вартість', 'здешевшала'];
         }
         elseif ($day_diff < 0) {
-            $frases = array('зміцнилась', 'зросла', 'подорожчала');
+            $phrases = ['зміцнилась', 'зросла', 'подорожчала'];
         }
 
         if ($day_diff != 0) {
-            $say .= ' ' . $frases[array_rand($frases)];
+            $say .= ' ' . $phrases[array_rand($phrases)];
         }
 
         return $say;
     }
 
     public static function tweet() {
-        $today = new \DateTime();
-        $yesterday = (new \DateTime())->modify('-1 day');
+        $today = \DateTime::createFromFormat('Y-m-d', Yii::$app->hryvna->getActualDate());
+        $yesterday = clone $today;
+        $yesterday->modify('-1 day');
 
-        $avg = Yii::$app->hryvna->getAvg($today);
+        $avg = Yii::$app->hryvna->getAvg(clone $today);
         $avg_y = Yii::$app->hryvna->getAvg($yesterday);
 
         if (empty($avg['dollar_avg']) || empty($avg_y['dollar_avg'])) {
@@ -147,7 +148,7 @@ class Storyteller
         $K = rand(0, 100) < 80 ? 1 : 100;
 
         $tweet = implode(' ', [
-            self::formatDate(new \DateTime(), true),
+            self::formatDate($today, true),
             $say_story[array_rand($say_story)]($K),
             ($K == 1 ? sprintf('%0.2f', $K * $avg_rounded) : $K * $avg_rounded) . ' гривень',
             $say_day_diff,
@@ -160,6 +161,49 @@ class Storyteller
     }
 
     public static function tellLongStory() {
+
+        $day = Yii::$app->hryvna->getAvg();
+        $story = [];
+
+        $story[] = 'Офіційний курс від НБУ – '.round($day['dollar_nbu']['value'], 2).' гривень за долар та '.round($day['euro_nbu']['value'], 2).' гривень за євро.';
+        $story[] = 'Середній курс купівлі та продажу долара у банках – '.round($day['dollar_buy_banks']['value'], 2).' та '.round($day['dollar_sale_banks']['value'], 2).' відповідно.';
+        $story[] = 'Євро купують за '.round($day['euro_buy_banks']['value'], 2).' та продають за '.round($day['euro_sale_banks']['value'], 2).' гривень.';
+
+        $black_diff = round(($day['dollar_buy_black']['diff'] + $day['dollar_sale_black']['diff']) / 2 * 100);
+        $black = 'Чорний ринок показує ';
+
+        if ($black_diff == 0) {
+            $phrases = ['стабільність'];
+        }
+        elseif (abs($black_diff) < 20) {
+            $phrases = ['незначне', 'невелике'];
+        }
+        elseif (abs($black_diff) < 50) {
+            $phrases = ['помітне', 'досить відчутне'];
+        }
+        else {
+            $phrases = ['сильне', 'різке', 'стрімке'];
+        }
+
+        $black .= $phrases[array_rand($phrases)];
+
+        if ($black_diff != 0) {
+
+            if ($black_diff > 0) {
+                $phrases = ['здешевшання', 'падіння'];
+            }
+            elseif ($black_diff < 0) {
+                $phrases = ['зміцнення', 'зростання', 'укріплення'];
+            }
+
+            $black .= ' ' . $phrases[array_rand($phrases)];
+        }
+
+        $black .= ' гривні.';
+
+        $story[] = $black;
+
+        return implode(' ', $story);
 
     }
 
