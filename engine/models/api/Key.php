@@ -2,6 +2,9 @@
 
 namespace app\models\api;
 
+use Yii;
+use yii\web\IdentityInterface;
+
 /**
  * This is the model class for table "api_keys".
  *
