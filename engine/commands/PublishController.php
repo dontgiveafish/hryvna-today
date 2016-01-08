@@ -166,27 +166,33 @@ class PublishController extends Controller
         $cash = Painter::drawCash($avg);
         imagejpeg($cash, $cash_destination);
 
+        echo ('Cash image created' . PHP_EOL);
+
         // twitter
 
         $tweet = Storyteller::tweet();
+        echo ('Tweet created:' . PHP_EOL);
+        echo ($tweet . PHP_EOL);
 
-        $twitter = new TwitterAPIExchange([
-            'oauth_access_token'        => Yii::$app->params['twitter']['oauth_access_token'],
-            'oauth_access_token_secret' => Yii::$app->params['twitter']['oauth_access_token_secret'],
-            'consumer_key'              => Yii::$app->params['twitter']['consumer_key'],
-            'consumer_secret'           => Yii::$app->params['twitter']['consumer_secret']
-        ]);
+        if (empty(YII_DEBUG)) {
 
-        $json = $twitter->buildOauth('https://api.twitter.com/1.1/statuses/update_with_media.json', 'POST')
-        ->setPostfields([
-            'status'    => $tweet,
-            'media[]'   => '@' . $cash_destination,
-        ])
-        ->performRequest();
+            $twitter = new TwitterAPIExchange([
+                'oauth_access_token'        => Yii::$app->params['twitter']['oauth_access_token'],
+                'oauth_access_token_secret' => Yii::$app->params['twitter']['oauth_access_token_secret'],
+                'consumer_key'              => Yii::$app->params['twitter']['consumer_key'],
+                'consumer_secret'           => Yii::$app->params['twitter']['consumer_secret']
+            ]);
 
-        $json = json_decode($json);
+            $json = $twitter->buildOauth('https://api.twitter.com/1.1/statuses/update_with_media.json', 'POST')
+                ->setPostfields([
+                    'status'    => $tweet,
+                    'media[]'   => '@' . $cash_destination,
+                ])
+                ->performRequest();
 
-        print_r($json);
+            $json = json_decode($json);
+            print_r($json);
+        }
 
         // facebook
 
@@ -196,27 +202,34 @@ class PublishController extends Controller
             'Детальніше про курс валют, як завжди – на Гривні Тудей: http://hryvna.today'
         ]);
 
-        FacebookSession::setDefaultApplication(
-            Yii::$app->params['facebook']['application_id'],
-            Yii::$app->params['facebook']['application_secret']
-        );
+        echo ('Facebook post created:' . PHP_EOL);
+        echo ($facebook_post . PHP_EOL);
 
-        $session = new FacebookSession(Yii::$app->params['facebook']['access_token']);
+        if (empty(YII_DEBUG)) {
 
-        $request = new FacebookRequest(
-            $session,
-            'POST',
-            '/' . Yii::$app->params['facebook']['page_id'] . '/photos',
-            array (
-                'caption' => $facebook_post,
-                'source' => new CURLFile($cash_destination)
-            )
-        );
+            FacebookSession::setDefaultApplication(
+                Yii::$app->params['facebook']['application_id'],
+                Yii::$app->params['facebook']['application_secret']
+            );
 
-        $response = $request->execute();
-        $graphObject = $response->getGraphObject();
+            $session = new FacebookSession(Yii::$app->params['facebook']['access_token']);
 
-        print_r($graphObject);
+            $request = new FacebookRequest(
+                $session,
+                'POST',
+                '/' . Yii::$app->params['facebook']['page_id'] . '/photos',
+                array(
+                    'caption' => $facebook_post,
+                    'source' => new CURLFile($cash_destination)
+                )
+            );
+
+            $response = $request->execute();
+            $graphObject = $response->getGraphObject();
+
+            print_r($graphObject);
+
+        }
 
     }
 
