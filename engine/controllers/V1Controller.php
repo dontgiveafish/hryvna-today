@@ -9,6 +9,8 @@ use app\components;
 
 use yii\filters\auth\QueryParamAuth;
 
+use app\hryvna\Dashboard;
+
 class V1Controller extends Controller
 {
 
@@ -129,7 +131,7 @@ class V1Controller extends Controller
      */
     public function actionActualdate()
     {       
-        return Yii::$app->hryvna->getActualDate();
+        return Dashboard::getActualDate();
     }
 
     /**
@@ -141,7 +143,7 @@ class V1Controller extends Controller
     public function actionAvg()
     {
         $today = $this->prepareDate();
-        return Yii::$app->hryvna->getAvg($today);
+        return Dashboard::getAvg($today);
     }
    
     /**
@@ -154,7 +156,7 @@ class V1Controller extends Controller
         $period = $this->preparePeriod();
         $delta = $this->prepareDelta();
 
-        return Yii::$app->hryvna->getDays($today, $period, $delta);
+        return Dashboard::getDays($today, $period, $delta);
     }
 
     /**
@@ -176,7 +178,7 @@ class V1Controller extends Controller
         $today = $this->prepareDate();
         $period = $this->preparePeriod();
 
-        return Yii::$app->hryvna->getBankDays($today, $period);
+        return Dashboard::getBankDays($today, $period);
     }
     
     /**
@@ -185,10 +187,10 @@ class V1Controller extends Controller
      */
     public function actionLanding() {
         return [
-            'actual_date' => Yii::$app->hryvna->getActualDate(),
-            'avg' => Yii::$app->hryvna->getAvg(),
-            'days' => Yii::$app->hryvna->getDays(),
-            'banks' => Yii::$app->hryvna->getBankDays(null, -1)
+            'actual_date' => Dashboard::getActualDate(),
+            'avg' => Dashboard::getAvg(),
+            'days' => Dashboard::getDays(),
+            'banks' => Dashboard::getBankDays(null, -1)
         ];
     }
 

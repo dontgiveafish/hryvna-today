@@ -4,46 +4,23 @@
  * This class is provided to operate with database and create data structures for using in template and APIs
  */
 
-namespace app\components;
+namespace app\hryvna;
  
 use Yii;
-use yii\base\Component;
 
 use app\models;
 
-class Hryvna extends Component
+class Dashboard
 {
 
     const DATE_FORMAT = 'Y-m-d';
 
-    private $actual_date = null;
-    
     /**
-     * This is private function to assign date to component
-     * When date is not in query, default date is last actual date
-     * @see getActualDate()
-     * @return DateTime
+     * Actual date is a last date when exchanges for all banks are ready
+     * @return bool|Datetime
      */
-    private function assignActualDate() {
-
-        if (empty($this->actual_date)) {
-
-            $date_string = $this->getActualDate();
-            $this->actual_date = new \DateTime();
-
-        }
-
-        return clone $this->actual_date;
-        
-    }
-
-    /**
-     * Actual date is a last date when exchanges for all bank are ready
-     * @return String Date string in mysql format(Y-m-d)
-     */
-    public function getActualDate()
+    public static function getActualDate()
     {
-        
         $banks_count = models\Bank::find()->count();
 
         $table_exchanges = models\ExchangeRate::tableName();
@@ -64,7 +41,11 @@ class Hryvna extends Component
         $command = Yii::$app->db->createCommand($query);
         $result = $command->queryOne();
 
-        return $result['actual_date'];
+        if (empty($result)) {
+            return false;
+        }
+
+        return \DateTime::createFromFormat(self::DATE_FORMAT, $result['actual_date']);
     }
     
     /**
@@ -73,17 +54,17 @@ class Hryvna extends Component
      * @param \DateTime $today
      * @return array
      */
-    public function getAvg(\DateTime $today = null)
+    public static function getAvg(\DateTime $today = null)
     {
 
         if (empty($today)) {
-            $today = $this->assignActualDate();
+            $today = self::getActualDate();
         }
 
         $table_exchanges = models\ExchangeRate::tableName();
         $table_banks = models\Bank::tableName();
 
-        $result = array();
+        $result = [];
 
         for ($i = 0; $i < 2; ++$i) {
 
@@ -175,10 +156,10 @@ class Hryvna extends Component
      * @param int $delta
      * @return array
      */
-    function getDays(\DateTime $today = null, $period = -10, $delta = 1) {
+    public static function getDays(\DateTime $today = null, $period = -10, $delta = 1) {
 
         if (empty($today)) {
-            $today = $this->assignActualDate();
+            $today = self::getActualDate();
         }
 
         $exchanges_table = models\ExchangeRate::tableName();
@@ -186,7 +167,7 @@ class Hryvna extends Component
                 
         $today->modify(($delta * $period) .' day');
         
-        $result = array();
+        $result = [];
 
         for ($i = 0; $i < abs($period); ++$i) {
 
@@ -229,13 +210,13 @@ class Hryvna extends Component
     /**
      * Getting exchanges in banks for selected period
      * @param \DateTime $today
-     * @param type $period
+     * @param int $period
      * @return array
      */
-    function getBankDays(\DateTime $today = null, $period = -10) {
+    public static function getBankDays(\DateTime $today = null, $period = -10) {
 
         if (empty($today)) {
-            $today = $this->assignActualDate();
+            $today = self::getActualDate();
         }
 
         $table_exchanges = models\ExchangeRate::tableName();
@@ -243,7 +224,7 @@ class Hryvna extends Component
         
         $today->modify($period .' day');
         
-        $days = array();
+        $days = [];
         
         for ($i = 0; $i < abs($period); ++$i) {
 

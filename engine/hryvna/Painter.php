@@ -6,10 +6,13 @@ use Yii;
 
 class Painter
 {
+    /**
+     * @param $avg_rounded Decimal number of cash
+     * @return resource Scaled image
+     */
     public static function drawCash($avg_rounded)
     {
-
-        Yii::$app->params['cash'];
+        // prepare image layout
 
         $outputImage = imagecreatetruecolor(2000, 2000);
 
@@ -18,6 +21,8 @@ class Painter
 
         $x = 0;
         $y = 0;
+
+        // prepare cash images
 
         $cash_pattern = Yii::$app->params['cash']['dir'] . '/*' . Yii::$app->params['cash']['ext'];
 
@@ -28,6 +33,7 @@ class Painter
 
         rsort($cuts);
 
+        // break sum to cash bits
 
         $value = round($avg_rounded * 100);
 
@@ -43,8 +49,9 @@ class Painter
 
         }
 
-        $cents = false;
+        // draw cash bits
 
+        $cents = false;
         $max_x = $max_y = 0;
 
         foreach ($result as $key => $value) {
@@ -81,6 +88,8 @@ class Painter
             }
 
         }
+
+        // cut and scale
 
         $padding = 35;
         $cuttedImage = imagecreatetruecolor($max_x + $padding*2, $max_y + $padding*2);

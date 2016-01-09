@@ -42,11 +42,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
         ],
-        'hryvna' => [
-            'class' => 'app\components\Hryvna', 
-        ],
         'response' => [
-                'format' => 'json',
+            'format' => 'json',
         ],
     ],
     'params' => $params,

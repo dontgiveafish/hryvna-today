@@ -13,6 +13,7 @@ use Facebook\FacebookSession,
 
 use app\models;
 
+use app\hryvna\Dashboard;
 use app\hryvna\Storyteller;
 use app\hryvna\Painter;
 
@@ -28,8 +29,8 @@ class PublishController extends Controller
         $params = [
             'today'     => new \DateTime(),
             'metrics'   => empty(YII_DEBUG),
-            'review'    => $day_review = Yii::$app->hryvna->getAvg(),
-            'banks_exchanges' => $banks_days = Yii::$app->hryvna->getBankDays(null, -10),
+            'review'    => $day_review = Dashboard::getAvg(),
+            'banks_exchanges' => $banks_days = Dashboard::getBankDays(null, -10),
             'banks_names' => $banks_names = ArrayHelper::map(models\Bank::find()->orderBy([
                 new \yii\db\Expression('FIELD(rate, 0), rate, id'),
             ])->all(), 'id', 'title'), //@todo add right sorting
@@ -95,7 +96,7 @@ class PublishController extends Controller
 
         $params = [
             'today'     => new \DateTime(),
-            'review'    => $day_review = Yii::$app->hryvna->getAvg(),
+            'review'    => $day_review = Dashboard::getAvg(),
             'story'     => Storyteller::describePeriod(1, 'останній тиждень', 'десять днів')['dollar']['story']
         ];
 
@@ -153,7 +154,7 @@ class PublishController extends Controller
 
         // prepare data
 
-        $day_review = Yii::$app->hryvna->getAvg();
+        $day_review = Dashboard::getAvg();
         $avg = $day_review['dollar_avg']['value'];
         $diff = round($day_review['dollar_avg']['diff'], 2);
         if ($diff > 0) {

@@ -8,7 +8,7 @@ class Storyteller
 {
     public static function describePeriod($delta, $story_one, $story_two)
     {
-        $days = Yii::$app->hryvna->getDays(null, -10 * $delta, 1);
+        $days = Dashboard::getDays(null, -10 * $delta, 1);
 
         $result = [];
 
@@ -77,8 +77,8 @@ class Storyteller
         $today = new \DateTime();
         $yesterday = (new \DateTime())->modify('-1 day');
 
-        $avg = Yii::$app->hryvna->getAvg($today);
-        $avg_y = Yii::$app->hryvna->getAvg($yesterday);
+        $avg = Dashboard::getAvg($today);
+        $avg_y = Dashboard::getAvg($yesterday);
 
         if (empty($avg['dollar_avg']) || empty($avg_y['dollar_avg'])) {
             throw new \Exception('no avg');
@@ -118,12 +118,12 @@ class Storyteller
     }
 
     public static function tweet() {
-        $today = \DateTime::createFromFormat('Y-m-d', Yii::$app->hryvna->getActualDate());
+        $today = Dashboard::getActualDate();
         $yesterday = clone $today;
         $yesterday->modify('-1 day');
 
-        $avg = Yii::$app->hryvna->getAvg(clone $today);
-        $avg_y = Yii::$app->hryvna->getAvg($yesterday);
+        $avg = Dashboard::getAvg(clone $today);
+        $avg_y = Dashboard::getAvg($yesterday);
 
         if (empty($avg['dollar_avg']) || empty($avg_y['dollar_avg'])) {
             throw new \Exception('no avg');
@@ -162,7 +162,7 @@ class Storyteller
 
     public static function tellLongStory() {
 
-        $day = Yii::$app->hryvna->getAvg();
+        $day = Dashboard::getAvg();
         $story = [];
 
         $story[] = 'Офіційний курс від НБУ – '.round($day['dollar_nbu']['value'], 2).' гривень за долар та '.round($day['euro_nbu']['value'], 2).' гривень за євро.';

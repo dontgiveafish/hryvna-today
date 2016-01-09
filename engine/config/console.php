@@ -27,9 +27,6 @@ return [
                 ],
             ],
         ],
-        'hryvna' => [
-            'class' => 'app\components\Hryvna',
-        ],
         'formatter' => [
             'dateFormat' => 'yyyy.MM.dd',
             'decimalSeparator' => ',',
