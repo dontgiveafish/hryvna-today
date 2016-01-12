@@ -3,19 +3,13 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Лис 24 2015 р., 13:13
+-- Час створення: Січ 12 2016 р., 10:39
 -- Версія сервера: 5.5.46-0ubuntu0.14.04.2
 -- Версія PHP: 5.5.9-1ubuntu4.14
 
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- База даних: `hryvna`
@@ -48,9 +42,19 @@ INSERT INTO `banks` (`id`, `type`, `title`, `rate`) VALUES
 --
 
 INSERT INTO `currency` (`id`, `code`, `title`, `symbol`) VALUES
+(643, 'RUB', 'Російський рубль', '₽'),
+(826, 'GBP', 'Англійський фунт стерлінгів', '£'),
 (840, 'USD', 'Долар США', '$'),
 (978, 'EUR', 'Євро', '€'),
-(980, 'UAH', 'Гривня', '₴');
+(980, 'UAH', 'Гривня', '₴'),
+(985, 'PLN', 'Польський злотий', 'zł');
+
+--
+-- Дамп даних таблиці `grabber_currency_checker`
+--
+
+INSERT INTO `grabber_currency_checker` (`id`, `currency_id`, `value`) VALUES
+  (1, 978, '&euro;');
 
 --
 -- Дамп даних таблиці `grabber_strategy_currency`
@@ -88,7 +92,10 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
 (31, 10, 840, 0.01000, NULL, 5, NULL, 2, NULL, 5, NULL, 3, NULL, 5, NULL, 1),
 (32, 10, 978, 0.01000, NULL, 2, NULL, 2, NULL, 2, NULL, 3, NULL, 2, NULL, 1),
 (33, 19, 840, NULL, NULL, 1, NULL, 0, NULL, 1, NULL, 1, NULL, 1, 'th', 0),
-(34, 19, 978, NULL, NULL, 2, NULL, 0, NULL, 2, NULL, 1, NULL, 2, 'th', 0);
+(34, 19, 978, NULL, NULL, 2, NULL, 0, NULL, 2, NULL, 1, NULL, 2, 'th', 0),
+(35, 2, 985, 0.01000, NULL, 13, NULL, 4, NULL, 13, NULL, 4, NULL, 13, NULL, 1),
+(36, 2, 826, 0.01000, NULL, 3, NULL, 4, NULL, 3, NULL, 4, NULL, 3, NULL, 1),
+(37, 2, 643, 0.10000, NULL, 14, NULL, 4, NULL, 14, NULL, 4, NULL, 14, NULL, 1);
 
 --
 -- Дамп даних таблиці `grabber_strategy_info`
@@ -115,7 +122,3 @@ INSERT INTO `grabber_strategy_info` (`id`, `bank_id`, `name`, `url`, `cells_sele
 (18, NULL, 'Telegraf', 'http://telegraf.com.ua/kurs-valute/', '.kurs-block .right table.kurs-table', 0),
 (19, 17, 'Mizhbank', 'http://finance.liga.net/rates/mb/', 'table#link_mb', 0);
 SET FOREIGN_KEY_CHECKS=1;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

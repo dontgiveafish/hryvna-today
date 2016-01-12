@@ -92,7 +92,7 @@ fabric.properties
 
 engine/assets/*
 engine/runtime/*
-public/api.hryvna.today/assets/*
+public/api.hryvna.today/assets
 nbproject
 public/hryvna.today/index.html
 public/hryvna.today/js/data.js

@@ -11,13 +11,12 @@ use Yii;
  * @property string $code
  * @property string $title
  * @property string $symbol
+ *
+ * @property GrabberCurrencyChecker[] $grabberCurrencyCheckers
+ * @property GrabberStrategyCurrency[] $grabberStrategyCurrencies
  */
 class Currency extends \yii\db\ActiveRecord
 {
-    
-    const DOLLAR_ID = 840;
-    const EURO_ID = 978;
-    
     /**
      * @inheritdoc
      */
@@ -32,7 +31,7 @@ class Currency extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'code', 'title', 'symbol'], 'required'],
+            [['id', 'code', 'title'], 'required'],
             [['id'], 'integer'],
             [['code'], 'string', 'max' => 5],
             [['title', 'symbol'], 'string', 'max' => 128]
@@ -50,5 +49,21 @@ class Currency extends \yii\db\ActiveRecord
             'title' => 'Title',
             'symbol' => 'Symbol',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGrabberCurrencyCheckers()
+    {
+        return $this->hasMany(GrabberCurrencyChecker::className(), ['currency_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGrabberStrategyCurrencies()
+    {
+        return $this->hasMany(GrabberStrategyCurrency::className(), ['currency_id' => 'id']);
     }
 }

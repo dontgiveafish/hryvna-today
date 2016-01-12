@@ -3,12 +3,14 @@
 namespace app\commands;
 
 use app\models\ExchangeRate;
+use app\models\ExchangeRateNew;
 use app\models\ExchangeRateGrabberInfo;
 use app\models\Currency;
 
 use app\grabbers\ExchangeRateGrabber;
 use app\grabbers\ExchangeRateGrabberStrategyAbstract;
 
+use yii\helpers\ArrayHelper;
 use yii\console\Controller;
 
 class UpdateController extends Controller
@@ -26,6 +28,7 @@ class UpdateController extends Controller
     {
 
         // create grabber
+
         try {
             $grabber = new ExchangeRateGrabber(ExchangeRateGrabberStrategyAbstract::create($strategy_classname));
         }
@@ -34,28 +37,14 @@ class UpdateController extends Controller
             return;
         }
 
-        // start tries        
+        // start tries
+
         $try_number = 0;
         $today = (new \DateTime)->format('Y-m-d');
 
         do {
             try {
                 $data = $grabber->grab();
-
-                // @todo: hide in factory
-
-                $exchange = ExchangeRate::find()->where(['bank_id' => $grabber->getBankId(), 'grab_date' => $today])->one();
-
-                if (empty($exchange)) {
-                    $exchange = new ExchangeRate();
-                    $exchange->bank_id = $grabber->getBankId();
-                    $exchange->grab_date = $today;
-                }
-
-                $exchange->dollar_buy = $data[Currency::DOLLAR_ID]['buy'];
-                $exchange->dollar_sale = $data[Currency::DOLLAR_ID]['sale'];
-                $exchange->euro_buy = $data[Currency::EURO_ID]['buy'];
-                $exchange->euro_sale = $data[Currency::EURO_ID]['sale'];
             }
             catch (\Exception $ex) {
 
@@ -71,33 +60,102 @@ class UpdateController extends Controller
                 }
             }
         }
-        while (empty($exchange) && $try_number <= $tries_count);
+        while (empty($data) && $try_number <= $tries_count);
 
+        $exchange_rates = [];
+
+        // we have some data
+        if (!empty($data)) {
+
+            foreach ($data as $currency_id => $currency_values) {
+
+                // check if we already have exchange rates for this day
+                $exchange = ExchangeRateNew::find()
+                    ->where([
+                        'bank_id' => $grabber->getBankId(),
+                        'currency_id' => $currency_id,
+                        'grab_date' => $today
+                    ])
+                    ->one();
+
+                // if no, create new objects
+                if (empty($exchange)) {
+                    $exchange = new ExchangeRateNew();
+                    $exchange->bank_id = $grabber->getBankId();
+                    $exchange->currency_id = $currency_id;
+                    $exchange->grab_date = $today;
+                }
+
+                // fill buy and sale values
+                $exchange->buy = $currency_values['buy'];
+                $exchange->sale = $currency_values['sale'];
+
+                // add to exchange rates array
+                $exchange_rates[] = $exchange;
+
+            }
+        }
         // get last exchange rates if grabber is not working
-        if (empty($exchange)) {
+        else {
 
-            // @todo: hide in factory
+            // get last grabbed date
 
-            $last_exchanges = ExchangeRate::find()->where(['bank_id' => $grabber->getBankId()])->orderBy('grab_date DESC')->one();
+            $last_exchanges = ExchangeRateNew::find()
+                ->where([
+                    'bank_id' => $grabber->getBankId()
+                ])
+                ->orderBy('grab_date DESC')
+                ->one();
 
-            if ($last_exchanges->grab_date == $today) {
-                $exchange = $last_exchanges;
+            $last_exchanges_date = $last_exchanges->grab_date;
+
+            // get grabbed exchange rates for last date
+
+            $last_exchanges = ExchangeRateNew::find()
+                ->where([
+                    'bank_id' => $grabber->getBankId(),
+                    'grab_date' => $last_exchanges_date
+                ])
+                ->all();
+
+            // save each exchange rate
+
+            foreach ($last_exchanges as $last_exchange) {
+                if ($last_exchange->grab_date == $today) {
+                    $exchange = $last_exchange;
+                }
+                else {
+                    $exchange = new ExchangeRateNew();
+                    $exchange->attributes = $last_exchange->attributes;
+                    $exchange->id = null;
+                    $exchange->grab_date = $today;
+                }
+
+                $exchange_rates[] = $exchange;
             }
-            else {
-                $exchange = new ExchangeRate();
-                $exchange->attributes = $last_exchanges->attributes;
-                $exchange->id = null;
-                $exchange->grab_date = $today;
-            }
 
-
-            echo ("Last exchange rates will be inserted for $strategy_classname" . PHP_EOL);
+            echo ("Last exchange rates from $last_exchanges_date will be inserted for $strategy_classname" . PHP_EOL);
 
         }
 
-        echo ($strategy_classname . " updated with dollar $exchange->dollar_buy/$exchange->dollar_sale, euro $exchange->euro_buy/$exchange->euro_sale" . PHP_EOL);
+        // prepare currency codes for report
+        $currency_codes = ArrayHelper::map(Currency::find()->all(), 'id', 'code');
 
-        $exchange->save();
+        // save exchange rates and report
+
+        echo ($strategy_classname . ' ');
+
+        foreach ($exchange_rates as $exchange_rate) {
+            echo(
+                $currency_codes[$exchange_rate->currency_id] . ':' .
+                $exchange_rate->buy . '/' .
+                $exchange_rate->sale . ' '
+            );
+
+            $exchange->save();
+        }
+
+        echo (PHP_EOL);
 
     }
 
@@ -114,5 +172,35 @@ class UpdateController extends Controller
         foreach ($banks_to_grab as $bank) {
             $this->actionBank($bank->name, $tries_count, $seconds_to_sleep);
         }
+    }
+
+    public function actionMigrate()
+    {
+
+        $currencies = [
+            840 => 'dollar',
+            978 => 'euro'
+        ];
+        $old_rates = ExchangeRate::find()->orderBy('id')->all();
+
+        foreach ($old_rates as $old_rate) {
+            $rate_layout = new ExchangeRateNew();
+            $rate_layout->bank_id = $old_rate->bank_id;
+            $rate_layout->grab_date = $old_rate->grab_date;
+
+            foreach ($currencies as $currency_id => $currency_name) {
+                $new_rate = clone $rate_layout;
+
+                $new_rate->currency_id = $currency_id;
+                $new_rate->buy = $old_rate->{$currency_name . '_buy'};
+                $new_rate->sale = $old_rate->{$currency_name . '_sale'};
+
+                $new_rate->save();
+                echo  ("Added rate #$new_rate->id" . PHP_EOL);
+            }
+
+        }
+
+        die;
     }
 }

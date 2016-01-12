@@ -19,6 +19,9 @@ abstract class ExchangeRateGrabberStrategyAbstract
     /** @var ExchangeRateGrabberInfo Metadata of grabber */
     protected $info;
 
+    /** @var array Array to store grabber currency checker values */
+    private static $currency_checker;
+
     /**
      * Create strategry from strategy name
      * It can return existing class object or construct CommonBankGrabStrategy with bankname
@@ -124,12 +127,34 @@ abstract class ExchangeRateGrabberStrategyAbstract
             throw new \RuntimeException('broken markup:no exchange');
         }
 
-        // check for values of exchanges and currency checker
+        // build currency checker values
 
-        $currency_checker = [
-            Currency::DOLLAR_ID => ['USD', '$'],
-            Currency::EURO_ID => ['EUR', '€', '&euro;']
-        ];
+        if (empty(self::$currency_checker)) {
+
+            $currency_checker = [];
+            $currencies = Currency::find()->all();
+
+            foreach ($currencies as $currency) {
+                if (empty($currency_checker[$currency->id])) {
+                    $currency_checker[$currency->id] = [];
+                }
+
+                // push currency code and symbol
+                array_push($currency_checker[$currency->id], $currency->code, $currency->symbol);
+
+                // add additional grabber currency checker values
+                if (!empty($currency->grabberCurrencyCheckers)) {
+                    foreach ($currency->grabberCurrencyCheckers as $checker) {
+                        array_push($currency_checker[$currency->id], $checker->value);
+                    }
+                }
+            }
+
+            self::$currency_checker = $currency_checker;
+
+        }
+
+        // check for values of exchanges and currency checker
 
         foreach ($this->exchanges as $currency => $exchange) {
 
@@ -137,7 +162,7 @@ abstract class ExchangeRateGrabberStrategyAbstract
                 throw new \RuntimeException('broken markup:no exchange');
             }
 
-            if (!in_array($exchange['check'], $currency_checker[$currency])) {
+            if (!in_array($exchange['check'], self::$currency_checker[$currency])) {
                 throw new \RuntimeException('broken markup:check fail');
             }
         }

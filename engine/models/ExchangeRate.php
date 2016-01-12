@@ -24,7 +24,7 @@ class ExchangeRate extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'exchanges_new';
+        return 'exchange_new';
     }
 
     /**
