@@ -2,12 +2,11 @@
 
 namespace app\grabbers\banks;
 
-use app\models\Currency;
-
 use app\grabbers\ExchangeRateGrabbingStrategyInterface;
 use app\grabbers\CommonBankGrabStrategy;
 
 use serhatozles\simplehtmldom\simple_html_dom_node;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is class for grabbing http://minfin.com.ua
@@ -36,11 +35,18 @@ class Minfin extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrat
     
     public function execute()
     {
-        foreach ([Currency::DOLLAR_ID => 'USD', Currency::EURO_ID => 'EUR'] as $currency_id => $currency_alias) {
+        // get list of currencies for this strategy
+        $currencies = ArrayHelper::map($this->info->grabberStrategyCurrencies, 'currency.id', 'currency.code');
 
+        if (empty($currencies)) {
+            return;
+        }
+
+        // and execute each of them
+        foreach ($currencies as $currency_id => $currency_code) {
             $this->current_curency_id = $currency_id;
-            $this->current_curency_alias = $currency_alias;
-            
+            $this->current_curency_alias = $currency_code;
+
             parent::execute();
         }
 
@@ -49,7 +55,6 @@ class Minfin extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrat
     
     protected function grabValues(simple_html_dom_node $cells)
     {
-        
         $buy = $this->grabTableCell($cells, '.au-mid-buysell', 0);
         $sale = $this->grabTableCell($cells, '.au-mid-buysell', 1);
 

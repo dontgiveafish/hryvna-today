@@ -2,10 +2,10 @@
 
 namespace app\grabbers\banks;
 
-use app\models\Currency;
-
 use app\grabbers\ExchangeRateGrabberStrategyAbstract;
 use app\grabbers\ExchangeRateGrabbingStrategyInterface;
+
+use yii\helpers\ArrayHelper;
 
 /**
  * This is class for grabbing non-common Privatbank API
@@ -28,7 +28,7 @@ class Privat extends ExchangeRateGrabberStrategyAbstract implements ExchangeRate
         $html = file_get_contents($url);
 
         if (empty($html)) {
-            throw new \LogicException('broken markup:no data');
+            throw new \LogicException('broken anwer:no data');
         }
 
         $json = json_decode($html);
@@ -37,40 +37,41 @@ class Privat extends ExchangeRateGrabberStrategyAbstract implements ExchangeRate
             throw new \LogicException('broken json: no data');
         }
 
-        // USD
+        // prepare available currency codes
+        $currencies = $this->info->grabberStrategyCurrencies;
 
-        $buy = $this->grabJson($json, 2, 'buy');
-        $sale = $this->grabJson($json, 2, 'sale');
-        $check = $this->grabJson($json, 2, 'ccy');
+        if (!empty($currencies)) {
 
-        $this->saveCurrencyValues(Currency::DOLLAR_ID, $buy, $sale, $check);
+            $currency_codes = ArrayHelper::map($currencies, 'currency.code', 'currency.id');
 
-        // EUR
+            // this code is here because PrivatBank use RUR for RUB :-/
+            foreach ($currencies as $currency) {
+                if (!empty($currency->currency->grabberCurrencyCheckers)) {
+                    foreach ($currency->currency->grabberCurrencyCheckers as $checker) {
+                        $currency_codes[$checker->value] = $currency->currency->id;
+                    }
+                }
+            }
 
-        $buy = $this->grabJson($json, 0, 'buy');
-        $sale = $this->grabJson($json, 0, 'sale');
-        $check = $this->grabJson($json, 0, 'ccy');
+            // search for available currencies and save values
+            foreach ($json as $key => $data) {
+                $currency_code = $data->ccy ?: null;
 
-        $this->saveCurrencyValues(Currency::EURO_ID, $buy, $sale, $check);
-        
-        return $this->returnValues();
-    }
+                if (!empty($currency_code) &&
+                    !empty($currency_codes[$currency_code]) &&
+                    $data->base_ccy == 'UAH'
+                ) {
+                    $this->saveCurrencyValues(
+                        $currency_codes[$currency_code],
+                        $data->buy,
+                        $data->sale,
+                        $currency_code
+                    );
+                }
+            }
 
-    /**
-     * Get and filter JSON value
-     * 
-     * @param array $json_array
-     * @param type $currency_id
-     * @param type $key
-     * @return type
-     * @throws \Exception
-     */
-    private function grabJson(array $json_array, $currency_id, $key)
-    {
-        if (empty($json_array[$currency_id]->$key)) {
-            throw new \LogicException('broken json: missing value');
         }
 
-        return $json_array[$currency_id]->$key;
+        return $this->returnValues();
     }
 }

@@ -2,8 +2,6 @@
 
 namespace app\grabbers\banks;
 
-use app\models\Currency;
-
 use app\grabbers\CommonBankGrabStrategy;
 use app\grabbers\ExchangeRateGrabbingStrategyInterface;
 
@@ -17,28 +15,16 @@ class Kredo extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrate
     /**
      * {@inheritdoc}
      */
-    protected function grabValues(simple_html_dom_node $cells)
+    protected function grabTableCell(simple_html_dom_node $cells, $tr_idx, $td_idx, $tr_selector = null, $td_selector = null)
     {
+        // grab cell as usual
+        $data = parent::grabTableCell($cells, $tr_idx, $td_idx, $tr_selector, $td_selector);
 
-        // USD
+        // separate currency code
+        if ($td_idx == 0) {
+            $data = substr($data, 3, 3);
+        }
 
-        $cell = explode('/', $this->grabTableCell($cells, 1, 1));
-
-        $buy = $cell[0] / 100;
-        $sale = $cell[1] / 100;
-        $check = $this->grabTableCell($cells, 1, 0);
-
-        $this->saveCurrencyValues(Currency::DOLLAR_ID, $buy, $sale, $check);
-
-        // EUR
-
-        $cell = explode('/', $this->grabTableCell($cells, 2, 1));
-
-        $buy = $cell[0] / 100;
-        $sale = $cell[1] / 100;
-        $check = $this->grabTableCell($cells, 2, 0);
-
-        $this->saveCurrencyValues(Currency::EURO_ID, $buy, $sale, $check);
-
+       return $data;
     }
 }

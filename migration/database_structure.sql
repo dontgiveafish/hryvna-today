@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Січ 12 2016 р., 10:38
+-- Час створення: Січ 13 2016 р., 13:48
 -- Версія сервера: 5.5.46-0ubuntu0.14.04.2
 -- Версія PHP: 5.5.9-1ubuntu4.14
 
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `exchange_rates` (
   `sale` decimal(10,5) NOT NULL,
   `grab_date` date NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `bank_id and date` (`bank_id`,`currency_id`,`grab_date`),
+  UNIQUE KEY `bank_id and currency_id and date` (`bank_id`,`currency_id`,`grab_date`),
   KEY `id` (`id`),
   KEY `currency_id` (`currency_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `grabber_currency_checker` (
   `currency_id` int(10) unsigned NOT NULL,
   `value` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `value` (`value`),
   KEY `currency_id` (`currency_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
@@ -138,6 +139,7 @@ CREATE TABLE IF NOT EXISTS `grabber_strategy_currency` (
   `check_td_selector` varchar(256) DEFAULT NULL,
   `check_td_idx` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `strategy_id` (`strategy_id`,`currency_id`),
   KEY `bank_id` (`strategy_id`,`currency_id`),
   KEY `currency_id` (`currency_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;

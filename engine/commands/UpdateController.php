@@ -152,7 +152,7 @@ class UpdateController extends Controller
                 $exchange_rate->sale . ' '
             );
 
-            $exchange->save();
+            $exchange_rate->save();
         }
 
         echo (PHP_EOL);
