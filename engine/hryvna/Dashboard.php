@@ -1,315 +1,286 @@
 <?php
 
 /* 
- * This class is provided to operate with database and create data structures for using in template and APIs
+ * This class is provided to operate with database and create data structures to build website and APIs
  */
 
 namespace app\hryvna;
  
 use Yii;
+use yii\helpers\ArrayHelper;
 
 use app\models;
 
 class Dashboard
 {
-
+    /** @const Format for converting \DateTime to string */
     const DATE_FORMAT = 'Y-m-d';
 
-    /**
-     * Actual date is a last date when exchanges for all banks are ready
-     * @return bool|Datetime
-     */
-    public static function getActualDate()
-    {
-        $banks_count = models\Bank::find()->count();
+    /** @const Flag to calculate difference in exchange rates with previous date */
+    const FLAG_CALCULATE_DIFF = 0x1;
 
-        $table_exchanges = models\ExchangeRate::tableName();
-        
+    /** @const Flag to round exchange rates to cents */
+    const FLAG_ROUND_TO_CENTS = 0x2;
+
+    /** @var int[] Array to store currency IDs */
+    private $currencies;
+
+    /** @var int Field to store options */
+    private $options;
+
+    /** @var \DateTime Date to start getting exchange rates */
+    private $startDate;
+
+    /**
+     * Dashboard constructor
+     * @param int[] $currencies List of currency IDs
+     * @param int $options
+     * @param \DateTime|null $startDate
+     */
+    public function __construct(array $currencies, $options = 0, \DateTime $startDate = null)
+    {
+
+        if (empty($startDate)) {
+            $startDate = new \DateTime();
+        }
+
+        $this->startDate = clone $startDate;
+        $this->currencies = $currencies;
+        $this->options = $options;
+    }
+
+    /**
+     * This method is taking exchange rates for selected date and currency from database
+     * @param \DateTime $today
+     * @param int $currency_id
+     * @param string|null $group_by
+     * @param array|null $conditions
+     * @return array
+     */
+    private function getAvgDay(\DateTime $today, $currency_id, $group_by = null, array $conditions = null)
+    {
+        //prepare date
+        $today_string = $today->format(self::DATE_FORMAT);
+
+        // prepare condition queries
+        $conditions_query = '';
+        if (!empty($conditions)) {
+            $conditions_query .= 'AND ';
+            $conditions_query .= implode(' AND ', $conditions);
+        }
+
+        // prepare GROUP BY expressions
+        $group_by_select = $group_by_expression = '';
+        if (!empty($group_by)) {
+            $group_by_select = "$group_by as rates_index,";
+            $group_by_expression = "GROUP BY $group_by";
+        }
+
+        // prepare ROUND expressions
+        $round_expression_left = $round_expression_right = '';
+        if ($this->options & self::FLAG_ROUND_TO_CENTS) {
+            $round_expression_left = 'ROUND(';
+            $round_expression_right = ', 2)';
+        }
+
+        // prepare table names
+        $table_exchanges = models\ExchangeRateNew::tableName();
+        $table_banks = models\Bank::tableName();
+
+        // query cooking
+
         $query = "
-            SELECT grab_date as actual_date, count(*) as exchanges_count
-
-            FROM `$table_exchanges` as exchanges
-
-            GROUP BY `grab_date`
-
-            HAVING exchanges_count = $banks_count
-            ORDER BY `grab_date` DESC
-
-            LIMIT 1
-        ";
-        
-        $command = Yii::$app->db->createCommand($query);
-        $result = $command->queryOne();
-
-        if (empty($result)) {
-            return false;
-        }
-
-        return \DateTime::createFromFormat(self::DATE_FORMAT, $result['actual_date']);
-    }
-    
-    /**
-     * Giving average exchanges for one day
-     * This is using on first screen of site
-     * @param \DateTime $today
-     * @return array
-     */
-    public static function getAvg(\DateTime $today = null)
-    {
-
-        if (empty($today)) {
-            $today = self::getActualDate();
-        }
-
-        $table_exchanges = models\ExchangeRate::tableName();
-        $table_banks = models\Bank::tableName();
-
-        $result = [];
-
-        for ($i = 0; $i < 2; ++$i) {
-
-            $today_string = $today->format(self::DATE_FORMAT);
-
-            // this is a big query to get average values in one select
-
-            $part_of_query = "
-                    FROM $table_exchanges as exchanges
-                    JOIN $table_banks as banks ON banks.id = exchanges.bank_id
-                    WHERE `grab_date` = '$today_string'
-            ";
-
-            $query = "
-                    SELECT *,
-
-                        (dollar_avg_buy + dollar_avg_sale ) /2 AS dollar_avg,
-                        (euro_avg_buy + euro_avg_sale) /2 AS euro_avg
-
-                    FROM
-                    (
-                        SELECT
-                            AVG(dollar_buy) as dollar_buy_banks, AVG(dollar_sale) as dollar_sale_banks,
-                            AVG(euro_buy) as euro_buy_banks, AVG(euro_sale) as euro_sale_banks
-                        $part_of_query
-                        AND bank_id != 1
-                        AND banks.type = 'bank'
-
-                    ) as banks,
-                    (
-                        SELECT 
-                            AVG(dollar_buy) as dollar_nbu,
-                            AVG(euro_buy) as euro_nbu
-                        $part_of_query
-                        AND bank_id = 1
-
-                    ) as nbu,
-                    (
-                        SELECT
-                            AVG(dollar_buy) as dollar_avg_buy, AVG(dollar_sale) as dollar_avg_sale,
-                            AVG(euro_buy) as euro_avg_buy, AVG(euro_sale) as euro_avg_sale
-                        $part_of_query
-                        AND banks.type = 'bank'
-
-                    ) as avg,
-                    (
-                        SELECT
-                            AVG(dollar_buy) as dollar_buy_black, AVG(dollar_sale) as dollar_sale_black,
-                            AVG(euro_buy) as euro_buy_black, AVG(euro_sale) as euro_sale_black
-                        $part_of_query
-                        AND bank_id = 16
-
-                    ) as markets,
-                    (
-                        SELECT
-                            AVG(dollar_buy) as dollar_buy_mizhbank, AVG(dollar_sale) as dollar_sale_mizhbank,
-                            AVG(euro_buy) as euro_buy_mizhbank, AVG(euro_sale) as euro_sale_mizhbank
-                        $part_of_query
-                        AND bank_id = 17
-
-                    ) as mizhbank
-            ";
-
-            // call this query
-
-            $command = Yii::$app->db->createCommand($query);
-            $result[$i] = $command->queryOne();
-
-            // today is a new yesterday
-            
-            $today->modify("-1 day");
-
-        }
-
-        // calculate diff and make a proper format
-        foreach ($result[0] as $key => $value) {
-            $result[0][$key] = array('value' => $value, 'diff' => $value - $result[1][$key]);
-        }
-        
-        // give it away now
-        return $result[0];
-            
-    }
-    
-    /**
-     * Getting history of exchanges
-     * @param \DateTime $today
-     * @param int $period 
-     * @param int $delta
-     * @return array
-     */
-    public static function getDays(\DateTime $today = null, $period = -10, $delta = 1) {
-
-        if (empty($today)) {
-            $today = self::getActualDate();
-        }
-
-        $exchanges_table = models\ExchangeRate::tableName();
-        $table_banks = models\Bank::tableName();
-                
-        $today->modify(($delta * $period) .' day');
-        
-        $result = [];
-
-        for ($i = 0; $i < abs($period); ++$i) {
-
-            $today->modify("$delta day");
-            $today_string = $today->format(self::DATE_FORMAT);
-
-            $query = "
-            SELECT *, ROUND(dollar_avg, 2) AS dollar_avg_rounded, ROUND(euro_avg, 2) AS euro_avg_rounded
+            SELECT *, $round_expression_left ((buy + sale) /2) $round_expression_right AS avg
             FROM (
 
-                SELECT * , (dollar_buy + dollar_sale) /2 AS dollar_avg, (euro_buy + euro_sale) /2 AS euro_avg
-                FROM (
+                SELECT
+                    $group_by_select
+                    $round_expression_left AVG(buy)  $round_expression_right as buy,
+                    $round_expression_left AVG(sale) $round_expression_right as sale
+                FROM
+                  $table_exchanges as exchanges
+                JOIN
+                  $table_banks as banks ON banks.id = exchanges.bank_id
+                WHERE `grab_date` = '$today_string'
+                  AND exchanges.currency_id = $currency_id
+                  $conditions_query
 
-                    SELECT
-                        AVG(dollar_buy) AS dollar_buy, AVG(dollar_sale) AS dollar_sale,
-                        AVG(euro_buy) AS euro_buy, AVG(euro_sale) AS euro_sale
-                    FROM $exchanges_table as exchanges
-                    JOIN $table_banks as banks ON banks.id = exchanges.bank_id
-                    WHERE `grab_date` = '$today_string'
-                    AND banks.type = 'bank'
+                $group_by_expression
 
-                ) AS avgs_temp
-            ) AS avgs
-            ";
+                ORDER BY FIELD(banks.rate, 0), banks.rate, banks.id
 
-            $command = Yii::$app->db->createCommand($query);
-            $day = $command->queryOne();
-            
-            $day['date'] = $today->format(self::DATE_FORMAT);
-            //$day['text'] = $today->format(self::DATE_FORMAT);
+            ) AS avgs_temp
+        ";
 
-            $result[] = $day;
+        $command = Yii::$app->db->createCommand($query);
 
+        if (empty($group_by)) {
+            // return one item if no groups
+
+            $result = [
+                'avg' => $command->queryOne()
+            ];
+        }
+        else {
+            // return array if groups
+
+            $rows = $command->queryAll();
+
+            // reindex array
+            $result = ArrayHelper::index($rows, function (&$row) {
+                return $row['rates_index'];
+            });
+        }
+
+        // build structure
+        foreach ($result as &$row) {
+
+            if (empty($row['avg'])) {
+                $row = null;
+            }
+            else {
+
+                // index index value
+                if (!empty($row['rates_index'])) {
+                    unset($row['rates_index']);
+                }
+
+                // build value structure
+                foreach ($row as $key => &$value) {
+                    $value = ['value' => $value];
+                }
+            }
         }
 
         return $result;
-
     }
-    
+
     /**
-     * Getting exchanges in banks for selected period
-     * @param \DateTime $today
-     * @param int $period
+     * This method is giving history of exchange rates for selected period
+     * @param int $days_count
+     * @param int $period_delta
+     * @param array $params
      * @return array
      */
-    public static function getBankDays(\DateTime $today = null, $period = -10) {
+    private function getAvgPeriod($days_count, $period_delta, array $params = [])
+    {
+        // load options and whatever
 
-        if (empty($today)) {
-            $today = self::getActualDate();
+        $currencies = $this->currencies;
+        $diff_increment = ($this->options & self::FLAG_CALCULATE_DIFF) ? 1 : 0;
+
+        // build period array
+
+        $period = [];
+        $today = clone $this->startDate;
+
+        for ($i = 0; $i < $days_count + $diff_increment; ++$i) {
+            $period[$today->format(self::DATE_FORMAT)] = clone $today;
+            $today->modify(intval($period_delta) . ' days');
         }
 
-        $table_exchanges = models\ExchangeRate::tableName();
-        $banks_table = models\Bank::tableName();
-        
-        $today->modify($period .' day');
-        
-        $days = [];
-        
-        for ($i = 0; $i < abs($period); ++$i) {
+        ksort($period);
 
-            $today->modify("+1 day");
+        // run throw period
 
-            $yesterday = clone $today;
-            $yesterday->modify('-1 day');
+        $result = [];
 
-            $today_string = $today->format(self::DATE_FORMAT);
+        foreach ($period as $today_string => $today_object) {
 
-            $query = "
+            foreach ($currencies as $currency_id) {
 
-                SELECT
+                $groups = [];
 
-                       q1.*,
+                foreach ($params as $param) {
 
-                       AVG(dollar_buy) as dollar_buy_yesterday,
-                       AVG(dollar_sale) as dollar_sale_yesterday,
-                       (AVG(q1.dollar_buy_today) - AVG(dollar_buy)) as dollar_buy_diff,
-                       (AVG(q1.dollar_sale_today) - AVG(dollar_sale)) as dollar_sale_diff,
+                    $day_rates = self::getAvgDay($today_object, $currency_id, ...$param); // hello, new php 5.6 feature!;
 
-                       AVG(euro_buy) as euro_buy_yesterday,
-                       AVG(euro_sale) as euro_sale_yesterday,
-                       (AVG(q1.euro_buy_today) - AVG(euro_buy)) as euro_buy_diff,
-                       (AVG(q1.euro_sale_today)- AVG(euro_sale)) as euro_sale_diff
+                    // calculate diff
+                    if ($diff_increment) {
 
-                FROM $table_exchanges as exchanges, (
+                        if (!empty($day_rates)) {
+                            foreach ($day_rates as $rates_index => &$rates_indexes) {
 
-                    SELECT bank_id, 
-                        AVG(dollar_buy) as dollar_buy_today, AVG(dollar_sale) as dollar_sale_today,
-                        AVG(euro_buy) as euro_buy_today, AVG(euro_sale) as euro_sale_today
-                        FROM $table_exchanges as exchanges
-                        JOIN $banks_table as banks ON banks.id = exchanges.bank_id
-                        WHERE `grab_date` = '$today_string'
-                        AND banks.id = exchanges.bank_id
+                                if (!empty($rates_indexes)) {
+                                    foreach ($rates_indexes as $value_index => &$value) {
 
-                    GROUP BY bank_id
+                                        // calc diff
+                                        if (
+                                            // no previous day
+                                            empty($yesterday_string) ||
+                                            // no previous day values
+                                            empty($result[$yesterday_string][$currency_id][$rates_index][$value_index]['value']))
+                                        {
+                                            $diff = null;
+                                        } else {
+                                            $diff = $value['value'] - $result[$yesterday_string][$currency_id][$rates_index][$value_index]['value'];
+                                        }
 
-                ) as q1
+                                        // finally set diff
+                                        $value['diff'] = $diff;
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-                WHERE q1.bank_id = exchanges.bank_id
-                AND grab_date = '".$yesterday->format(self::DATE_FORMAT)."'
-
-                GROUP BY bank_id
-
-            ";
-
-            $command = Yii::$app->db->createCommand($query);
-            $res = $command->queryAll();
-
-            if (!empty($res)) {
-
-                foreach ($res as $row) {
-
-                    $day = [
-
-                        'dollar_buy' => [
-                            'value' => $row['dollar_buy_today'],
-                            'diff' => $row['dollar_buy_diff'],
-                        ],
-                        'dollar_sale' => [
-                            'value' => $row['dollar_sale_today'],
-                            'diff' => $row['dollar_sale_diff'],
-                        ],
-                        'euro_buy' => [
-                            'value' => $row['euro_buy_today'],
-                            'diff' => $row['euro_buy_diff'],
-                        ],
-                        'euro_sale' => [
-                            'value' => $row['euro_sale_today'],
-                            'diff' => $row['euro_sale_diff'],
-                        ],
-
-                    ];
-
-                    $days[$today->format(self::DATE_FORMAT)][$row['bank_id']] = $day;
-
+                    $groups[] = $day_rates;
                 }
 
+                $result[$today_string][$currency_id] = array_merge(...$groups); // and hello again!
             }
 
-        }
-        
-        return $days;
+            // my favourite part
+            $yesterday_string = $today_string;
 
-   }
+        }
+
+        // delete first date exchange rates(they were loaded to calculate diff)
+        if ($diff_increment) {
+            array_shift($result);
+        }
+
+        // give it away now
+        return $result;
+    }
+
+    /**
+     * Giving average exchanges for only one day
+     * This is used on first screen of site
+     * @return array
+     */
+    public function getAvg()
+    {
+        return reset($this->getAvgHistory(1, -1));
+    }
+
+    /**
+     * Giving average exchanges for bank types
+     * This is used on the second screen of site
+     * @param int $period_length
+     * @param int $period_delta
+     * @return array
+     */
+    public function getAvgHistory($period_length = 10, $period_delta = -1)
+    {
+        return $this->getAvgPeriod($period_length, $period_delta, [
+            [],
+            ['banks.type'],
+        ]);
+    }
+
+    /**
+     * Getting exchanges in banks
+     * This is used on third screen of site
+     * @param int $period_length
+     * @param int $period_delta
+     * @return array
+     */
+    public function getBanksHistory($period_length = 10, $period_delta = -1)
+    {
+        return $this->getAvgPeriod($period_length, $period_delta, [
+            ['banks.id']
+        ]);
+    }
 
 }
