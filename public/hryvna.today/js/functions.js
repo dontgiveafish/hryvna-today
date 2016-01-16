@@ -272,6 +272,9 @@ function fancyboxPopup(obj, arrConfig){
 
 /* CONVERTER CALCULATIONS */
 function calculateMyMoney() {
+
+	// @todo prepare to many currencies
+
     var table = $('.table-currency-converter');
     
     var money = $('#converter-sum').val();
@@ -299,18 +302,18 @@ function calculateMyMoney() {
        if (operation == 'buy') {
 
            if (currency == 'usd') {
-               var uah_k = $(this).data('dollar-sale');
-               var eur_k = $(this).data('dollar-sale') / $(this).data('euro-sale');
+               var uah_k = $(this).data('usd-sale');
+               var eur_k = $(this).data('usd-sale') / $(this).data('eur-sale');
                
            }
            else if (currency == 'eur') {
-               var uah_k = $(this).data('euro-sale');
-               var eur_k = $(this).data('euro-sale') / $(this).data('dollar-sale');
+               var uah_k = $(this).data('eur-sale');
+               var eur_k = $(this).data('eur-sale') / $(this).data('usd-sale');
                
            }
            else if (currency == 'uah') {
-               var uah_k = 1/$(this).data('dollar-sale');
-               var eur_k = 1/$(this).data('euro-sale');
+               var uah_k = 1/$(this).data('usd-sale');
+               var eur_k = 1/$(this).data('eur-sale');
            }
 
 
@@ -319,18 +322,18 @@ function calculateMyMoney() {
        else if (operation == 'sale') {
            
            if (currency == 'usd') {
-               var uah_k = $(this).data('dollar-buy');
-               var eur_k = $(this).data('dollar-buy') / $(this).data('euro-buy');
+               var uah_k = $(this).data('usd-buy');
+               var eur_k = $(this).data('usd-buy') / $(this).data('eur-buy');
                
            }
            else if (currency == 'eur') {
-               var uah_k = $(this).data('euro-buy');
-               var eur_k = $(this).data('euro-buy') / $(this).data('dollar-buy');
+               var uah_k = $(this).data('eur-buy');
+               var eur_k = $(this).data('eur-buy') / $(this).data('usd-buy');
                
            }
            else if (currency == 'uah') {
-               var uah_k = 1/$(this).data('dollar-buy');
-               var eur_k = 1/$(this).data('euro-buy');
+               var uah_k = 1/$(this).data('usd-buy');
+               var eur_k = 1/$(this).data('eur-buy');
            }
 
        }
@@ -1251,56 +1254,42 @@ function chooseCurrency() {
                         
 			e.preventDefault();
                         
-                        var currency =  $(this).attr('href').replace('#','');
-                        
-                        $('.choose-currency-graph').removeClass('usd eur').addClass(currency);
-                        
-                        if ( currency == 'usd' ) {
-                                $('.choose-language-list a').removeClass('active');
-                                $('.choose-language-list li:eq(0) a').addClass('active');
+			current_currency = $(this).data('currency-id');
+			var current_currency_code =  $(this).attr('href').replace('#','');
 
-                                current_currency = 840;
-                                var current_currency_title = 'dollar';
-                        }
+			$('.choose-currency-graph').removeClass('usd eur').addClass(current_currency_code);
 
-                        if ( currency == 'eur' ) {
-                                $('.choose-language-list a').removeClass('active');
-                                $('.choose-language-list li:eq(1) a').addClass('active');
+			// ЗДЕСЬ ПРОИСХОДИТ НЕЧТО ПРЕКРАСНОЕ
 
-                                current_currency = 978;
-                                var current_currency_title = 'euro';
+			firstGraphic();
+			$('.back-to-banks').trigger('click');
+			graficCurrency(start_date);
 
-                        }
-                        
-                        // ЗДЕСЬ ПРОИСХОДИТ НЕЧТО ПРЕКРАСНОЕ
+			var selector_currency_value = current_currency + '-value';
+			var selector_currency_diff =  current_currency + '-diff';
 
-                        firstGraphic();
-                        $('.back-to-banks').trigger('click');
-                        graficCurrency(start_date);
+			$('.choose-currency-text-inner p').html(datas_tank[currency_delta][current_currency]['story']);
 
-                        
-                        $('.choose-currency-text-inner p').html(datas_tank[currency_delta][current_currency]['story']);
-                        
-                        $('.price-large').text($('.price-large').data(current_currency_title));
-                        
-                        $('.table-today-info tbody td div').each(function() {
+			$('.price-large').text($('.price-large').data(selector_currency_value));
 
-                            if ($(this).data(current_currency_title) == null) return;
+			$('.table-today-info tbody td div').each(function() {
 
-                            var i = '';
-                            var diff = $(this).data(current_currency_title + '-diff');
+				if ($(this).data(selector_currency_value) == null) return;
 
-                            if (diff != null) {
-                                if (diff > 0) i_class = 'icon-arrow-yellow-top';
-                                if (diff < 0) i_class = 'icon-arrow-yellow-down';
-                                if (diff == 0) i_class = 'icon-arrow-medium';
+				var i = '';
+				var diff = $(this).data(selector_currency_diff);
 
-                                i = ' <i class="' + i_class + '"></i>';
-                            }
+				if (diff != null) {
+					if (diff > 0) i_class = 'icon-arrow-yellow-top';
+					if (diff < 0) i_class = 'icon-arrow-yellow-down';
+					if (diff == 0) i_class = 'icon-arrow-medium';
 
-                            $(this).find('span').html(
-                                $(this).data(current_currency_title) + i);
-                        });
+					i = ' <i class="' + i_class + '"></i>';
+				}
+
+				$(this).find('span').html(
+					$(this).data(selector_currency_value) + i);
+				});
 
 		});
                 
@@ -1355,7 +1344,8 @@ $(document).ready( function(){
 	chooseCurrency();
 	graficCurrency(start_date);
 	firstGraphic();
-	showMoreBanks();       
+	showMoreBanks();
+	calculateMyMoney();
         
 });
 $(window).resize(function(){

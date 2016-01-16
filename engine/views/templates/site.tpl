@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>Гривня Тудей | Курс гривні, долара та євро</title>
-	<meta name="keywords" content="курс валют, курс гривні, курс долара, курс євро, курс банків, мижбанк, чорний ринок, конвертер валют, історія курсу">
+	<meta name="keywords" content="курс валют, курс гривні, курс долара, курс євро, курс банків, міжбанк, чорний ринок, конвертер валют, історія курсу">
 	<meta name="description" content="Стежте щодня за курсом гривні по відношенню до долара та євро. Актуальний курс валют банків України та міжбанку, аналітичні інструменти на кожен день">
 	<link rel="shortcut icon" href="img/favicon.ico" />
 
@@ -35,34 +35,6 @@
 	<meta property="og:url" content="http://hryvna.today" />
 	<meta property="og:see_also" content="http://dontgiveafish.com" />
 
-	{{function name=today}}
-		<td>
-			<div
-				{{assign var=currency value="dollar_$value"}}
-				{{assign var=currency value=$review.$currency}}
-				{{assign var=dollar_value value=$currency.value|string_format:"%.2f"}}
-				{{assign var=dollar_diff value=$currency.diff|string_format:"%.2f"}}
-				data-dollar="{{$currency.value|string_format:"%.2f"}}"
-				data-dollar-diff="{{$currency.diff}}"
-
-				{{assign var=currency value="euro_$value"}}
-				{{assign var=currency value=$review.$currency}}
-				data-euro="{{$currency.value|string_format:"%.2f"}}"
-				data-euro-diff="{{$currency.diff}}">
-
-				<span>{{$dollar_value}}
-				{{if $dollar_diff > 0}}
-					<i class="icon-arrow-yellow-top"></i>
-				{{elseif $dollar_diff < 0}}
-					<i class="icon-arrow-yellow-down"></i>
-				{{else}}
-					<i class="icon-arrow-medium"></i>
-				{{/if}}</span>
-			</div>
-		</td>
-	{{/function}}
-
-
 </head>
 <body>
 <!-- wrapper -->
@@ -81,8 +53,9 @@
 				<!-- choose-language -->
 				<div class="choose-language">
 					<ul class="choose-language-list">
-						<li><a href="#usd" class="active alert">USD</a></li>
-						<li><a href="#eur">EUR</a></li>
+						{{foreach from=$currencies key=currency_id item=currency name=loop}}
+							<li><a href="#{{$currency.code|strtolower}}"{{if $smarty.foreach.loop.first}} class="active alert"{{/if}} data-currency-id="{{$currency.id}}">{{$currency.code}}</a></li>
+						{{/foreach}}
 					</ul>
 				</div>
 				<!-- choose-language end -->
@@ -122,32 +95,54 @@
 		<section class="today-info" id="today-info" data-color="header-today-info">
 			<div class="container">
 				<div class="title"><div class="title-text"><div class="title-currency">Гривня</div> сьогодні</div></div>
-				<div class="price-large" data-dollar="{{$review.dollar_avg.value|string_format:"%.2f"}}" data-euro="{{$review.euro_avg.value|string_format:"%.2f"}}">{{$review.dollar_avg.value|string_format:"%.2f"}}</div>
+				<div class="price-large"
+					{{foreach from=$currencies key=currency_id item=currency name=loop}}
+						data-{{$currency_id}}-value="{{$review[$currency_id].avg.avg.value|string_format:"%.2f"}}"
+					{{/foreach}}
+				>
+					{{$review[$base_currency_id].avg.avg.value|string_format:"%.2f"}}
+				</div>
 				<!-- table-today-info -->
 				<table class="table-today-info">
 					<thead>
 						<tr>
-							<th colspan="2"><div><span>НБУ</span></div></th>
-							<th><div><span>Банки</span></div></th>
-							<th><div><span>Міжбанк</span></div></th>
-							<th><div><span>Міняйли</span></div></th>
+							{{foreach from=$bank_types key=alias item=title name=loop}}
+							<th{{if $smarty.foreach.loop.first}} colspan="2"{{/if}}><div><span>{{$title}}</span></div></th>
+							{{/foreach}}
 						</tr>
 					</thead>
 					<tbody>
+					{{foreach from=['buy' => 'Купівля', 'sale' => 'Продаж'] key=operation_alias item=operation_title}}
 						<tr>
-							<td><div><span>Купівля</span></div></td>
-                                                        {{today value='nbu'}}
-                                                        {{today value='buy_banks'}}
-                                                        {{today value='buy_mizhbank'}}
-                                                        {{today value='buy_black'}}
+							<td><div><span>{{$operation_title}}</span></div></td>
+							{{foreach from=$bank_types key=alias item=title name=loop}}
+
+									<td>
+										<div
+
+												{{foreach from=$currencies key=currency_id item=currency}}
+													{{assign var=rate value=$review[$currency_id][$alias][$operation_alias]}}
+													data-{{$currency_id}}-value="{{if !empty($rate)}}{{$rate.value|string_format:"%.2f"}}{{else}}-{{/if}}"
+													data-{{$currency_id}}-diff="{{if !empty($rate)}}{{$rate.diff|string_format:"%.2f"}}{{else}}-{{/if}}"
+												{{/foreach}}
+										>
+
+												{{assign var=rate value=$review[$base_currency_id][$alias][$operation_alias]}}
+												<span>{{$rate.value|string_format:"%.2f"}}
+														{{if $rate.diff > 0}}
+															<i class="icon-arrow-yellow-top"></i>
+														{{elseif $rate.diff < 0}}
+															<i class="icon-arrow-yellow-down"></i>
+														{{else}}
+															<i class="icon-arrow-medium"></i>
+														{{/if}}
+												</span>
+										</div>
+									</td>
+
+							{{/foreach}}
 						</tr>
-						<tr>
-							<td><div><span>Продаж</span></div></td>
-                                                        {{today value='nbu'}}
-                                                        {{today value='sale_banks'}}
-                                                        {{today value='sale_mizhbank'}}
-                                                        {{today value='sale_black'}}
-                                                </tr>
+					{{/foreach}}
 					</tbody>
 				</table>
 				<!-- table-today-info end -->
@@ -184,7 +179,7 @@
 						</div>
 					</div>
 					<div class="choose-currency-text-inner">
-						<p>{{$days.week.dollar.story}}</p>
+						<p>{{$stories[$base_currency_id].week}}</p>
 					</div>
 				</div>
 				<!-- add class usd or eur -->
@@ -365,13 +360,16 @@
 						<tbody>
 							{{foreach from=$converter_exchanges key=bank_id item=bank}}
 							<tr
-								data-dollar-buy="{{$bank.dollar_buy.value}}"  data-dollar-sale="{{$bank.dollar_sale.value}}"
-								data-euro-buy="{{$bank.euro_buy.value}}"  data-euro-sale="{{$bank.euro_sale.value}}"
+								{{foreach from=$currencies key=currency_id item=currency}}
+									{{foreach from=['buy', 'sale'] item=operation}}
+										data-{{$currency.code|strtolower}}-{{$operation}}="{{$converter_exchanges[$bank_id]['values'][$currency_id][$operation]}}"
+									{{/foreach}}
+								{{/foreach}}
 							>
-								<td>{{$bank.title}}</td>
+								<td>{{$converter_exchanges[$bank_id].title}}</td>
 
-								<td class="col-uah">{{($bank.dollar_sale.value * 100)|string_format:"%.2f"}}</td>
-								<td class="col-eur">{{($bank.dollar_sale.value / $bank.euro_sale.value * 100)|string_format:"%.2f"}}</td>
+								<td class="col-uah"></td>
+								<td class="col-eur"></td>
 							</tr>
 							{{/foreach}}
 
@@ -395,7 +393,7 @@
 <!-- Widgets -->
 <script src="js/widgets.js"></script>
 <!-- Main functions -->
-<script src="js/functions.js?v3"></script>
+<script src="js/functions.js?v4"></script>
 <!-- Data -->
 <script src="js/data.js?{{$today->getTimestamp()}}"></script>
 

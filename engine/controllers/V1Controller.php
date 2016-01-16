@@ -126,15 +126,6 @@ class V1Controller extends Controller
     }
     
     /**
-     * Actual date is a last date when exchanges for all bank are ready
-     * @return String Date string in mysql format(Y-m-d)
-     */
-    public function actionActualdate()
-    {       
-        return Dashboard::getActualDate();
-    }
-
-    /**
      * Giving average exchanges for one day
      * This is using on first screen of site
      * @param \DateTime $today
@@ -142,8 +133,9 @@ class V1Controller extends Controller
      */
     public function actionAvg()
     {
-        $today = $this->prepareDate();
-        return Dashboard::getAvg($today);
+
+        $dashboard = new Dashboard([840], Dashboard::FLAG_CALCULATE_DIFF);
+        return $dashboard->getAvg();
     }
    
     /**
@@ -152,11 +144,8 @@ class V1Controller extends Controller
      */
     public function actionDays()
     {
-        $today = $this->prepareDate();
-        $period = $this->preparePeriod();
-        $delta = $this->prepareDelta();
-
-        return Dashboard::getDays($today, $period, $delta);
+        $dashboard = new Dashboard([840], Dashboard::FLAG_CALCULATE_DIFF);
+        return $dashboard->getAvgHistory();
     }
 
     /**
@@ -168,6 +157,10 @@ class V1Controller extends Controller
             new \yii\db\Expression('FIELD(rate, 0), rate, id'),            
         ])->all();
     }
+
+    public function actionCurrencies() {
+        // @todo
+    }
     
     /**
      * Getting exchanges in banks for selected period
@@ -175,10 +168,8 @@ class V1Controller extends Controller
      */
     public function actionBankdays()
     {
-        $today = $this->prepareDate();
-        $period = $this->preparePeriod();
-
-        return Dashboard::getBankDays($today, $period);
+        $dashboard = new Dashboard([840], Dashboard::FLAG_CALCULATE_DIFF);
+        return $dashboard->getBanksHistory();
     }
     
     /**
@@ -186,11 +177,13 @@ class V1Controller extends Controller
      * @return array
      */
     public function actionLanding() {
+
+        $dashboard = new Dashboard([840], Dashboard::FLAG_CALCULATE_DIFF);
+
         return [
-            'actual_date' => Dashboard::getActualDate(),
-            'avg' => Dashboard::getAvg(),
-            'days' => Dashboard::getDays(),
-            'banks' => Dashboard::getBankDays(null, -1)
+            'avg' => $dashboard->getAvg(),
+            'days' => $dashboard->getAvgHistory(),
+            'banks' => $dashboard->getBanksHistory()
         ];
     }
 

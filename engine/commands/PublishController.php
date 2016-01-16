@@ -26,14 +26,32 @@ class PublishController extends Controller
     public function actionSite()
     {
 
+        $currencies = ArrayHelper::map(
+            models\SiteCurrency::find()->orderBy('rate')->all(),
+            'currency_id',
+            'currency'
+        );
+
+        $base_currency_id = reset(array_keys($currencies));
+
+        $dashboard = new Dashboard(
+            array_keys($currencies),
+            Dashboard::FLAG_ROUND_TO_CENTS | Dashboard::FLAG_CALCULATE_DIFF
+        );
+
         $params = [
             'today'     => new \DateTime(),
+            'currencies' => $currencies,
+            'base_currency_id' => $base_currency_id,
             'metrics'   => empty(YII_DEBUG),
-            'review'    => $day_review = Dashboard::getAvg(),
-            'banks_exchanges' => $banks_days = Dashboard::getBankDays(null, -10),
-            'banks_names' => $banks_names = ArrayHelper::map(models\Bank::find()->orderBy([
-                new \yii\db\Expression('FIELD(rate, 0), rate, id'),
-            ])->all(), 'id', 'title'), //@todo add right sorting
+            'review'    => $day_review = $dashboard->getAvg(),
+            'banks_exchanges' => $banks_days = $dashboard->getBanksHistory(10),
+            'banks_names' =>
+                $banks_names = ArrayHelper::map(models\Bank::find()->orderBy([
+                    new \yii\db\Expression('FIELD(rate, 0), rate, id'),
+                ])->all(), 'id', 'title'),
+            'bank_types' =>
+                $banks_types = ArrayHelper::map(models\BankType::find()->orderBy('rate')->limit(4)->all(), 'alias', 'title'),
         ];
 
         // generate days
@@ -47,34 +65,53 @@ class PublishController extends Controller
         ];
 
         $data_tank = [];
+        $stories = [];
 
         foreach ($periods as $period_code => $period_info) {
-                $data_tank[$period_code] = Storyteller::describePeriod($period_info['delta'], $period_info['story_one'], $period_info['story_two']);
+                $data_tank[$period_code] = $dashboard->getAvgHistory(10, -$period_info['delta']);
+
+                foreach ($currencies as $currency) {
+                    $story = Storyteller::describePeriod($currency, ...array_values($period_info));
+                    $stories[$currency->id][$period_code] = $story;
+                }
+
         }
 
         $params['days'] = $data_tank;
+        $params['stories'] = $stories;
 
         // generate exchange rates table
 
-        $converter_exchanges = end($banks_days);
+        $exchangerBoard = new Dashboard(array_keys($currencies));
 
-        foreach ($converter_exchanges as $bank_id => $exchange) {
+        $converter_exchanges_banks = end($exchangerBoard->getBanksHistory(1));
+        $converter_exchanges_avg = $exchangerBoard->getAvg();
 
-            // change NBU to avg exchange rates
-            if ($bank_id == 1) {
-                $exchange['dollar_buy'] = ['value' => $day_review['dollar_buy_banks']['value']];
-                $exchange['dollar_sale'] = ['value' => $day_review['dollar_sale_banks']['value']];
-                $exchange['euro_buy'] = ['value' => $day_review['euro_buy_banks']['value']];
-                $exchange['euro_sale'] = ['value' => $day_review['euro_sale_banks']['value']];
-                $exchange['title'] = 'Середній банковий курс';
+        $converter_exchanges = [];
+
+        foreach ($currencies as $currency_id => $currency) {
+            foreach ($converter_exchanges_banks[$currency_id] as $bank_id => $bank_day) {
+
+                $title = $banks_names[$bank_id];
+
+                if ($bank_id == 1) {
+                    $bank_day = $converter_exchanges_avg[$currency_id]['commercial'];
+                    $title = 'Середній банковий курс';
+                }
+
+                $bank = [
+                    'buy' => $bank_day['buy']['value'],
+                    'sale' => $bank_day['sale']['value'],
+                ];
+
+                $converter_exchanges[$bank_id]['values'][$currency_id] = $bank;
+                $converter_exchanges[$bank_id]['title'] = $title;
+
             }
-            else {
-                $exchange['title'] = $banks_names[$bank_id];
-            }
-
-            $converter_exchanges[$bank_id] = $exchange;
 
         }
+
+        ksort($converter_exchanges);
 
         $params['converter_exchanges'] = $converter_exchanges;
 
@@ -93,11 +130,13 @@ class PublishController extends Controller
      */
     public function actionEmail()
     {
+        $base_currency = models\SiteCurrency::find()->orderBy('rate')->one()->currency;
+        $dashboard = new Dashboard([$base_currency->id], Dashboard::FLAG_ROUND_TO_CENTS | Dashboard::FLAG_CALCULATE_DIFF);
 
         $params = [
             'today'     => new \DateTime(),
-            'review'    => $day_review = Dashboard::getAvg(),
-            'story'     => Storyteller::describePeriod(1, 'останній тиждень', 'десять днів')['dollar']['story']
+            'review'    => $dashboard->getAvg()[$base_currency->id],
+            'story'     => Storyteller::describePeriod($base_currency, 1, 'останній тиждень', 'десять днів')
         ];
 
         $probability = rand(0, 100);
@@ -109,7 +148,7 @@ class PublishController extends Controller
             $subject = 'Який курс сьогодні?';
         }
         else {
-            $subject = Storyteller::describeDayChanges();
+            $subject = Storyteller::describeDayChanges($base_currency);
         }
 
         $letter = $this->view->render('@app/views/mail/campaign.tpl', $params);
@@ -154,9 +193,21 @@ class PublishController extends Controller
 
         // prepare data
 
-        $day_review = Dashboard::getAvg();
-        $avg = $day_review['dollar_avg']['value'];
-        $diff = round($day_review['dollar_avg']['diff'], 2);
+        $currencies = ArrayHelper::map(
+            models\SiteCurrency::find()->orderBy('rate')->all(),
+            'currency_id',
+            'currency'
+        );
+
+        $base_currency = reset($currencies);
+
+        $dashboard = new Dashboard([$base_currency->id], Dashboard::FLAG_ROUND_TO_CENTS | Dashboard::FLAG_CALCULATE_DIFF);
+        $avgs = $dashboard->getAvg()[$base_currency->id]['avg']['avg'];
+
+
+        $avg = $avgs['value'];
+        $diff = $avgs['diff'];
+
         if ($diff > 0) {
             $diff = '+' . $diff;
         }
@@ -171,7 +222,7 @@ class PublishController extends Controller
 
         // twitter
 
-        $tweet = Storyteller::tweet();
+        $tweet = Storyteller::tweet($base_currency);
         echo ('Tweet created:' . PHP_EOL);
         echo ($tweet . PHP_EOL);
 
@@ -198,8 +249,8 @@ class PublishController extends Controller
         // facebook
 
         $facebook_post = implode(PHP_EOL . PHP_EOL, [
-            Storyteller::describeDayChanges() . ($diff == 0 ? '' : " ($diff)") .  '.',
-            Storyteller::tellLongStory(),
+            Storyteller::describeDayChanges($base_currency) . ($diff == 0 ? '' : " ($diff)") .  '.',
+            Storyteller::tellLongStory(...$currencies),
             'Детальніше про курс валют, як завжди – на Гривні Тудей: http://hryvna.today'
         ]);
 

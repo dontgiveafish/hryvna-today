@@ -84,8 +84,9 @@ class Dashboard
         }
 
         // prepare table names
-        $table_exchanges = models\ExchangeRateNew::tableName();
+        $table_exchanges = models\ExchangeRate::tableName();
         $table_banks = models\Bank::tableName();
+        $table_banks_type = models\BankType::tableName();
 
         // query cooking
 
@@ -101,6 +102,8 @@ class Dashboard
                   $table_exchanges as exchanges
                 JOIN
                   $table_banks as banks ON banks.id = exchanges.bank_id
+                JOIN
+                  $table_banks_type as bank_types ON banks.type_id = bank_types.id
                 WHERE `grab_date` = '$today_string'
                   AND exchanges.currency_id = $currency_id
                   $conditions_query
@@ -224,10 +227,10 @@ class Dashboard
                         }
                     }
 
-                    $groups[] = $day_rates;
+                    $groups += $day_rates;
                 }
 
-                $result[$today_string][$currency_id] = array_merge(...$groups); // and hello again!
+                $result[$today_string][$currency_id] = $groups;
             }
 
             // my favourite part
@@ -265,7 +268,7 @@ class Dashboard
     {
         return $this->getAvgPeriod($period_length, $period_delta, [
             [],
-            ['banks.type'],
+            ['bank_types.alias'],
         ]);
     }
 

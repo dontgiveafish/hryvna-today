@@ -3,7 +3,6 @@
 namespace app\commands;
 
 use app\models\ExchangeRate;
-use app\models\ExchangeRateNew;
 use app\models\ExchangeRateGrabberInfo;
 use app\models\Currency;
 
@@ -70,7 +69,7 @@ class UpdateController extends Controller
             foreach ($data as $currency_id => $currency_values) {
 
                 // check if we already have exchange rates for this day
-                $exchange = ExchangeRateNew::find()
+                $exchange = ExchangeRate::find()
                     ->where([
                         'bank_id' => $grabber->getBankId(),
                         'currency_id' => $currency_id,
@@ -80,7 +79,7 @@ class UpdateController extends Controller
 
                 // if no, create new objects
                 if (empty($exchange)) {
-                    $exchange = new ExchangeRateNew();
+                    $exchange = new ExchangeRate();
                     $exchange->bank_id = $grabber->getBankId();
                     $exchange->currency_id = $currency_id;
                     $exchange->grab_date = $today;
@@ -100,7 +99,7 @@ class UpdateController extends Controller
 
             // get last grabbed date
 
-            $last_exchanges = ExchangeRateNew::find()
+            $last_exchanges = ExchangeRate::find()
                 ->where([
                     'bank_id' => $grabber->getBankId()
                 ])
@@ -111,7 +110,7 @@ class UpdateController extends Controller
 
             // get grabbed exchange rates for last date
 
-            $last_exchanges = ExchangeRateNew::find()
+            $last_exchanges = ExchangeRate::find()
                 ->where([
                     'bank_id' => $grabber->getBankId(),
                     'grab_date' => $last_exchanges_date
@@ -125,7 +124,7 @@ class UpdateController extends Controller
                     $exchange = $last_exchange;
                 }
                 else {
-                    $exchange = new ExchangeRateNew();
+                    $exchange = new ExchangeRate();
                     $exchange->attributes = $last_exchange->attributes;
                     $exchange->id = null;
                     $exchange->grab_date = $today;
@@ -162,8 +161,8 @@ class UpdateController extends Controller
     /**
      * Update exchanges for every bank with strategy
      * 
-     * @param type $tries_count
-     * @param type $seconds_to_sleep
+     * @param int $tries_count
+     * @param int $seconds_to_sleep
      */
     public function actionAll($tries_count = 5, $seconds_to_sleep = 10)
     {
@@ -174,33 +173,4 @@ class UpdateController extends Controller
         }
     }
 
-    public function actionMigrate()
-    {
-
-        $currencies = [
-            840 => 'dollar',
-            978 => 'euro'
-        ];
-        $old_rates = ExchangeRate::find()->orderBy('id')->all();
-
-        foreach ($old_rates as $old_rate) {
-            $rate_layout = new ExchangeRateNew();
-            $rate_layout->bank_id = $old_rate->bank_id;
-            $rate_layout->grab_date = $old_rate->grab_date;
-
-            foreach ($currencies as $currency_id => $currency_name) {
-                $new_rate = clone $rate_layout;
-
-                $new_rate->currency_id = $currency_id;
-                $new_rate->buy = $old_rate->{$currency_name . '_buy'};
-                $new_rate->sale = $old_rate->{$currency_name . '_sale'};
-
-                $new_rate->save();
-                echo  ("Added rate #$new_rate->id" . PHP_EOL);
-            }
-
-        }
-
-        die;
-    }
 }

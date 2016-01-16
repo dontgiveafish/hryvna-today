@@ -2,61 +2,68 @@ var day = "{{$today->format("d")}}";
 var month = "{{$today->format("m")}}";
 var year = "{{$today->format("Y")}}";       
 var start_date = "{{$today->format("Y-m-d")}}";
-var current_currency = 840;
+var current_currency = {{$base_currency_id}};
 var currency_delta = 'week';
 
 var datas_tank = {
 
 {{foreach from=$days key=code item=period}}
     '{{$code}}' : {
-            840 : {
-                'tank' : [{{foreach from=$period.dollar.tank item=day}}{{if !empty($day.dollar_avg_rounded)}}{{$day.dollar_avg_rounded}}{{else}}0{{/if}}, {{/foreach}}],
-                'story' : "{{$period.dollar.story}}"
-
+        {{foreach from=$currencies key=currency_id item=currency}}
+            {{$currency_id}} : {
+                tank : [
+                    {{foreach from=$period item=value}}
+                        {{$value[$currency_id].avg.avg.value|string_format:"%.2f"}},
+                    {{/foreach}}
+                ],
+                story : "{{$stories[$currency_id][$code]}}"
             },
-            978 : {
-                'tank' : [{{foreach from=$period.euro.tank item=day}}{{if !empty($day.euro_avg_rounded)}}{{$day.euro_avg_rounded}}{{else}}0{{/if}}, {{/foreach}}],
-                'story' : "{{$period.euro.story}}"
-            }
+        {{/foreach}}
     },
 {{/foreach}}
 
 };
 
 var arrayBanks = [
-        {{foreach from=$banks_names key=id item=title}}
+        {{foreach from=$banks_names key=bank_id item=title}}
         {
-            id: {{$id}},
+            id: {{$bank_id}},
             name: "{{$title}}",
             time: "15:00",
             date: [
                     {{foreach from=$banks_exchanges key=date item=day}}
-                    {{if !empty($day[$id])}}
+                    {{if !empty($day[$base_currency_id][$bank_id])}}
                     {
                             dateCurrent: "{{$date}}",
                             currencyBuy: {
-                                840 : {{$day[$id].dollar_buy.value|string_format:"%.2f"}},
-                                978 : {{$day[$id].euro_buy.value|string_format:"%.2f"}},
-                            }, 
+                                {{foreach from=$currencies key=currency_id item=currency}}
+                                    {{$currency_id}} : {{$day[$currency_id][$bank_id].buy.value|string_format:"%.2f"}},
+                                {{/foreach}}
+                            },
                             currencySale: {
-                                840 : {{$day[$id].dollar_sale.value|string_format:"%.2f"}},
-                                978 : {{$day[$id].euro_sale.value|string_format:"%.2f"}},
+                                {{foreach from=$currencies key=currency_id item=currency}}
+                                    {{$currency_id}} : {{$day[$currency_id][$bank_id].sale.value|string_format:"%.2f"}},
+                                {{/foreach}}
                             },
                             currencyBuyIncrement: {
-                                840 : {{$day[$id].dollar_buy.diff|string_format:"%.2f"}},
-                                978 : {{$day[$id].euro_buy.diff|string_format:"%.2f"}},
+                                {{foreach from=$currencies key=currency_id item=currency}}
+                                    {{$currency_id}} : {{$day[$currency_id][$bank_id].buy.diff|string_format:"%.2f"}},
+                                {{/foreach}}
                             },
                             currencySaleIncrement: {
-                                840 : {{$day[$id].dollar_sale.diff|string_format:"%.2f"}},
-                                978 : {{$day[$id].euro_sale.diff|string_format:"%.2f"}},
+                                {{foreach from=$currencies key=currency_id item=currency}}
+                                    {{$currency_id}} : {{$day[$currency_id][$bank_id].sale.diff|string_format:"%.2f"}},
+                                {{/foreach}}
                             },
                             barLeft: {
-                                840 : {{$day[$id].dollar_buy.value * 3|string_format:"%.2f"}},
-                                978 : {{$day[$id].euro_buy.value * 3|string_format:"%.2f"}},
-                            }, 
+                                {{foreach from=$currencies key=currency_id item=currency}}
+                                    {{$currency_id}} : {{$day[$currency_id][$bank_id].buy.value * 3|string_format:"%.2f"}},
+                                {{/foreach}}
+                            },
                             barRight: {
-                                840 : {{$day[$id].dollar_sale.value * 3|string_format:"%.2f"}},
-                                978 : {{$day[$id].euro_sale.value * 3|string_format:"%.2f"}},
+                                {{foreach from=$currencies key=currency_id item=currency}}
+                                    {{$currency_id}} : {{$day[$currency_id][$bank_id].sale.value * 3|string_format:"%.2f"}},
+                                {{/foreach}}
                             },
                     },
                     {{/if}}

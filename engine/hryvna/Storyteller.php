@@ -3,88 +3,73 @@
 namespace app\hryvna;
 
 use Yii;
+use yii\helpers\ArrayHelper;
+
+use app\models\Currency;
 
 class Storyteller
 {
-    public static function describePeriod($delta, $story_one, $story_two)
+    public static function describePeriod(Currency $currency, $delta, $story_one, $story_two)
     {
-        $days = Dashboard::getDays(null, -10 * $delta, 1);
+        $currency_title = $currency->verbal;
 
-        $result = [];
+        // get exchange rates list
 
-        foreach (['dollar' => 'долар', 'euro' => 'євро'] as $currency_code => $currency_title) {
+        $dashboard = new Dashboard([$currency->id], Dashboard::FLAG_ROUND_TO_CENTS);
+        $days = $dashboard->getAvgHistory($delta * 10, -1);
 
-            foreach ($days as $i => $day) {
+        $values = ArrayHelper::getColumn($days, function ($element) use ($currency) {
+            return $element[$currency->id]['avg']['avg']['value'];
+        });
 
-                $avg_rounded = $day[$currency_code.'_avg_rounded'];
-
-                if ($i == 0) {
-                    $min = $max = $first = $avg_rounded;
-                    $min_date = $max_date = $day['date'];
-                }
-                if ($day['dollar_avg'] > $max) {
-                    $max = $avg_rounded;
-                    $max_date = $day['date'];
-                }
-                if ($day['dollar_avg'] < $min) {
-                    $min = $avg_rounded;
-                    $min_date = $day['date'];
-                }
-                if (!next($days)) $last = $avg_rounded;
-
-            }
-
-            $story = "За $story_one <strong>гривня ";
-
-            if ($first > $last) { $story .= 'зміцнилась'; }
-            elseif ($first < $last) { $story .= 'впала в ціні'; }
-            else { $story .= 'є стабільною'; }
-
-            $story .= '</strong>';
-
-            if ($delta == 1) $story .= " і сьогодні один $currency_title коштує приблизно $last&nbsp;гривень";
-
-            $story .= '. ';
-
-            $diff = round(($last - $first) / count($days), 2) * 100;
-            $diff_story = ($diff >= 0 ? 'плюс' : 'мінус') . ' ' . self::sklonen(abs($diff), 'копійку', 'копійки', 'копійок');
-
-            $story .= "Середнє коливання за $story_two – <span style='white-space:nowrap;'>$diff_story</span> у проміжку від $min до $max&nbsp;гривень за $currency_title.";
-
-            if ($delta != 1) {
-                $story .= ' Мінімум було досягнуто '. self::formatDate($min_date). ', а максимум – '. self::formatDate($max_date) .'.';
-            }
-
-            $selected_days = [];
-            for ($i = 9; $i >= 0; --$i) {
-                $day =  count($days) - 1 - $delta * $i;
-                $selected_days[] = $days[$day];
-            }
-
-            $result[$currency_code] = [
-                'tank' => $selected_days,
-                'story' => $story
-            ];
-
+        if (empty($values)) {
+            return;
         }
 
-        return $result;
+        // calculate min, max(with dates), left and right value
+
+        $min_date = array_keys($values, $min = min($values))[0];
+        $max_date = array_keys($values, $max = max($values))[0];
+        $first = reset($values);
+        $last = end($values);
+
+        // start story
+
+        $story = "За $story_one <strong>гривня ";
+
+        if ($first > $last) { $story .= 'зміцнилась'; }
+        elseif ($first < $last) { $story .= 'впала в ціні'; }
+        else { $story .= 'є стабільною'; }
+
+        $story .= '</strong>';
+
+        if (abs($delta) == 1) $story .= " і сьогодні один $currency_title коштує приблизно $last&nbsp;гривень";
+
+        $story .= '. ';
+
+        $diff = round(($last - $first) / count($days), 2) * 100;
+        $diff_story = ($diff >= 0 ? 'плюс' : 'мінус') . ' ' . self::sklonen(abs($diff), 'копійку', 'копійки', 'копійок');
+
+        $story .= "Середнє коливання за $story_two – <span style='white-space:nowrap;'>$diff_story</span> у проміжку від $min до $max&nbsp;гривень за $currency_title.";
+
+        if (abs($delta) != 1) {
+            $story .= ' Мінімум було досягнуто '. self::formatDate($min_date). ', а максимум – '. self::formatDate($max_date) .'.';
+        }
+
+        return $story;
 
     }
 
-    public static function describeDayChanges()
+    public static function describeDayChanges(Currency $currency)
     {
-        $today = new \DateTime();
-        $yesterday = (new \DateTime())->modify('-1 day');
+        $dashboard = new Dashboard([$currency->id], Dashboard::FLAG_CALCULATE_DIFF | Dashboard::FLAG_ROUND_TO_CENTS);
+        $avg = $dashboard->getAvg()[$currency->id]['avg']['avg'];
 
-        $avg = Dashboard::getAvg($today);
-        $avg_y = Dashboard::getAvg($yesterday);
-
-        if (empty($avg['dollar_avg']) || empty($avg_y['dollar_avg'])) {
+        if (empty($avg)) {
             throw new \Exception('no avg');
         }
 
-        $day_diff = round($avg['dollar_avg']['value'] - $avg_y['dollar_avg']['value'], 2) * 100;
+        $day_diff = round($avg['diff'], 2) * 100;
 
         $say = self::formatDate(new \DateTime(), true) . ' гривня ';
 
@@ -117,20 +102,17 @@ class Storyteller
         return $say;
     }
 
-    public static function tweet() {
-        $today = Dashboard::getActualDate();
-        $yesterday = clone $today;
-        $yesterday->modify('-1 day');
+    public static function tweet(Currency $currency) {
 
-        $avg = Dashboard::getAvg(clone $today);
-        $avg_y = Dashboard::getAvg($yesterday);
+        $dashboard = new Dashboard([$currency->id], Dashboard::FLAG_CALCULATE_DIFF | Dashboard::FLAG_ROUND_TO_CENTS);
+        $avg = $dashboard->getAvg()[$currency->id]['avg']['avg'];
 
-        if (empty($avg['dollar_avg']) || empty($avg_y['dollar_avg'])) {
+        if (empty($avg)) {
             throw new \Exception('no avg');
         }
 
-        $avg_rounded = round($avg['dollar_avg']['value'], 2);
-        $day_diff = round($avg['dollar_avg']['value'] - $avg_y['dollar_avg']['value'], 2);
+        $avg_rounded = $avg['value'];
+        $day_diff = $avg['diff'];
 
         if ($day_diff == 0) $say_day_diff = '(без змін)';
         else if ($day_diff < 0) $say_day_diff = '('.sprintf('%0.2f', $day_diff).')';
@@ -148,7 +130,7 @@ class Storyteller
         $K = rand(0, 100) < 80 ? 1 : 100;
 
         $tweet = implode(' ', [
-            self::formatDate($today, true),
+            self::formatDate(new \DateTime(), true),
             $say_story[array_rand($say_story)]($K),
             ($K == 1 ? sprintf('%0.2f', $K * $avg_rounded) : $K * $avg_rounded) . ' гривень',
             $say_day_diff,
@@ -160,16 +142,37 @@ class Storyteller
 
     }
 
-    public static function tellLongStory() {
+    public static function tellLongStory(Currency $major_currency, Currency $minor_currency)
+    {
+        $dashboard = new Dashboard([$major_currency->id, $minor_currency->id], Dashboard::FLAG_CALCULATE_DIFF | Dashboard::FLAG_ROUND_TO_CENTS);
+        $avgs = $dashboard->getAvg();
 
-        $day = Dashboard::getAvg();
+        // let the story begin
+
         $story = [];
 
-        $story[] = 'Офіційний курс від НБУ – '.round($day['dollar_nbu']['value'], 2).' гривень за долар та '.round($day['euro_nbu']['value'], 2).' гривень за євро.';
-        $story[] = 'Середній курс купівлі та продажу долара у банках – '.round($day['dollar_buy_banks']['value'], 2).' та '.round($day['dollar_sale_banks']['value'], 2).' відповідно.';
-        $story[] = 'Євро купують за '.round($day['euro_buy_banks']['value'], 2).' та продають за '.round($day['euro_sale_banks']['value'], 2).' гривень.';
+        // nbu
 
-        $black_diff = round(($day['dollar_buy_black']['diff'] + $day['dollar_sale_black']['diff']) / 2 * 100);
+        $story[] =
+            'Офіційний курс від НБУ – ' .
+            $avgs[$major_currency->id]['government']['avg']['value'] . " гривень за $major_currency->verbal та " .
+            $avgs[$minor_currency->id]['government']['avg']['value'] . " гривень за $minor_currency->verbal.";
+
+        // commercial banks
+
+        $story[] =
+            'Середній курс купівлі та продажу долара у банках – ' . $avgs[$major_currency->id]['commercial']['buy']['value'] .
+            ' та '. $avgs[$major_currency->id]['commercial']['sale']['value'] . ' відповідно.';
+
+        $story[] =
+            mb_convert_case($major_currency->verbal, MB_CASE_TITLE, 'UTF-8') .
+            ' купують за ' . $avgs[$minor_currency->id]['commercial']['buy']['value'] .
+            ' та продають за '. $avgs[$minor_currency->id]['commercial']['sale']['value'] . ' гривень.';
+
+        // black market
+
+        $black_diff = $avgs[$major_currency->id]['black']['avg']['diff'] * 100;
+
         $black = 'Чорний ринок показує ';
 
         if ($black_diff == 0) {
@@ -203,8 +206,9 @@ class Storyteller
 
         $story[] = $black;
 
-        return implode(' ', $story);
+        // that's the end
 
+        return implode(' ', $story);
     }
 
 
@@ -215,7 +219,7 @@ class Storyteller
      * @param bool Use random way to format
      * @return string
      */
-    public static function formatDate($date, $random_way = false)
+    public static function formatDate($date = null, $random_way = false)
     {
         // in a case of backward compatibility
         // @todo Datetime only
