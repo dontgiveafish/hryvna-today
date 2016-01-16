@@ -10,10 +10,13 @@ use Yii;
  * @property integer $id
  * @property string $code
  * @property string $title
+ * @property string $verbal
  * @property string $symbol
  *
+ * @property ExchangeRates[] $exchangeRates
  * @property GrabberCurrencyChecker[] $grabberCurrencyCheckers
  * @property GrabberStrategyCurrency[] $grabberStrategyCurrencies
+ * @property SiteCurrencyRates[] $siteCurrencyRates
  */
 class Currency extends \yii\db\ActiveRecord
 {
@@ -34,7 +37,7 @@ class Currency extends \yii\db\ActiveRecord
             [['id', 'code', 'title'], 'required'],
             [['id'], 'integer'],
             [['code'], 'string', 'max' => 5],
-            [['title', 'symbol'], 'string', 'max' => 128]
+            [['title', 'verbal', 'symbol'], 'string', 'max' => 128]
         ];
     }
 
@@ -47,8 +50,17 @@ class Currency extends \yii\db\ActiveRecord
             'id' => 'ID',
             'code' => 'Code',
             'title' => 'Title',
+            'verbal' => 'Verbal',
             'symbol' => 'Symbol',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getExchangeRates()
+    {
+        return $this->hasMany(ExchangeRates::className(), ['currency_id' => 'id']);
     }
 
     /**
@@ -65,5 +77,13 @@ class Currency extends \yii\db\ActiveRecord
     public function getGrabberStrategyCurrencies()
     {
         return $this->hasMany(GrabberStrategyCurrency::className(), ['currency_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSiteCurrencyRates()
+    {
+        return $this->hasMany(SiteCurrencyRates::className(), ['currency_id' => 'id']);
     }
 }

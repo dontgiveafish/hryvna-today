@@ -5,14 +5,15 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "banks".
+ * This is the model class for table "bank_list".
  *
  * @property integer $id
  * @property string $type
  * @property string $title
  * @property integer $rate
  *
- * @property Exchanges[] $exchanges
+ * @property ExchangeRates[] $exchangeRates
+ * @property GrabberStrategyInfo $grabberStrategyInfo
  */
 class Bank extends \yii\db\ActiveRecord
 {
@@ -21,7 +22,7 @@ class Bank extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'banks';
+        return 'bank_list';
     }
 
     /**
@@ -30,9 +31,8 @@ class Bank extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type'], 'string'],
+            [['type_id', 'rate'], 'integer'],
             [['title'], 'required'],
-            [['rate'], 'integer'],
             [['title'], 'string', 'max' => 512]
         ];
     }
@@ -44,7 +44,7 @@ class Bank extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'type' => 'Type',
+            'type_id' => 'Type ID',
             'title' => 'Title',
             'rate' => 'Rate',
         ];
@@ -53,8 +53,24 @@ class Bank extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getExchanges()
+    public function getType()
     {
-        return $this->hasMany(ExchangeRate::className(), ['bank_id' => 'id']);
+        return $this->hasOne(BankType::className(), ['id' => 'type_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getExchangeRates()
+    {
+        return $this->hasMany(ExchangeRates::className(), ['bank_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGrabberStrategyInfo()
+    {
+        return $this->hasOne(GrabberStrategyInfo::className(), ['bank_id' => 'id']);
     }
 }

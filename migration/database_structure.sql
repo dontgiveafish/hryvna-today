@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Січ 13 2016 р., 13:48
+-- Час створення: Січ 16 2016 р., 21:10
 -- Версія сервера: 5.5.46-0ubuntu0.14.04.2
--- Версія PHP: 5.5.9-1ubuntu4.14
+-- Версія PHP: 5.6.17-2+deb.sury.org~trusty+1
 
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -51,16 +51,33 @@ CREATE TABLE IF NOT EXISTS `api_log` (
 -- --------------------------------------------------------
 
 --
--- Структура таблиці `banks`
+-- Структура таблиці `bank_list`
 --
 
-DROP TABLE IF EXISTS `banks`;
-CREATE TABLE IF NOT EXISTS `banks` (
+DROP TABLE IF EXISTS `bank_list`;
+CREATE TABLE IF NOT EXISTS `bank_list` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type` set('bank','market') NOT NULL DEFAULT 'bank',
+  `type_id` int(10) unsigned DEFAULT NULL,
   `title` varchar(512) NOT NULL,
   `rate` smallint(6) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `type_id` (`type_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблиці `bank_types`
+--
+
+DROP TABLE IF EXISTS `bank_types`;
+CREATE TABLE IF NOT EXISTS `bank_types` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `alias` varchar(128) NOT NULL,
+  `title` varchar(128) NOT NULL,
+  `rate` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `alias` (`alias`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -74,6 +91,7 @@ CREATE TABLE IF NOT EXISTS `currency` (
   `id` int(10) unsigned NOT NULL,
   `code` varchar(5) NOT NULL,
   `title` varchar(128) NOT NULL,
+  `verbal` varchar(128) DEFAULT NULL,
   `symbol` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -163,6 +181,21 @@ CREATE TABLE IF NOT EXISTS `grabber_strategy_info` (
   UNIQUE KEY `bank_id` (`bank_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Структура таблиці `site_currency_rates`
+--
+
+DROP TABLE IF EXISTS `site_currency_rates`;
+CREATE TABLE IF NOT EXISTS `site_currency_rates` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `currency_id` int(10) unsigned NOT NULL,
+  `rate` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `currency_id` (`currency_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
 --
 -- Обмеження зовнішнього ключа збережених таблиць
 --
@@ -178,7 +211,7 @@ ADD CONSTRAINT `api_log_ibfk_1` FOREIGN KEY (`key_id`) REFERENCES `api_keys` (`i
 --
 ALTER TABLE `exchange_rates`
 ADD CONSTRAINT `exchange_rates_ibfk_1` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`),
-ADD CONSTRAINT `exchange_rates_ibfk_2` FOREIGN KEY (`bank_id`) REFERENCES `banks` (`id`);
+ADD CONSTRAINT `exchange_rates_ibfk_2` FOREIGN KEY (`bank_id`) REFERENCES `bank_list` (`id`);
 
 --
 -- Обмеження зовнішнього ключа таблиці `grabber_currency_checker`
@@ -197,5 +230,11 @@ ADD CONSTRAINT `grabber_strategy_currency_ibfk_3` FOREIGN KEY (`strategy_id`) RE
 -- Обмеження зовнішнього ключа таблиці `grabber_strategy_info`
 --
 ALTER TABLE `grabber_strategy_info`
-ADD CONSTRAINT `grabber_strategy_info_ibfk_1` FOREIGN KEY (`bank_id`) REFERENCES `banks` (`id`);
+ADD CONSTRAINT `grabber_strategy_info_ibfk_1` FOREIGN KEY (`bank_id`) REFERENCES `bank_list` (`id`);
+
+--
+-- Обмеження зовнішнього ключа таблиці `site_currency_rates`
+--
+ALTER TABLE `site_currency_rates`
+ADD CONSTRAINT `site_currency_rates_ibfk_1` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`);
 SET FOREIGN_KEY_CHECKS=1;
