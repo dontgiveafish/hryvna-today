@@ -1,9 +1,9 @@
 <?php
 
-$params = require(__DIR__ . '/params.php');
+//$params = require(__DIR__ . '/params.php');
 
 $config = [
-    'id' => 'basic',
+    'id' => 'api',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
@@ -19,7 +19,7 @@ $config = [
             'enableSession' => false,
         ],
         'errorHandler' => [
-            'class' => 'app\components\ApiErrorHandler',
+            'class' => 'app\api\v1\components\ApiErrorHandler'
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -46,7 +46,11 @@ $config = [
             'format' => 'json',
         ],
     ],
-    'params' => $params,
+    'modules' => [
+        'v1' => [
+            'class' => 'app\api\v1\Module',
+        ],
+    ],
 ];
 
 if (YII_ENV_DEV) {
@@ -56,11 +60,11 @@ if (YII_ENV_DEV) {
         'class' => 'yii\debug\Module',
     ];
 
-    $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',
-        'allowedIPs' => ['127.0.0.1', '10.0.0.1'],
-    ];
+//    $config['bootstrap'][] = 'gii';
+//    $config['modules']['gii'] = [
+//        'class' => 'yii\gii\Module',
+//        'allowedIPs' => ['127.0.0.1', '10.0.0.1'],
+//    ];
 }
 
 return $config;

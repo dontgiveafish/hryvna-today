@@ -108,6 +108,7 @@ $script = <<SCRIPT
 
     # Update the server
     echo "Update server..."
+    add-apt-repository -y ppa:ondrej/php5-5.6
     apt-get update -qq && apt-get upgrade -qq -y --fix-missing
 
     # Install basic tools

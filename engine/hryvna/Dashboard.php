@@ -184,7 +184,7 @@ class Dashboard
 
         ksort($period);
 
-        // run throw period
+        // run through period
 
         $result = [];
 

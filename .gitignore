@@ -88,6 +88,9 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+### Vagrant ###
+.vagrant
+
 ### Hryvna ###
 
 engine/assets/*

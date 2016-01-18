@@ -1,9 +1,11 @@
 <?php
 
-namespace app\components;
+namespace app\api\v1\components;
 
 use Yii;
 use app\models;
+
+use app\models\api\Log;
 
 class ApiErrorHandler extends \yii\web\ErrorHandler
 {
@@ -15,8 +17,8 @@ class ApiErrorHandler extends \yii\web\ErrorHandler
     protected function renderException($exception)
     {
 
-        $log = new models\api\Log;
-        $log->status = models\api\Log::STATUS_ERROR;
+        $log = new Log;
+        $log->status = Log::STATUS_ERROR;
         $log->save();
         
         if (Yii::$app->has('response')) {
@@ -52,7 +54,7 @@ class ApiErrorHandler extends \yii\web\ErrorHandler
 
 
         return [
-                'status' => models\api\Log::STATUS_ERROR,
+                'status' => Log::STATUS_ERROR,
                 'message' => $message
         ];
     }
