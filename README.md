@@ -11,8 +11,8 @@ vagrant up
 ```shell
 add-apt-repository ppa:ondrej/php5-5.6
 apt-get update
-mysql -u root -p hryvna < /var/www/#{project_name}/migration/database_structure.sql
-mysql -u root -p hryvna < /var/www/#{project_name}/migration/database_data.sql
+mysql -u root -p hryvna < migration/database_structure.sql
+mysql -u root -p hryvna < migration/database_data.sql
 ```
 
 ## API
