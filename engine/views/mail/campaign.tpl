@@ -69,7 +69,7 @@
 									<td valign="top" align="left" style="padding:19px 0px 19px 10px; font-size:15px; line-height:20px; font-weight:700; width:103px; border-top:1px solid #ededed; border-bottom:1px solid #ededed;">{{diff value=$review.government.avg}}</td>
 									<td valign="top" align="left" style="padding:19px 0px 19px 10px; font-size:15px; line-height:20px; font-weight:700; width:107px; border-top:1px solid #ededed; border-bottom:1px solid #ededed;">{{diff value=$review.commercial.sale}}</td>
 									<td valign="top" align="left" style="padding:19px 0px 19px 10px; font-size:15px; line-height:20px; font-weight:700; width:106px; border-top:1px solid #ededed; border-bottom:1px solid #ededed;">{{diff value=$review.interbank.sale}}</td>
-									<td valign="top" align="left" style="padding:19px 0px 19px 10px; font-size:15px; line-height:20px; font-weight:700; border-top:1px solid #ededed; border-bottom:1px solid #ededed;">{{diff value=$review.black.buy}}</td>
+									<td valign="top" align="left" style="padding:19px 0px 19px 10px; font-size:15px; line-height:20px; font-weight:700; border-top:1px solid #ededed; border-bottom:1px solid #ededed;">{{diff value=$review.black.sale}}</td>
 								</tr>
 							</tbody>
 						</table>
