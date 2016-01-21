@@ -4,9 +4,63 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "22b57dd9b977c71d2d2cde7386d864f2",
-    "content-hash": "7e2e5c51de5a8a51feb3038c9a87fc9d",
+    "hash": "2b2f3e79e1954006e42c584f44ae1ead",
+    "content-hash": "243a98aa8d7cb3c751d97dd6a48d7b0d",
     "packages": [
+        {
+            "name": "abraham/twitteroauth",
+            "version": "0.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/abraham/twitteroauth.git",
+                "reference": "d4fc4a3c36f5ecdfc8865ab1e7cefc432e49491c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/abraham/twitteroauth/zipball/d4fc4a3c36f5ecdfc8865ab1e7cefc432e49491c",
+                "reference": "d4fc4a3c36f5ecdfc8865ab1e7cefc432e49491c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpmd/phpmd": "2.2.*",
+                "phpunit/phpunit": "4.7.*",
+                "squizlabs/php_codesniffer": "2.3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Abraham\\TwitterOAuth\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Abraham Williams",
+                    "email": "abraham@abrah.am",
+                    "homepage": "https://abrah.am",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The most popular PHP library for use with the Twitter OAuth REST API.",
+            "homepage": "https://twitteroauth.com",
+            "keywords": [
+                "Twitter API",
+                "Twitter oAuth",
+                "api",
+                "oauth",
+                "rest",
+                "social",
+                "twitter"
+            ],
+            "time": "2015-11-05 04:04:20"
+        },
         {
             "name": "bower-asset/bootstrap",
             "version": "v3.3.5",
@@ -365,51 +419,6 @@
                 "sdk"
             ],
             "time": "2015-04-03 20:31:47"
-        },
-        {
-            "name": "j7mbo/twitter-api-php",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/J7mbo/twitter-api-php.git",
-                "reference": "e576556d8b548327d4aefeff0a9d40fa9a9d552e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/J7mbo/twitter-api-php/zipball/e576556d8b548327d4aefeff0a9d40fa9a9d552e",
-                "reference": "e576556d8b548327d4aefeff0a9d40fa9a9d552e",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.5.1"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "TwitterAPIExchange.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GNU Public License"
-            ],
-            "authors": [
-                {
-                    "name": "James Mallison",
-                    "homepage": "https://github.com/j7mbo/twitter-api-php"
-                }
-            ],
-            "description": "Simple PHP Wrapper for Twitter API v1.1 calls",
-            "homepage": "https://github.com/j7mbo/twitter-api-php",
-            "keywords": [
-                "api",
-                "php",
-                "twitter"
-            ],
-            "time": "2015-05-04 14:30:06"
         },
         {
             "name": "mailchimp/mailchimp",

@@ -6,7 +6,7 @@ use Yii;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
 use sammaye\mailchimp\Mailchimp;
-use TwitterAPIExchange;
+use Abraham\TwitterOAuth\TwitterOAuth;
 use Facebook\FacebookSession,
     Facebook\FacebookRequest,
     CURLFile;
@@ -228,22 +228,23 @@ class PublishController extends Controller
 
         if (empty(YII_DEBUG)) {
 
-            $twitter = new TwitterAPIExchange([
-                'oauth_access_token'        => Yii::$app->params['twitter']['oauth_access_token'],
-                'oauth_access_token_secret' => Yii::$app->params['twitter']['oauth_access_token_secret'],
-                'consumer_key'              => Yii::$app->params['twitter']['consumer_key'],
-                'consumer_secret'           => Yii::$app->params['twitter']['consumer_secret']
+            $twitter = new TwitterOAuth(
+                Yii::$app->params['twitter']['consumer_key'],
+                Yii::$app->params['twitter']['consumer_secret'],
+                Yii::$app->params['twitter']['oauth_access_token'],
+                Yii::$app->params['twitter']['oauth_access_token_secret']
+            );
+
+            $media = $twitter->upload('media/upload', [
+                'media' => $cash_destination
             ]);
 
-            $json = $twitter->buildOauth('https://api.twitter.com/1.1/statuses/update_with_media.json', 'POST')
-                ->setPostfields([
-                    'status'    => $tweet,
-                    'media[]'   => '@' . $cash_destination,
-                ])
-                ->performRequest();
+            $result = $twitter->post('statuses/update', [
+                'status' => $tweet,
+                'media_ids' => $media->media_id_string,
+            ]);
 
-            $json = json_decode($json);
-            print_r($json);
+            print_r($result);
         }
 
         // facebook
