@@ -170,7 +170,7 @@ INSERT INTO `grabber_strategy_info` (`id`, `bank_id`, `name`, `url`, `cells_sele
   (1, 2, 'Aval', 'http://aval.ua/personal/everyday/exchange/exchange/', 'div.body-currency-block-rba table.body-currency', 0),
   (2, 1, 'Nbu', 'http://www.bank.gov.ua/control/uk/curmetal/currency/search', '.content table', 3),
   (3, 11, 'Idea', 'http://www.ideabank.ua/', '.currencyBox', 0),
-  (4, 5, 'Oschadny', 'http://oschadnybank.com/ua/private/currency/currency_rates/', 'table', 0),
+  (4, 5, 'Oschadny', 'http://www.oschadbank.ua/ua/private/currency/', 'table', 0),
   (5, 9, 'Eximb', 'https://www.eximb.com/ukr/personal/everyday/currency_exchange/', '.table_1', 0),
   (6, 6, 'Creditagricole', 'https://credit-agricole.ua/press/exchange-rates', '#content table', 1),
   (7, 4, 'Creditdnepr', 'http://creditdnepr.com.ua/ukr/online/currency-rate-precious-metals/', '#currency-list table', 0),
