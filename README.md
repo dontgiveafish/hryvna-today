@@ -16,6 +16,14 @@ mysql -u root -p hryvna < migration/database_structure.sql
 mysql -u root -p hryvna < migration/database_data.sql
 ```
 
+Після налаштування серверу не забудьте завантажити ліби за допомогою Composer:
+
+```shell
+vagrant ssh
+cd /vagrant/engine
+composer install
+```
+
 ## API
 
 Гривня Тудей має власне API, у якому можна отримати історію курсів за останній рік. Також, із запуском API тепер доступні курси багатьох валют. 
