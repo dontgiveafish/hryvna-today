@@ -32,6 +32,16 @@ composer install
 
 https://market.mashape.com/dontgiveafish/hryvna-today
 
+## Telegram
+
+Напишіть боту Гривні у Telegram! Бот навчений декільком командам, що дають інформацію про поточний курс валют:
+
+https://telegram.me/HryvnaTodayBot
+
+Код боту також відкритий і знаходиться в іншому проекті:
+
+https://github.com/dontgiveafish/hryvna-today-telegram
+
 ## Багато дяк
 
 [Dmytro Bagaiev](https://github.com/dbagaev) for code revision
