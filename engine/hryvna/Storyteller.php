@@ -165,7 +165,7 @@ class Storyteller
             ' та '. $avgs[$major_currency->id]['commercial']['sale']['value'] . ' відповідно.';
 
         $story[] =
-            mb_convert_case($major_currency->verbal, MB_CASE_TITLE, 'UTF-8') .
+            mb_convert_case($minor_currency->verbal, MB_CASE_TITLE, 'UTF-8') .
             ' купують за ' . $avgs[$minor_currency->id]['commercial']['buy']['value'] .
             ' та продають за '. $avgs[$minor_currency->id]['commercial']['sale']['value'] . ' гривень.';
 

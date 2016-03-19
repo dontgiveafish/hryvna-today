@@ -205,8 +205,8 @@ class PublishController extends Controller
         $avgs = $dashboard->getAvg()[$base_currency->id]['avg']['avg'];
 
 
-        $avg = $avgs['value'];
-        $diff = $avgs['diff'];
+        $avg = sprintf('%0.2f', $avgs['value']);
+        $diff = sprintf('%0.2f', $avgs['diff']);
 
         if ($diff > 0) {
             $diff = '+' . $diff;
