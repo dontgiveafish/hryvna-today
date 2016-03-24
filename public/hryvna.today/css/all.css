@@ -1251,14 +1251,15 @@ article,
 /*Social icons*/
 [class^="soc-icon-"],
 [class*=" soc-icon-"] {
-	background-image:url(../img/sprite-social.png);
+	background-image:url(../img/sprite-social.png?v2);
 	background-repeat:no-repeat; 
 	width:20px;
 	height:20px;
 }
 .soc-icon-twitter{ background-position: 0 0; width: 73px; height: 15px; } 
-.soc-icon-facebook{ background-position: 0 -35px; width: 79px; height: 16px; } 
-.soc-icon-vk{ background-position: 0 -71px; width: 25px; height: 15px; } 
+.soc-icon-facebook{ background-position: 0 -36px; width: 79px; height: 16px; }
+.soc-icon-vk{ background-position: 0 -71px; width: 25px; height: 15px; }
+.soc-icon-telegram{ background-position: 0 -105px; width: 79px; height: 19px; }
 /*Social icons end*/
 /*===ELEMENTS END===*/
 

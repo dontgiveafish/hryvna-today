@@ -21,7 +21,7 @@
 	<!-- Widgets style -->
 	<link href="css/widgets.css" rel="stylesheet" media="screen">
 	<!-- Main style -->
-	<link href="css/all.css" rel="stylesheet" media="screen">
+	<link href="css/all.css?v2" rel="stylesheet" media="screen">
 	<!--[if gte IE 9]><link rel="stylesheet" href="css/ie9.css" media="screen, projection"><![endif]-->
 	<!--[if lte IE 8]><link rel="stylesheet" href="css/ie8.css" media="screen, projection"><![endif]-->
 	<!--[if lte IE 7]><link rel="stylesheet" href="css/ie7.css" media="screen, projection"><![endif]-->
@@ -263,6 +263,7 @@
 									<ul class="social-list">
 										<li><a href="https://twitter.com/hryvna_today" class="soc-icon-twitter"></a></li>
 										<li><a href="https://www.facebook.com/hryvna" class="soc-icon-facebook"></a></li>
+										<li><a href="https://telegram.me/HryvnaTodayBot" class="soc-icon-telegram"></a></li>
 									</ul>
 								</div>
 							</div>
