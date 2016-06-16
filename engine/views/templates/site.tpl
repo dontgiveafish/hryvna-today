@@ -285,7 +285,7 @@
 <footer class="footer" role="contentinfo">
 	<div class="footer-inner">
 		<div class="container">
-			<p class="copyright">Гривня Тудей  &#169; 2015</p>
+			<p class="copyright">Гривня Тудей  &#169; 2016</p>
 			<div class="studio">Зроблено в <a href="http://dontgiveafish.com">Don’t give a fish</a></div>
 		</div>
 	</div>
