@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Січ 16 2016 р., 21:11
+-- Час створення: Жов 03 2016 р., 22:20
 -- Версія сервера: 5.5.46-0ubuntu0.14.04.2
 -- Версія PHP: 5.6.17-2+deb.sury.org~trusty+1
 
@@ -172,7 +172,7 @@ INSERT INTO `grabber_strategy_info` (`id`, `bank_id`, `name`, `url`, `cells_sele
   (3, 11, 'Idea', 'http://www.ideabank.ua/', '.currencyBox', 0),
   (4, 5, 'Oschadny', 'http://www.oschadbank.ua/ua/private/currency/', 'table', 0),
   (5, 9, 'Eximb', 'https://www.eximb.com/ukr/personal/everyday/currency_exchange/', '.table_1', 0),
-  (6, 6, 'Creditagricole', 'https://credit-agricole.ua/press/exchange-rates', '#content table', 1),
+  (6, 6, 'Creditagricole', 'https://credit-agricole.ua/press/exchange-rates', '#content2 table', 1),
   (7, 4, 'Creditdnepr', 'http://creditdnepr.com.ua/ukr/online/currency-rate-precious-metals/', '#currency-list table', 0),
   (8, 8, 'Kredo', 'http://www.kredobank.com.ua/exchange_rates/ex_bank/', 'table.ourTable', 0),
   (9, 10, 'Otp', 'http://www.otpbank.com.ua/', '.currency-rates table', 0),
