@@ -48,6 +48,10 @@ https://github.com/dontgiveafish/hryvna-today-telegram
 
 ## Таке інше
 
+Історія проекту в статті на DOU:
+
+http://dou.ua/lenta/articles/dou-projector-hryvna-today/
+
 Якщо ви хочете долучитись до розробки чи маєте питання щодо API, пишіть на tony@dontgiveafish.com
 
 І гуд тріп, як той казав Едіп!
