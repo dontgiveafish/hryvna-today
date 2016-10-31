@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Жов 03 2016 р., 22:20
+-- Час створення: Жов 31 2016 р., 11:07
 -- Версія сервера: 5.5.46-0ubuntu0.14.04.2
 -- Версія PHP: 5.6.17-2+deb.sury.org~trusty+1
 
@@ -160,7 +160,7 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (92, 16, 643, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
   (93, 18, 643, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
   (94, 19, 643, NULL, NULL, 3, NULL, 0, NULL, 3, NULL, 1, NULL, 3, 'th', 0),
-  (95, 7, 643, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0);
+  (95, 7, 643, NULL, NULL, 4, NULL, 1, NULL, 4, NULL, 2, NULL, 4, NULL, 0);
 
 --
 -- Дамп даних таблиці `grabber_strategy_info`
@@ -173,7 +173,7 @@ INSERT INTO `grabber_strategy_info` (`id`, `bank_id`, `name`, `url`, `cells_sele
   (4, 5, 'Oschadny', 'http://www.oschadbank.ua/ua/private/currency/', 'table', 0),
   (5, 9, 'Eximb', 'https://www.eximb.com/ukr/personal/everyday/currency_exchange/', '.table_1', 0),
   (6, 6, 'Creditagricole', 'https://credit-agricole.ua/press/exchange-rates', '#content2 table', 1),
-  (7, 4, 'Creditdnepr', 'http://creditdnepr.com.ua/ukr/online/currency-rate-precious-metals/', '#currency-list table', 0),
+  (7, 4, 'Creditdnepr', 'http://creditdnepr.com.ua/kursy-valyut', '.field-content table.table-s1', 0),
   (8, 8, 'Kredo', 'http://www.kredobank.com.ua/exchange_rates/ex_bank/', 'table.ourTable', 0),
   (9, 10, 'Otp', 'http://www.otpbank.com.ua/', '.currency-rates table', 0),
   (10, 14, 'Pivdenniy', 'http://bank.com.ua/ua/rates/', '.content table', 0),
