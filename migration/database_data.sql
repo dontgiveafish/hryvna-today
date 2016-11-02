@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Жов 31 2016 р., 11:07
+-- Час створення: Лис 02 2016 р., 09:48
 -- Версія сервера: 5.5.46-0ubuntu0.14.04.2
 -- Версія PHP: 5.6.17-2+deb.sury.org~trusty+1
 
@@ -90,8 +90,8 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (8, 5, 978, NULL, NULL, 2, NULL, 2, NULL, 2, NULL, 3, NULL, 2, NULL, 0),
   (9, 3, 840, NULL, '.currencyItem', 0, '.buy', 0, '.currencyItem', 0, '.sell', 0, '.currencyItem', 0, '.title', 0),
   (10, 3, 978, NULL, '.currencyItem', 1, '.buy', 0, '.currencyItem', 1, '.sell', 0, '.currencyItem', 1, '.title', 0),
-  (11, 2, 840, 0.01000, NULL, 6, NULL, 4, NULL, 6, NULL, 4, NULL, 6, NULL, 1),
-  (12, 2, 978, 0.01000, NULL, 7, NULL, 4, NULL, 7, NULL, 4, NULL, 7, NULL, 1),
+  (11, 2, 840, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+  (12, 2, 978, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (13, 4, 840, 0.01000, NULL, 1, NULL, 5, NULL, 1, NULL, 6, NULL, 1, NULL, 0),
   (14, 4, 978, 0.01000, NULL, 2, NULL, 5, NULL, 2, NULL, 6, NULL, 2, NULL, 0),
   (15, 9, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
@@ -109,9 +109,9 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (32, 10, 643, 0.01000, NULL, 4, NULL, 2, NULL, 4, NULL, 3, NULL, 4, NULL, 1),
   (33, 19, 840, NULL, NULL, 1, NULL, 0, NULL, 1, NULL, 1, NULL, 1, 'th', 0),
   (34, 19, 978, NULL, NULL, 2, NULL, 0, NULL, 2, NULL, 1, NULL, 2, 'th', 0),
-  (35, 2, 985, 0.01000, NULL, 13, NULL, 4, NULL, 13, NULL, 4, NULL, 13, NULL, 1),
-  (36, 2, 826, 0.01000, NULL, 3, NULL, 4, NULL, 3, NULL, 4, NULL, 3, NULL, 1),
-  (37, 2, 643, 0.10000, NULL, 14, NULL, 4, NULL, 14, NULL, 4, NULL, 14, NULL, 1),
+  (35, 2, 985, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+  (36, 2, 826, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+  (37, 2, 643, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (38, 8, 840, 0.01000, NULL, 3, NULL, 3, NULL, 3, NULL, 5, NULL, 3, NULL, 0),
   (39, 8, 978, 0.01000, NULL, 7, NULL, 3, NULL, 7, NULL, 5, NULL, 7, NULL, 0),
   (40, 8, 826, 0.01000, NULL, 2, NULL, 3, NULL, 2, NULL, 5, NULL, 2, NULL, 0),
@@ -125,7 +125,7 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (48, 1, 826, NULL, NULL, 4, NULL, 1, NULL, 4, NULL, 2, NULL, 4, NULL, 0),
   (49, 1, 643, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
   (50, 1, 756, NULL, NULL, 5, NULL, 1, NULL, 5, NULL, 2, NULL, 5, NULL, 0),
-  (51, 2, 756, 0.01000, NULL, 23, NULL, 4, NULL, 23, NULL, 4, NULL, 23, NULL, 1),
+  (51, 2, 756, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (52, 3, 826, NULL, '.currencyItem', 2, '.buy', 0, '.currencyItem', 2, '.sell', 0, '.currencyItem', 2, '.title', 0),
   (53, 3, 985, NULL, '.currencyItem', 3, '.buy', 0, '.currencyItem', 3, '.sell', 0, '.currencyItem', 3, '.title', 0),
   (54, 3, 643, NULL, '.currencyItem', 4, '.buy', 0, '.currencyItem', 4, '.sell', 0, '.currencyItem', 4, '.title', 0),
@@ -136,8 +136,8 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (60, 5, 124, NULL, NULL, 6, NULL, 2, NULL, 6, NULL, 3, NULL, 6, NULL, 0),
   (61, 5, 985, NULL, NULL, 13, NULL, 2, NULL, 13, NULL, 3, NULL, 13, NULL, 0),
   (62, 5, 392, NULL, NULL, 14, NULL, 2, NULL, 14, NULL, 3, NULL, 14, NULL, 0),
-  (63, 2, 124, 0.01000, NULL, 10, NULL, 4, NULL, 10, NULL, 4, NULL, 10, NULL, 1),
-  (64, 2, 392, 0.00100, NULL, 25, NULL, 4, NULL, 25, NULL, 4, NULL, 25, NULL, 1),
+  (63, 2, 124, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+  (64, 2, 392, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (65, 6, 643, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
   (66, 6, 756, NULL, NULL, 4, NULL, 1, NULL, 4, NULL, 2, NULL, 4, NULL, 0),
   (67, 6, 826, NULL, NULL, 5, NULL, 1, NULL, 5, NULL, 2, NULL, 5, NULL, 0),
@@ -168,7 +168,7 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
 
 INSERT INTO `grabber_strategy_info` (`id`, `bank_id`, `name`, `url`, `cells_selector`, `cells_idx`) VALUES
   (1, 2, 'Aval', 'http://aval.ua/personal/everyday/exchange/exchange/', 'div.body-currency-block-rba table.body-currency', 0),
-  (2, 1, 'Nbu', 'http://www.bank.gov.ua/control/uk/curmetal/currency/search', '.content table', 3),
+  (2, 1, 'Nbu', 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange', NULL, NULL),
   (3, 11, 'Idea', 'http://www.ideabank.ua/', '.currencyBox', 0),
   (4, 5, 'Oschadny', 'http://www.oschadbank.ua/ua/private/currency/', 'table', 0),
   (5, 9, 'Eximb', 'https://www.eximb.com/ukr/personal/everyday/currency_exchange/', '.table_1', 0),
