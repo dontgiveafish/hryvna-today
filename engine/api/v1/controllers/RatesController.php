@@ -47,7 +47,13 @@ class RatesController extends BaseController
     public function actionAverages()
     {
         $dashboard = $this->getDashboard();
-        return $dashboard->getAvgHistory();
+
+        $period_length = $this->prepareParamInt('period_length');
+        if (empty($period_length)) {
+            $period_length = 10;
+        }
+
+        return $dashboard->getAvgHistory($period_length);
     }
 
     /**
