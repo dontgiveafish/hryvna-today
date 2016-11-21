@@ -62,6 +62,7 @@ class CommonBankGrabStrategy extends ExchangeRateGrabberStrategyAbstract impleme
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION , 1);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0); // @todo add cert to server
         curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36');
         $str = curl_exec($curl);
 
