@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Лис 02 2016 р., 09:48
--- Версія сервера: 5.5.46-0ubuntu0.14.04.2
--- Версія PHP: 5.6.17-2+deb.sury.org~trusty+1
+-- Час створення: Гру 21 2016 р., 02:01
+-- Версія сервера: 5.5.53-0ubuntu0.14.04.1
+-- Версія PHP: 5.5.9-1ubuntu4.20
 
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -99,7 +99,7 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (19, 12, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
   (20, 12, 978, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
   (21, 13, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
-  (24, 13, 978, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
+  (24, 13, 978, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
   (25, 14, 840, NULL, NULL, 1, NULL, 2, NULL, 1, NULL, 3, NULL, 1, NULL, 0),
   (27, 16, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
   (28, 16, 978, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
@@ -151,9 +151,9 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (76, 11, 840, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (77, 11, 978, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (80, 11, 643, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-  (86, 13, 756, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
-  (87, 13, 826, NULL, NULL, 2, NULL, 4, NULL, 2, NULL, 5, NULL, 2, NULL, 3),
-  (88, 13, 643, NULL, NULL, 1, NULL, 4, NULL, 1, NULL, 5, NULL, 1, NULL, 3),
+  (86, 13, 756, NULL, NULL, 5, NULL, 1, NULL, 5, NULL, 2, NULL, 5, NULL, 0),
+  (87, 13, 826, NULL, NULL, 4, NULL, 1, NULL, 4, NULL, 2, NULL, 4, NULL, 0),
+  (88, 13, 643, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
   (89, 14, 643, NULL, NULL, 3, NULL, 2, NULL, 3, NULL, 3, NULL, 3, NULL, 0),
   (90, 14, 826, NULL, NULL, 4, NULL, 2, NULL, 4, NULL, 3, NULL, 4, NULL, 0),
   (91, 14, 978, NULL, NULL, 2, NULL, 2, NULL, 2, NULL, 3, NULL, 2, NULL, 0),
@@ -179,7 +179,7 @@ INSERT INTO `grabber_strategy_info` (`id`, `bank_id`, `name`, `url`, `cells_sele
   (10, 14, 'Pivdenniy', 'http://bank.com.ua/ua/rates/', '.content table', 0),
   (11, 3, 'Privat', 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5', NULL, NULL),
   (12, 12, 'Procredit', 'http://www.procreditbank.com.ua/private-individuals/credit-cards/archive-exchange-rates/', '#currenciesContainer table', 0),
-  (13, 13, 'Pumb', 'http://pumb.ua/ua/', '#tab1 .currency table', 0),
+  (13, 13, 'Pumb', 'https://pumb.ua', '.exchange-rate table', 0),
   (14, 7, 'Ukrsib', 'https://my.ukrsibbank.com/ua/personal/operations/currency_exchange/', '#tab_desc table.content_tbl2', 0),
   (15, 16, 'Black', NULL, NULL, NULL),
   (16, NULL, 'Finance', 'http://finance.i.ua/', '.Right .local_table', 0),
