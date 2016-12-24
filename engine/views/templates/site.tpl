@@ -416,8 +416,6 @@ hm.src = ('++u-heatmap-it+log-js').replace(/[+]/g,'/').replace(/-/g,'.');
 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<!-- Hello .io -->
-<script src="https://cdn.onthe.io/io.js?DOojDJ6gL1Es"></script>
 {{/if}}
 
 
