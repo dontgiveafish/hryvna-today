@@ -173,7 +173,7 @@ INSERT INTO `grabber_strategy_info` (`id`, `bank_id`, `name`, `url`, `cells_sele
   (4, 5, 'Oschadny', 'http://www.oschadbank.ua/ua/private/currency/', 'table', 0),
   (5, 9, 'Eximb', 'https://www.eximb.com/ukr/personal/everyday/currency_exchange/', '.table_1', 0),
   (6, 6, 'Creditagricole', 'https://credit-agricole.ua/press/exchange-rates', '#content2 table', 1),
-  (7, 4, 'Creditdnepr', 'http://creditdnepr.com.ua/kursy-valyut', '.field-content table.table-s1', 0),
+  (7, 4, 'Creditdnepr', 'https://creditdnepr.com.ua/currency', '.site-content table.table-s1', 0),
   (8, 8, 'Kredo', 'http://www.kredobank.com.ua/exchange_rates/ex_bank/', 'table.ourTable', 0),
   (9, 10, 'Otp', 'http://www.otpbank.com.ua/', '.currency-rates table', 0),
   (10, 14, 'Pivdenniy', 'http://bank.com.ua/ua/rates/', '.content table', 0),
