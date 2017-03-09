@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Гру 21 2016 р., 02:01
--- Версія сервера: 5.5.53-0ubuntu0.14.04.1
--- Версія PHP: 5.5.9-1ubuntu4.20
+-- Час створення: Бер 09 2017 р., 08:53
+-- Версія сервера: 5.5.41-0ubuntu0.14.04.1
+-- Версія PHP: 5.6.17-3+deb.sury.org~trusty+1
 
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -82,8 +82,8 @@ INSERT INTO `grabber_currency_checker` (`id`, `currency_id`, `value`) VALUES
 
 INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `currency_multiplier`, `buy_tr_selector`, `buy_tr_idx`, `buy_td_selector`, `buy_td_idx`, `sale_tr_selector`, `sale_tr_idx`, `sale_td_selector`, `sale_td_idx`, `check_tr_selector`, `check_tr_idx`, `check_td_selector`, `check_td_idx`) VALUES
   (0, 14, 756, NULL, NULL, 5, NULL, 2, NULL, 5, NULL, 3, NULL, 5, NULL, 0),
-  (3, 6, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
-  (4, 6, 978, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
+  (3, 6, 840, NULL, '.currency', 0, 'div', 1, '.currency', 0, 'div', 2, '.currency', 0, 'div', 0),
+  (4, 6, 978, NULL, '.currency', 1, 'div', 1, '.currency', 1, 'div', 2, '.currency', 1, 'div', 0),
   (5, 7, 840, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
   (6, 7, 978, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
   (7, 5, 840, NULL, NULL, 1, NULL, 2, NULL, 1, NULL, 3, NULL, 1, NULL, 0),
@@ -98,6 +98,8 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (16, 9, 978, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
   (19, 12, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
   (20, 12, 978, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
+  (21, 13, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
+  (24, 13, 978, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
   (25, 14, 840, NULL, NULL, 1, NULL, 2, NULL, 1, NULL, 3, NULL, 1, NULL, 0),
   (27, 16, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
   (28, 16, 978, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
@@ -136,11 +138,11 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (62, 5, 392, NULL, NULL, 14, NULL, 2, NULL, 14, NULL, 3, NULL, 14, NULL, 0),
   (63, 2, 124, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (64, 2, 392, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-  (65, 6, 643, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
-  (66, 6, 756, NULL, NULL, 4, NULL, 1, NULL, 4, NULL, 2, NULL, 4, NULL, 0),
-  (67, 6, 826, NULL, NULL, 5, NULL, 1, NULL, 5, NULL, 2, NULL, 5, NULL, 0),
-  (68, 6, 124, NULL, NULL, 6, NULL, 1, NULL, 6, NULL, 2, NULL, 6, NULL, 0),
-  (70, 6, 985, NULL, NULL, 7, NULL, 1, NULL, 7, NULL, 2, NULL, 7, NULL, 0),
+  (65, 6, 643, NULL, '.currency', 2, 'div', 1, '.currency', 2, 'div', 2, '.currency', 2, 'div', 0),
+  (66, 6, 756, NULL, '.currency', 3, 'div', 1, '.currency', 3, 'div', 2, '.currency', 3, 'div', 0),
+  (67, 6, 826, NULL, '.currency', 4, 'div', 1, '.currency', 4, 'div', 2, '.currency', 4, 'div', 0),
+  (68, 6, 124, NULL, '.currency', 5, 'div', 1, '.currency', 5, 'div', 2, '.currency', 5, 'div', 0),
+  (70, 6, 985, NULL, '.currency', 6, 'div', 1, '.currency', 6, 'div', 2, '.currency', 6, 'div', 0),
   (71, 8, 124, 0.01000, NULL, 4, NULL, 3, NULL, 4, NULL, 5, NULL, 4, NULL, 0),
   (72, 9, 756, NULL, NULL, 5, NULL, 1, NULL, 5, NULL, 2, NULL, 5, NULL, 0),
   (73, 10, 756, 0.01000, NULL, 1, NULL, 2, NULL, 1, NULL, 3, NULL, 1, NULL, 1),
@@ -149,8 +151,6 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (76, 11, 840, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (77, 11, 978, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (80, 11, 643, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-  (21, 13, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
-  (24, 13, 978, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
   (86, 13, 643, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
   (87, 13, 826, NULL, NULL, 4, NULL, 1, NULL, 4, NULL, 2, NULL, 4, NULL, 0),
   (88, 13, 756, NULL, NULL, 5, NULL, 1, NULL, 5, NULL, 2, NULL, 5, NULL, 0),
@@ -172,7 +172,7 @@ INSERT INTO `grabber_strategy_info` (`id`, `bank_id`, `name`, `url`, `cells_sele
   (3, 11, 'Idea', 'http://www.ideabank.ua/', '.currencyBox', 0),
   (4, 5, 'Oschadny', 'http://www.oschadbank.ua/ua/private/currency/', 'table', 0),
   (5, 9, 'Eximb', 'https://www.eximb.com/ukr/personal/everyday/currency_exchange/', '.table_1', 0),
-  (6, 6, 'Creditagricole', 'https://credit-agricole.ua/press/exchange-rates', '#content2 table', 1),
+  (6, 6, 'Creditagricole', 'https://credit-agricole.ua/kurs-valyut', '.exchange-rates-table', 0),
   (7, 4, 'Creditdnepr', 'https://creditdnepr.com.ua/currency', '.site-content table.table-s1', 0),
   (8, 8, 'Kredo', 'http://www.kredobank.com.ua/exchange_rates/ex_bank/', 'table.ourTable', 0),
   (9, 10, 'Otp', 'http://www.otpbank.com.ua/', '.currency-rates table', 0),
