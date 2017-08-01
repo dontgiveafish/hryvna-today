@@ -135,7 +135,7 @@ class Storyteller
             ($K == 1 ? sprintf('%0.2f', $K * $avg_rounded) : $K * $avg_rounded) . ' гривень',
             $say_day_diff,
             '#' . $hashtags[array_rand($hashtags)],
-            'g.ua/kK6C'
+            'goo.gl/iwqvmI'
         ]);
 
         return $tweet;
