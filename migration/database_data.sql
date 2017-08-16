@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Бер 09 2017 р., 08:53
--- Версія сервера: 5.5.41-0ubuntu0.14.04.1
--- Версія PHP: 5.6.17-3+deb.sury.org~trusty+1
+-- Час створення: Сер 16 2017 р., 08:05
+-- Версія сервера: 5.5.53-0ubuntu0.14.04.1
+-- Версія PHP: 5.5.9-1ubuntu4.20
 
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -81,7 +81,7 @@ INSERT INTO `grabber_currency_checker` (`id`, `currency_id`, `value`) VALUES
 --
 
 INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `currency_multiplier`, `buy_tr_selector`, `buy_tr_idx`, `buy_td_selector`, `buy_td_idx`, `sale_tr_selector`, `sale_tr_idx`, `sale_td_selector`, `sale_td_idx`, `check_tr_selector`, `check_tr_idx`, `check_td_selector`, `check_td_idx`) VALUES
-  (0, 14, 756, NULL, NULL, 5, NULL, 2, NULL, 5, NULL, 3, NULL, 5, NULL, 0),
+  (0, 14, 756, NULL, NULL, 4, NULL, 1, NULL, 4, NULL, 2, NULL, 4, NULL, 0),
   (3, 6, 840, NULL, '.currency', 0, 'div', 1, '.currency', 0, 'div', 2, '.currency', 0, 'div', 0),
   (4, 6, 978, NULL, '.currency', 1, 'div', 1, '.currency', 1, 'div', 2, '.currency', 1, 'div', 0),
   (5, 7, 840, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
@@ -100,7 +100,7 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (20, 12, 978, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
   (21, 13, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
   (24, 13, 978, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
-  (25, 14, 840, NULL, NULL, 1, NULL, 2, NULL, 1, NULL, 3, NULL, 1, NULL, 0),
+  (25, 14, 840, NULL, NULL, 0, NULL, 1, NULL, 0, NULL, 2, NULL, 0, NULL, 0),
   (27, 16, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
   (28, 16, 978, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
   (29, 18, 840, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
@@ -154,9 +154,9 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (86, 13, 643, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
   (87, 13, 826, NULL, NULL, 4, NULL, 1, NULL, 4, NULL, 2, NULL, 4, NULL, 0),
   (88, 13, 756, NULL, NULL, 5, NULL, 1, NULL, 5, NULL, 2, NULL, 5, NULL, 0),
-  (89, 14, 643, NULL, NULL, 3, NULL, 2, NULL, 3, NULL, 3, NULL, 3, NULL, 0),
-  (90, 14, 826, NULL, NULL, 4, NULL, 2, NULL, 4, NULL, 3, NULL, 4, NULL, 0),
-  (91, 14, 978, NULL, NULL, 2, NULL, 2, NULL, 2, NULL, 3, NULL, 2, NULL, 0),
+  (89, 14, 643, NULL, NULL, 2, NULL, 1, NULL, 2, NULL, 2, NULL, 2, NULL, 0),
+  (90, 14, 826, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
+  (91, 14, 978, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 2, NULL, 1, NULL, 0),
   (92, 16, 643, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
   (93, 18, 643, NULL, NULL, 3, NULL, 1, NULL, 3, NULL, 2, NULL, 3, NULL, 0),
   (94, 19, 643, NULL, NULL, 3, NULL, 0, NULL, 3, NULL, 1, NULL, 3, 'th', 0),
@@ -180,7 +180,7 @@ INSERT INTO `grabber_strategy_info` (`id`, `bank_id`, `name`, `url`, `cells_sele
   (11, 3, 'Privat', 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5', NULL, NULL),
   (12, 12, 'Procredit', 'http://www.procreditbank.com.ua/private-individuals/credit-cards/archive-exchange-rates/', '#currenciesContainer table', 0),
   (13, 13, 'Pumb', 'https://pumb.ua', '.exchange-rate table', 0),
-  (14, 7, 'Ukrsib', 'https://my.ukrsibbank.com/ua/personal/operations/currency_exchange/', '#tab_desc table.content_tbl2', 0),
+  (14, 7, 'Ukrsib', 'https://my.ukrsibbank.com/ua/personal/operations/currency_exchange/', 'table.currency__table', 0),
   (15, 16, 'Black', NULL, NULL, NULL),
   (16, NULL, 'Finance', 'http://finance.i.ua/', '.Right .local_table', 0),
   (17, NULL, 'Minfin', 'http://minfin.com.ua/currency/auction/%CURRENCY%/buy/all/', '.au-status .au-status--group', 0),
