@@ -706,6 +706,10 @@ function scrollNavigation() {
 }
 /* scrollNavigation end */
 
+/**
+ * Apply jQuery TableSorter plugin to table object
+ * @param table
+ */
 function tableSort(table) {
     table.trigger('destroy');
     table.tablesorter({
