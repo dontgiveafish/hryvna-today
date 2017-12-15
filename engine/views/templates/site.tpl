@@ -201,7 +201,7 @@
 					<div class="banks-graphics" ></div>
 				</div>
 				<!-- bay-sale -->
-				<table class="table-bay-sale tablesorter">
+				<table class="table-bay-sale">
 					<thead>
 						<tr>
 							<th><span class="title-sort double-title-sort">Банки</span></th>
@@ -338,7 +338,7 @@
 		<div class="popup-content">
 			<div class="scroll-pane">
 				<div class="scroll-inner">
-					<table class="table-currency-converter tablesorter">
+					<table class="table-currency-converter">
 						<thead>
 							<tr>
 								<th>
@@ -394,7 +394,7 @@
 <!-- Widgets -->
 <script src="js/widgets.js"></script>
 <!-- Main functions -->
-<script src="js/functions.js?v4"></script>
+<script src="js/functions.js?v5"></script>
 <!-- Data -->
 <script src="js/data.js?{{$today->getTimestamp()}}"></script>
 

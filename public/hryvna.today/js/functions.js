@@ -337,11 +337,12 @@ function calculateMyMoney() {
            }
 
        }
-        
+
        $(this).find('.col-uah').text((uah_k * money).toFixed(2));
        $(this).find('.col-eur').text((eur_k * money).toFixed(2));
     });
-    
+
+    sortTableCurrencyConverter();
 }
 $('#converter-sum').keyup(function() {
     calculateMyMoney();
@@ -705,26 +706,33 @@ function scrollNavigation() {
 }
 /* scrollNavigation end */
 
-$('.tablesorter').tablesorter({
-	widgets        : ['zebra', 'columns'],
-//	usNumberFormat : false,
-	sortReset      : true,
-	sortRestart    : true
-});
-
+/**
+ * Apply jQuery TableSorter plugin to table object
+ * @param table
+ */
 function tableSort(table) {
+    table.trigger('destroy');
+    table.tablesorter({
+        widgets: ['zebra', 'columns'],
+        sortReset: true,
+        sortRestart: true
+    });
+}
+
+function sortTableBuySale() {
 	if (document.all && (!document.documentMode || (document.documentMode && document.documentMode < 8))) {
-		
+
 	} else {
-		table.trigger('destroy');
-		table.tablesorter({
-			widgets        : ['zebra', 'columns'],
-//			usNumberFormat : false,
-			sortReset      : true,
-			sortRestart    : true
-		});
+        tableSort(
+            $('.table-bay-sale')
+        );
 	}
-	
+}
+
+function sortTableCurrencyConverter() {
+    tableSort(
+        $('.table-currency-converter')
+    );
 }
 
 function graficCurrency(start_date) {
@@ -833,7 +841,7 @@ function graficCurrency(start_date) {
 		});
 	});
 	fnProgressbar($('.progressbar'));
-	tableSort($('.tablesorter'));
+    sortTableBuySale();
 }
 
 function firstGraphic() {
@@ -1316,9 +1324,9 @@ function showMoreBanks() {
 /* showMoreBanks end */
 
 $(document).ready( function(){
-    
-    
-    
+
+
+
 	backToBanks();
 	chooseBanks();
 	scrollNavigation();
@@ -1346,7 +1354,7 @@ $(document).ready( function(){
 	firstGraphic();
 	showMoreBanks();
 	calculateMyMoney();
-        
+    sortTableCurrencyConverter();
 });
 $(window).resize(function(){
 	prependElements();
