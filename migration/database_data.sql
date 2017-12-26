@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Сер 16 2017 р., 08:05
+-- Час створення: Гру 26 2017 р., 21:40
 -- Версія сервера: 5.5.53-0ubuntu0.14.04.1
 -- Версія PHP: 5.5.9-1ubuntu4.20
 
@@ -113,10 +113,9 @@ INSERT INTO `grabber_strategy_currency` (`id`, `strategy_id`, `currency_id`, `cu
   (36, 2, 826, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (37, 2, 643, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (38, 8, 840, 0.01000, NULL, 3, NULL, 3, NULL, 3, NULL, 5, NULL, 3, NULL, 0),
-  (39, 8, 978, 0.01000, NULL, 7, NULL, 3, NULL, 7, NULL, 5, NULL, 7, NULL, 0),
+  (39, 8, 978, 0.01000, NULL, 6, NULL, 3, NULL, 6, NULL, 5, NULL, 6, NULL, 0),
   (40, 8, 826, 0.01000, NULL, 2, NULL, 3, NULL, 2, NULL, 5, NULL, 2, NULL, 0),
   (41, 8, 985, 0.01000, NULL, 5, NULL, 3, NULL, 5, NULL, 5, NULL, 5, NULL, 0),
-  (42, 8, 643, 0.00100, NULL, 6, NULL, 3, NULL, 6, NULL, 5, NULL, 6, NULL, 0),
   (43, 17, 840, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (44, 17, 978, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   (45, 17, 643, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
