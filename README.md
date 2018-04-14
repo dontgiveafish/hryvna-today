@@ -1,27 +1,16 @@
 ## Як встановити проект
 
-Якщо ви користуєтесь Vagrant, то ви вже знаєте, що вам робити:
+Якщо ви користуєтесь Docker, то ви вже знаєте, що вам робити:
 
 ```shell
-vagrant up
+docker-compose up -d
 ```
 
-В іншому разі, окрім стандартних процедур, для запуску проекту вам знадобиться оновити версію PHP до 5.6 та імпортувати схему бази даних із теки migration:
+Також треба встановити залежності та мігрувати базу даних:
 
 ```shell
-add-apt-repository ppa:ondrej/php5-5.6
-apt-get update
-apt-get install php5
-mysql -u root -p hryvna < migration/database_structure.sql
-mysql -u root -p hryvna < migration/database_data.sql
-```
-
-Після налаштування серверу не забудьте завантажити ліби за допомогою Composer:
-
-```shell
-vagrant ssh
-cd /vagrant/engine
-composer install
+docker-compose exec app composer install
+docker-compose exec app php yii migrate
 ```
 
 ## API
