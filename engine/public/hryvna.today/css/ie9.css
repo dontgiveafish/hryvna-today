@@ -1,0 +1,9 @@
+[class^="btn-"],
+[class*=" btn-"],
+[class^="btn-"].disabled,
+[class*=" btn-"].disabled {
+	filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false) !important;
+}
+html {	
+	overflow:visible; /*bug in bxslider (ie9 pressing footer)*/
+}
