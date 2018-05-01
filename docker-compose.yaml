@@ -1,21 +1,22 @@
 app:
-    image: webdevops/php-nginx
-    working_dir: /app/engine
-    volumes:
-        - .:/app
-    environment:
-        WEB_ALIAS_DOMAIN: hryvna.local
-        WEB_DOCUMENT_ROOT: /app/public/hryvna.today
-    links:
-        - db
+  image: webdevops/php-nginx
+  ports:
+    - "80:80"
+  working_dir: /app
+  volumes:
+    - ./engine:/app
+    - ./docker/config/nginx/vhost.conf:/opt/docker/etc/nginx/vhost.conf
+    - ./docker/volumes/logs/nginx:/var/log/nginx
+  links:
+    - db
 
 db:
-  image: mysql:latest
-  command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  image: mysql:5.7
+  command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --sql_mode=""
   ports:
-    - "3307:3306"
+    - "3308:3306"
   volumes:
-    - ./docker/resources/db:/var/lib/mysql
+    - ./docker/volumes/db:/var/lib/mysql
   restart: always
   environment:
     MYSQL_DATABASE: hryvna
