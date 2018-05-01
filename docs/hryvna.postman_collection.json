@@ -1,0 +1,82 @@
+{
+	"info": {
+		"name": "Hryvna",
+		"_postman_id": "b5615ae7-97a2-c266-bf7f-c22b4eadb66e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List exchange rates",
+			"description": "",
+			"item": [
+				{
+					"name": "By currencies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://{{host}}/v1/list/currencies",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"list",
+								"currencies"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "By banks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://{{host}}/v1/list/banks",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"list",
+								"banks"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "By bank types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://{{host}}/v1/list/bank_types",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"list",
+								"bank_types"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
