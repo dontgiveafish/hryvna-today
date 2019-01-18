@@ -841,6 +841,7 @@ function graficCurrency(start_date) {
 		});
 	});
 	fnProgressbar($('.progressbar'));
+    showMoreBanksButton.switchToInactiveMode();
     sortTableBuySale();
 }
 
@@ -1306,22 +1307,47 @@ function chooseCurrency() {
 }
 /* choose currency end */
 
-/* showMoreBanks */
-function showMoreBanks() {
-	if ( $('.show-more-banks').length ) {
-		$('.show-more-banks').on('click',function(e){
-			var cur = $(this);
-			var parent = cur.parents('.banks:eq(0)').find('.table-bay-sale tr.hidden').fadeToggle();
-			if ( cur.hasClass('active') )
-				cur.html('Показати більше банків');
-			else
-				cur.html('Приховати');
-			cur.toggleClass('active');
-			e.preventDefault();
-		});
-	}
-}
-/* showMoreBanks end */
+/**
+ * Working with the "show more banks" button
+ */
+var showMoreBanksButton = {
+
+    $button: $('#show-more-banks'),
+    $baySaleTable: $('#banks').find('.table-bay-sale'),
+    activeButtonClassName: 'active',
+    hiddenRowsClassName: 'tr.hidden',
+    activeButtonText: 'Приховати',
+    inactiveButtonText: 'Показати більше банків',
+
+    init: function () {
+        var that = this;
+
+        this.$button.click(function (event) {
+            event.preventDefault();
+            that.actionClick();
+        });
+    },
+
+    actionClick: function () {
+        this.$baySaleTable.find(this.hiddenRowsClassName).fadeToggle();
+
+        this.isActive() ? this.switchToInactiveMode() : this.switchToActiveMode();
+    },
+
+    isActive: function () {
+        return this.$button.hasClass(this.activeButtonClassName);
+    },
+
+    switchToActiveMode: function () {
+        this.$button.text(this.activeButtonText);
+        this.$button.addClass(this.activeButtonClassName);
+    },
+
+    switchToInactiveMode: function () {
+        this.$button.text(this.inactiveButtonText);
+        this.$button.removeClass(this.activeButtonClassName);
+    },
+};
 
 $(document).ready( function(){
 
@@ -1352,7 +1378,7 @@ $(document).ready( function(){
 	chooseCurrency();
 	graficCurrency(start_date);
 	firstGraphic();
-	showMoreBanks();
+    showMoreBanksButton.init();
 	calculateMyMoney();
     sortTableCurrencyConverter();
 });

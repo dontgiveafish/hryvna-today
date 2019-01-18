@@ -213,7 +213,7 @@
 					<tbody></tbody>
 				</table>
 				<!-- bay-sale end -->
-				<a href="" class="btn-light show-more-banks">Показати більше банків</a>
+				<a href="" class="btn-light show-more-banks" id="show-more-banks">Показати більше банків</a>
 				<div class="scroll-link scroll-link-banks"><a href="#banks">sdf</a></div>
 			</div>
 		</section>
@@ -394,7 +394,7 @@
 <!-- Widgets -->
 <script src="js/widgets.js"></script>
 <!-- Main functions -->
-<script src="js/functions.js?v5"></script>
+<script src="js/functions.js?v=6"></script>
 <!-- Data -->
 <script src="js/data.js?{{$today->getTimestamp()}}"></script>
 
