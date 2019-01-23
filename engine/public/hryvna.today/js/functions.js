@@ -1349,6 +1349,12 @@ var showMoreBanksButton = {
     },
 };
 
+/* showMoreBanks */
+function showMoreBanks() {
+    showMoreBanksButton.init();
+}
+/* showMoreBanks end */
+
 $(document).ready( function(){
 
 
@@ -1378,7 +1384,7 @@ $(document).ready( function(){
 	chooseCurrency();
 	graficCurrency(start_date);
 	firstGraphic();
-    showMoreBanksButton.init();
+    showMoreBanks();
 	calculateMyMoney();
     sortTableCurrencyConverter();
 });
