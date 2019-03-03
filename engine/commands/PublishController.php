@@ -52,6 +52,7 @@ class PublishController extends Controller
                 ])->all(), 'id', 'title'),
             'bank_types' =>
                 $banks_types = ArrayHelper::map(models\BankType::find()->orderBy('rate')->limit(4)->all(), 'alias', 'title'),
+            'current_year' => date('Y'),
         ];
 
         // generate days
