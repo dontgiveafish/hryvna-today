@@ -41,7 +41,7 @@
 						<h2 style="color: #424242; font-size: 17px; font-weight: bold; line-height: 30px; padding: 0 0 22px;">Доброго дня!</h2>
 						<p style="padding:0px 0px 30px 0px;">{{$story}}</p>
 						<p style="padding:0px 0px 30px 0px;">Більш детальна інформація, як завжди, на сайті <a style="color:#303f9f; text-decoration:underline;" href="http://hryvna.today">Гривня Тудей</a>.</p>
-						<p style="padding:0px 0px 60px 0px;">Доречі, ми запустили бота у Telegram. Тепер ви можете написати <a href="https://telegram.me/HryvnaTodayBot">@HryvnaTodayBot</a>, щоб ще швидше отримати актуальний курс гривні до долара.</p>
+						<p style="padding:0px 0px 60px 0px;">Доречі, ми додали Монобанк до списку банків!</p>
 						<div style="width:109px; height:3px; background-color:#448aff; margin:0px auto 25px;"></div>
 						<p style="padding:0px 0px 29px 0px; font-size:23px; line-height:30px; font-weight:bold; text-align:center;">Курс гривні {{$today->format("d.m.Y")}}, станом на {{$today->format("H:i")}}</p>
 						<p style="padding:0px 0px 67px 0px; font-size:100px; line-height:101px; font-weight:bold; color:#448aff; text-align:center;">{{$review.avg.avg.value|string_format:"%.2f"}}</p>
