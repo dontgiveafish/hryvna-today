@@ -23,11 +23,14 @@ class Ukrsib extends CommonBankGrabStrategy implements ExchangeRateGrabbingStrat
         // filter float from a cell
         if (preg_match("/[\\d]/", $data)) {
             $value = preg_replace("/[^0-9.]/", '', $data);
+
             return $value;
         }
 
         // get currency if this is not a value cell
-        $currency = reset(explode('.', $data));
+        $parts = explode('.', $data);
+        $currency = reset($parts);
+
         return $currency;
     }
 }
