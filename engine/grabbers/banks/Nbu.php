@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
 class Nbu extends ExchangeRateGrabberStrategyAbstract implements ExchangeRateGrabbingStrategyInterface
 {
     /**
-     * This method is adapted for Privatbank API
+     * This method is adapted for NBU API
      *
      * {@inheritdoc}
      */
