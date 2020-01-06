@@ -9,8 +9,7 @@ services:
     working_dir: /app
     volumes:
       - ./engine:/app
-    environment:
-      WEB_DOCUMENT_ROOT: /app/public
+      - ./docker/nginx/vhost.conf:/opt/docker/etc/nginx/vhost.conf
     links:
       - db
 

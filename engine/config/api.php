@@ -15,7 +15,6 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\api\Key',
             'enableSession' => false,
         ],
         'errorHandler' => [
