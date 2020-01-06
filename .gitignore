@@ -95,9 +95,8 @@ fabric.properties
 
 engine/assets/*
 engine/runtime/*
-engine/public/api.hryvna.today/assets
-engine/public/hryvna.today/index.html
-engine/public/hryvna.today/js/data.js
+engine/public/index.html
+engine/public/js/data.js
 docker/volumes
 old
 engine/config/params.php
