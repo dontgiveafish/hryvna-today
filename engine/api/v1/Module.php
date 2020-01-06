@@ -3,26 +3,19 @@
 namespace app\api\v1;
 
 use Yii;
-use app\models\api\Log;
+use app\models\api\ResponseStatus;
 
 class Module extends \yii\base\Module
 {
-
     /**
      * @inheritdoc
      */
     public function afterAction($action, $result)
     {
-        // save log
-
-        $log = new Log;
-        $log->status = Log::STATUS_SUCCESS;
-        $log->save();
-
         // generate answer
 
         $data = [
-            'status' => Log::STATUS_SUCCESS,
+            'status' => ResponseStatus::STATUS_SUCCESS,
             'data' => $result
         ];
 

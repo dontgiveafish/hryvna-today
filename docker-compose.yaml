@@ -1,24 +1,31 @@
-app:
-  image: webdevops/php-nginx
-  ports:
-    - "80:80"
-  working_dir: /app
-  volumes:
-    - ./engine:/app
-    - ./docker/config/nginx/vhost.conf:/opt/docker/etc/nginx/vhost.conf
-    - ./docker/volumes/logs/nginx:/var/log/nginx
-  links:
-    - db
+version: "3"
 
-db:
-  image: mysql:5.7
-  command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --sql_mode=""
-  ports:
-    - "3308:3306"
-  volumes:
-    - ./docker/volumes/db:/var/lib/mysql
-  environment:
-    MYSQL_DATABASE: hryvna
-    MYSQL_USER: root
-    MYSQL_PASSWORD: local
-    MYSQL_ROOT_PASSWORD: local
+services:
+
+  app:
+    image: webdevops/php-nginx:7.1
+    ports:
+      - "80:80"
+    working_dir: /app
+    volumes:
+      - ./engine:/app
+      - ./docker/nginx/vhost.conf:/opt/docker/etc/nginx/vhost.conf
+    links:
+      - db
+
+  db:
+    image: mysql:5.7
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --sql_mode=""
+    ports:
+      - "3308:3306"
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: hryvna
+      MYSQL_USER: root
+      MYSQL_PASSWORD: local
+      MYSQL_ROOT_PASSWORD: local
+
+volumes:
+  db:
+    driver: local
