@@ -159,7 +159,7 @@ class UpdateController extends Controller
 
         foreach ($exchange_rates as $exchange_rate) {
             $exchange_rate->save();
-            $logger->info('Successfully Saved exchange rates', [
+            $logger->info('Successfully saved exchange rates', [
                 'strategy' => $strategy_classname,
                 'currency' => $currency_codes[$exchange_rate->currency_id],
                 'buy' => $exchange_rate->buy,
