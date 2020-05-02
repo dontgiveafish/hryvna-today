@@ -99,4 +99,5 @@ engine/public/index.html
 engine/public/js/data.js
 docker/volumes
 old
+logs
 engine/config/params.php

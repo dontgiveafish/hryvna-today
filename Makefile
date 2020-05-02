@@ -8,6 +8,9 @@ APP_NAME = Hryvna
 up:
 	docker-compose up -d
 
+ps:
+	docker-compose ps
+
 restart:
 	docker-compose stop && docker-compose up -d
 
@@ -26,6 +29,7 @@ help:
 	@echo ''
 	@echo '  help          Show this help and exit'
 	@echo '  up            Starts and attaches to containers for a service'
+	@echo '  ps            List containers'
 	@echo '  restart       Stop and up docker-compose'
 	@echo '  bash          Go to bash of main container'
 	@echo '  migrate       Migrate database'

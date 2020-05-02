@@ -37,6 +37,7 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
+        'monolog' => require(__DIR__ . '/monolog.php'),
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,

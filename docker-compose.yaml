@@ -3,12 +3,15 @@ version: "3"
 services:
 
   app:
-    image: webdevops/php-nginx:7.1
+    image: webdevops/php-nginx-dev:7.1
     ports:
       - "80:80"
     working_dir: /app
     volumes:
       - ./engine:/app
+      - ./logs/nginx:/var/log/nginx
+      - ./docker/nginx/conf.d:/opt/docker/etc/nginx/conf.d
+      - ./docker/nginx/include:/opt/docker/etc/nginx/include
       - ./docker/nginx/vhost.conf:/opt/docker/etc/nginx/vhost.conf
     links:
       - db

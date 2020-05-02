@@ -9,6 +9,8 @@ use app\models\Currency;
 use app\grabbers\ExchangeRateGrabber;
 use app\grabbers\ExchangeRateGrabberStrategyAbstract;
 
+use Monolog\Logger;
+use Yii;
 use yii\helpers\ArrayHelper;
 use yii\console\Controller;
 
@@ -18,13 +20,15 @@ class UpdateController extends Controller
      * This is action to update exchanges from bank in database
      * When grab is failed, it goes again $tries_count times after sleeping $seconds_to_sleep seconds
      * If it is not helping, last exchange values from database will be inserted
-     * 
+     *
      * @param string $strategy_classname Classname of strategy
      * @param int $tries_count Count of tries if caught exception
      * @param int $seconds_to_sleep Seconds to sleep befor new try
      */
     public function actionBank($strategy_classname, $tries_count = 5, $seconds_to_sleep = 10)
     {
+        /** @var Logger $logger */
+        $logger = Yii::$app->monolog->getLogger();
 
         // create grabber
 
@@ -32,7 +36,11 @@ class UpdateController extends Controller
             $grabber = new ExchangeRateGrabber(ExchangeRateGrabberStrategyAbstract::create($strategy_classname));
         }
         catch (\Exception $ex) {
-            echo ('Can\'t create grabber of ' . $strategy_classname . ': ' . trim($ex->getMessage()) . PHP_EOL);
+            $logger->error('Can\'t create grabber', [
+                'strategy' => $strategy_classname,
+                'message' => $ex->getMessage(),
+            ]);
+
             return;
         }
 
@@ -47,7 +55,10 @@ class UpdateController extends Controller
             }
             catch (\Exception $ex) {
 
-                echo ($strategy_classname . ' is having problems: ' . trim($ex->getMessage()) . PHP_EOL);
+                $logger->warning('Grabber is having problems', [
+                    'strategy' => $strategy_classname,
+                    'message' => $ex->getMessage(),
+                ]);
 
                 // if some tries left, let's sleep for a few seconds
                 if (++$try_number <= $tries_count) {
@@ -55,7 +66,10 @@ class UpdateController extends Controller
                         sleep($seconds_to_sleep);
                     }
 
-                    echo ("Let's try again. This is try #$try_number" . PHP_EOL);
+                    $logger->warning('Trying to parse one more time', [
+                        'strategy' => $strategy_classname,
+                        'try_number' => $try_number,
+                    ]);
                 }
             }
         }
@@ -133,8 +147,9 @@ class UpdateController extends Controller
                 $exchange_rates[] = $exchange;
             }
 
-            echo ("Last exchange rates from $last_exchanges_date will be inserted for $strategy_classname" . PHP_EOL);
-
+            $logger->error('Inserting last exchange rates', [
+                'strategy' => $strategy_classname,
+            ]);
         }
 
         // prepare currency codes for report
@@ -142,32 +157,27 @@ class UpdateController extends Controller
 
         // save exchange rates and report
 
-        echo ($strategy_classname . ' ');
-
         foreach ($exchange_rates as $exchange_rate) {
-            echo(
-                $currency_codes[$exchange_rate->currency_id] . ':' .
-                $exchange_rate->buy . '/' .
-                $exchange_rate->sale . ' '
-            );
-
             $exchange_rate->save();
+            $logger->info('Successfully Saved exchange rates', [
+                'strategy' => $strategy_classname,
+                'currency' => $currency_codes[$exchange_rate->currency_id],
+                'buy' => $exchange_rate->buy,
+                'sale' => $exchange_rate->sale,
+            ]);
         }
-
-        echo (PHP_EOL);
-
     }
 
     /**
      * Update exchanges for every bank with strategy
-     * 
+     *
      * @param int $tries_count
      * @param int $seconds_to_sleep
      */
     public function actionAll($tries_count = 5, $seconds_to_sleep = 10)
     {
         $banks_to_grab = ExchangeRateGrabberInfo::find()->where(['not', ['bank_id' => null]])->orderBy('bank_id')->all();
-        
+
         foreach ($banks_to_grab as $bank) {
             $this->actionBank($bank->name, $tries_count, $seconds_to_sleep);
         }

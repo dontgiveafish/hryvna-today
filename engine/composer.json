@@ -22,7 +22,8 @@
         "serhatozles/yii2-simplehtmldom": "dev-master",
         "sammaye/yii2-mailchimp": "*",
         "facebook/php-sdk-v4": "4.0.*",
-        "abraham/twitteroauth": "^0.6.2"
+        "abraham/twitteroauth": "^0.6.2",
+        "mero/yii2-monolog": "^0.1.2"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

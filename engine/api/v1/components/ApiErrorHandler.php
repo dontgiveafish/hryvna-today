@@ -25,7 +25,7 @@ class ApiErrorHandler extends \yii\web\ErrorHandler
     /**
      * @inheritdoc
      */
-    protected function convertExceptionToArray(\Exception $exception)
+    protected function convertExceptionToArray($exception)
     {
         switch ($exception->statusCode) {
             case 401:
