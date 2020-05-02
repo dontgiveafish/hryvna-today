@@ -17,9 +17,9 @@ docker-compose exec app php yii migrate
 
 Гривня Тудей має власне API, у якому можна отримати історію курсів за останній рік. Також, із запуском API тепер доступні курси багатьох валют. 
 
-Документація та доступ знаходиться на Mashape за цим посиланням:
+Документація та доступ знаходиться на Rapid API за цим посиланням:
 
-https://market.mashape.com/dontgiveafish/hryvna-today
+https://rapidapi.com/dontgiveafish/api/hryvna-today
 
 ## Telegram
 
