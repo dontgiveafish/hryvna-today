@@ -2,6 +2,7 @@
 
 namespace app\commands;
 
+use Monolog\Logger;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\ArrayHelper;
@@ -25,7 +26,6 @@ class PublishController extends Controller
      */
     public function actionSite()
     {
-
         $currencies = ArrayHelper::map(
             models\SiteCurrency::find()->orderBy('rate')->all(),
             'currency_id',
@@ -124,6 +124,7 @@ class PublishController extends Controller
         echo (file_put_contents(Yii::$app->params['site']['index'], $site) . PHP_EOL);
         echo (file_put_contents(Yii::$app->params['site']['js'], $js) . PHP_EOL);
 
+        Yii::$app->monolog->getLogger()->info('Just published new version of a website');
     }
 
     /**
@@ -131,6 +132,9 @@ class PublishController extends Controller
      */
     public function actionEmail()
     {
+        /** @var Logger $logger */
+        $logger = Yii::$app->monolog->getLogger();
+
         $base_currency = models\SiteCurrency::find()->orderBy('rate')->one()->currency;
         $dashboard = new Dashboard([$base_currency->id], Dashboard::FLAG_ROUND_TO_CENTS | Dashboard::FLAG_CALCULATE_DIFF);
 
@@ -176,11 +180,12 @@ class PublishController extends Controller
             $result = $chimp->campaigns->send($campaign['id']);
 
             if (!empty($result['complete'])) {
-                echo ("Campaign $subject was successfully sent" . PHP_EOL);
+                $logger->info('Email campaign was successfully sent', [
+                    'subject' => $subject,
+                ]);
             }
             else {
-                throw new \Exception('There was a problem with sending email campaign');
-
+                $logger->error('There was a problem with sending email campaign');
             }
 
         }
@@ -191,6 +196,8 @@ class PublishController extends Controller
      */
     public function actionSocial()
     {
+        /** @var Logger $logger */
+        $logger = Yii::$app->monolog->getLogger();
 
         // prepare data
 
@@ -245,7 +252,7 @@ class PublishController extends Controller
                 'media_ids' => $media->media_id_string,
             ]);
 
-            print_r($result);
+            $logger->info('Just twitted a thing');
         }
 
         // facebook
@@ -281,8 +288,7 @@ class PublishController extends Controller
             $response = $request->execute();
             $graphObject = $response->getGraphObject();
 
-            print_r($graphObject);
-
+            $logger->info('Just posted to facebook');
         }
 
     }
