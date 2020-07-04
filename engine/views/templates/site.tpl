@@ -31,8 +31,8 @@
 	<!-- Social -->
 	<meta property="og:title" content="Гривня Тудей" />
 	<meta property="og:site_name" content="Гривня Тудей" />
-	<meta property="og:image" content="http://hryvna.today/img/preview.png" />
-	<meta property="og:url" content="http://hryvna.today" />
+	<meta property="og:image" content="https://hryvna.today/img/preview.png" />
+	<meta property="og:url" content="https://hryvna.today" />
 	<meta property="og:see_also" content="http://dontgiveafish.com" />
 
 </head>
@@ -386,7 +386,7 @@
 
 <!-- SCRIPT LINKS -->
 <!-- Jquery library -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <!-- Addthis -->
 <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-551c75cb498bb202" async="async"></script>
 <!-- UI -->
