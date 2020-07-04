@@ -10,8 +10,8 @@ class m200106_160229_cleanup_api_tables extends Migration
 
     public function up()
     {
-        $this->dropTable($this->tableApiKeys);
         $this->dropTable($this->tableApiLogs);
+        $this->dropTable($this->tableApiKeys);
     }
 
     public function down()
