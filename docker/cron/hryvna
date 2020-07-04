@@ -1,0 +1,4 @@
+# m h  dom mon dow usr command
+*/15 21,5-11,14 * * * root /usr/local/bin/php /var/www/engines/onyii/yii update/all && /usr/local/bin/php /var/www/engines/onyii/yii publish/site
+#50 14 * * * root /usr/local/bin/php /app/yii publish/social
+#00 15 * * 1-5 root /usr/local/bin/php /app/yii publish/email
