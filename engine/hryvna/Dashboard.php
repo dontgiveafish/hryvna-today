@@ -110,8 +110,6 @@ class Dashboard
 
                 $group_by_expression
 
-                ORDER BY FIELD(banks.rate, 0), banks.rate, banks.id
-
             ) AS avgs_temp
         ";
 
