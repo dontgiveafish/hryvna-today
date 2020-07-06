@@ -2,6 +2,7 @@
 
 namespace app\commands;
 
+use Facebook\FileUpload\FacebookFile;
 use Monolog\Logger;
 use Yii;
 use yii\console\Controller;
@@ -268,25 +269,18 @@ class PublishController extends Controller
 
         if (empty(YII_DEBUG)) {
 
-            FacebookSession::setDefaultApplication(
-                Yii::$app->params['facebook']['application_id'],
-                Yii::$app->params['facebook']['application_secret']
+            $fb = new \Facebook\Facebook([
+                'app_id' => Yii::$app->params['facebook']['application_id'],
+                'app_secret' => Yii::$app->params['facebook']['application_secret'],
+                'default_access_token' => Yii::$app->params['facebook']['access_token'],
+                'default_graph_version' => 'v2.5'
+            ]);
+
+            $fb->sendRequest('POST', sprintf('/%s/photos', Yii::$app->params['facebook']['page_id']), [
+                    'message' => $facebook_post,
+                    'source' => new FacebookFile($cash_destination),
+                ]
             );
-
-            $session = new FacebookSession(Yii::$app->params['facebook']['access_token']);
-
-            $request = new FacebookRequest(
-                $session,
-                'POST',
-                '/' . Yii::$app->params['facebook']['page_id'] . '/photos',
-                array(
-                    'caption' => $facebook_post,
-                    'source' => new CURLFile($cash_destination)
-                )
-            );
-
-            $response = $request->execute();
-            $graphObject = $response->getGraphObject();
 
             $logger->info('Just posted to facebook');
         }
